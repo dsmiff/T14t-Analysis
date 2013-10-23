@@ -38,6 +38,7 @@ void MyClass::Loop()
   Double_t mass[n], PID[n] ;
 
 TH1D* h_jetPt = new TH1D("jetPt", "jetPt", 200, 0., 200.);
+TH1D* ttbar_jetpt = new TH1D("ttbar_jetpt", "ttbar_jetpt", 200, 0., 200.);
 
 // Delphes (tree) has 2000 entries
 // Loop through each Delphes entry:
@@ -54,15 +55,21 @@ for(int i = 0; i<nentries; i++){
     if (Jet_PT[k] < 10.) continue;
     h_jetPt->Fill(Jet_PT[k]);
     std::cout << " Jet_PT[" << k << "]: " << Jet_PT[k]<< std::endl;
+    std::cout << " PID: " << abs(Particle_PID[k]) << std::endl;
+    if (abs(Particle_PID[k] == 6)){
+    ttbar_jetpt->Fill(Jet_PT[k]);
+    }
   }
 }
 
 
 TCanvas *c1 = new TCanvas("c1", "c1", 200, 10, 600, 400);
+TCanvas *c2 = new TCanvas("c2", "c2", 200, 10, 600, 400);
 
 h_jetPt->Draw("hist");
+ttbar_jetpt->Draw("hist");
 c1->Print("myTestPlot_jetPt.pdf");
-
+c2->Print("ttbar_jetpt.pdf");
 
 
 
