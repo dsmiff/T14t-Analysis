@@ -41,7 +41,7 @@ public :
    TTree          *fChain;   //!pointer to the analyzed TTree or TChain
    Int_t           fCurrent; //!current Tree number in a TChain
 
-   // Declaration of leaf types - why are those stored as integers, floats?
+   // Declaration of leaf types
    Int_t           Event_;
    UInt_t          Event_fUniqueID[kMaxEvent];   //[Event_]
    UInt_t          Event_fBits[kMaxEvent];   //[Event_]
