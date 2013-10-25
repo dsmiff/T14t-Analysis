@@ -81,7 +81,6 @@ for(int i = 0; i<nentries; i++){
       t.SetPy(Particle_Py[j]);
       t.SetPz(Particle_Pz[j]);
       t.SetE(Particle_E[j]);
-     
       std::cout << "Top mass: "  << t.M() << std::endl;
      }
     }
@@ -91,46 +90,15 @@ for(int i = 0; i<nentries; i++){
      std::cout << "dR: " << dR[j] << std::endl;
     if((dR[j] < Rcut) && (dR[j] > 0.)){
       std::cout << "Found a anti top quark" << std::endl;
+      tbar.SetPx(Particle_Px[j]);
+      tbar.SetPy(Particle_Py[j]);
+      tbar.SetPz(Particle_Pz[j]);
+      tbar.SetE(Particle_E[j]);
+      std::cout << "Anti top mass: " << tbar.M() << std::endl;
    } 
 
   }
 }
-
-
-
-/*
-    for(unsigned int l=0; l<sizeof(Particle_PID); l++){
-      if(Particle_PID[l] == 6){
-    cout << " Found a top quark" << endl;
-  t.SetPx(Particle_Px[l]);
-  t.SetPy(Particle_Py[l]);
-  t.SetPz(Particle_Pz[l]);
-  t.SetE(Particle_E[l]);
-  }
-      else if(Particle_PID[l] == -6){
-    cout << " Found an anti-top quark" << endl;
-  tbar.SetPx(Particle_Px[l]);
-  tbar.SetPy(Particle_Py[l]);
-  tbar.SetPz(Particle_Pz[l]);
-  tbar.SetE(Particle_E[l]);  
-  }
- } */
-
- /* for(unsigned int p=0; p<sizeof(Particle_PID); p++){
-    if(Particle_PID[p] == 10000021){
-      std::cout << "Found an LSP" << std::endl;
-    LSP.SetPx(Particle_Px[p]);
-    LSP.SetPy(Particle_Py[p]);
-    LSP.SetPz(Particle_Pz[p]);
-    LSP.SetE(Particle_E[p]);
-    }
-  }
-
-  for(unsigned int a=0; a<sizeof(Jet_DeltaEta); a++){
-    deltaR[a] = sqrt((pow((Jet_DeltaEta[a]),2) + (pow((Jet_DeltaPhi[a]),2))));
-    std::cout << "Delta R[" << a << "] : " << deltaR[a] << std::endl;
-  } */
-
 }
 
 
