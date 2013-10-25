@@ -77,6 +77,12 @@ for(int i = 0; i<nentries; i++){
      std::cout << "dR: " << dR[j] << std::endl;
     if((dR[j] < Rcut) && (dR[j] > .0)){
       std::cout << "Found a top quark" << std::endl;
+      t.SetPx(Particle_Px[j]);
+      t.SetPy(Particle_Py[j]);
+      t.SetPz(Particle_Pz[j]);
+      t.SetE(Particle_E[j]);
+     
+      std::cout << "Top mass: "  << t.M() << std::endl;
      }
     }
     
