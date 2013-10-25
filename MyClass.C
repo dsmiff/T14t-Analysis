@@ -72,18 +72,23 @@ for(int i = 0; i<nentries; i++){
      Rgjet[j] = sqrt(((pow(GenJet_Eta[j],2)) + pow(GenJet_Phi[j],2)));
 
 
-
    if(Particle_PID[j] == 6){
      dR[j] = Rjet[j] - Rgjet[j]; 
      std::cout << "dR: " << dR[j] << std::endl;
-
     if((dR[j] < Rcut) && (dR[j] > .0)){
       std::cout << "Found a top quark" << std::endl;
-
      }
     }
-  }
+    
+   if(Particle_PID[j] == -6){
+    dR[j] = Rjet[j] - Rgjet[j]; 
+     std::cout << "dR: " << dR[j] << std::endl;
+    if((dR[j] < Rcut) && (dR[j] > 0.)){
+      std::cout << "Found a anti top quark" << std::endl;
+   } 
 
+  }
+}
 
 
 
