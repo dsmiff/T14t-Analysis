@@ -35,7 +35,10 @@ TH1D* ttbar_genjetpt = new TH1D("ttbar_genjetpt", "ttbar_genjetpt", 200, 0., 200
   Long64_t nents = b_Particle_PID->GetEntries();
 
 TLorentzVector t, tbar, gluino, LSP;
-Double_t deltaR[48]; 
+Double_t Rcut = 0.5;
+Double_t Rjet[100] , Rgjet[100], dR[100];
+
+ 
 
   cout << "Working so far, printing values..." << endl;
   cout << "Number of entries: " << nentries << endl;
@@ -62,6 +65,28 @@ for(int i = 0; i<nentries; i++){
     ttbar_genjetpt->Fill(GenJet_PT[k]);
     }
 }
+
+
+  for(unsigned int j=0; j<sizeof(Jet_Eta); j++){
+     Rjet[j] = sqrt(((pow(Jet_Eta[j],2)) + pow(Jet_Phi[j],2)));
+     Rgjet[j] = sqrt(((pow(GenJet_Eta[j],2)) + pow(GenJet_Phi[j],2)));
+
+
+
+   if(Particle_PID[j] == 6){
+     dR[j] = Rjet[j] - Rgjet[j]; 
+     std::cout << "dR: " << dR[j] << std::endl;
+
+    if((dR[j] < Rcut) && (dR[j] > .0)){
+      std::cout << "Found a top quark" << std::endl;
+
+     }
+    }
+  }
+
+
+
+
 /*
     for(unsigned int l=0; l<sizeof(Particle_PID); l++){
       if(Particle_PID[l] == 6){
@@ -80,7 +105,7 @@ for(int i = 0; i<nentries; i++){
   }
  } */
 
-  for(unsigned int p=0; p<sizeof(Particle_PID); p++){
+ /* for(unsigned int p=0; p<sizeof(Particle_PID); p++){
     if(Particle_PID[p] == 10000021){
       std::cout << "Found an LSP" << std::endl;
     LSP.SetPx(Particle_Px[p]);
@@ -93,7 +118,7 @@ for(int i = 0; i<nentries; i++){
   for(unsigned int a=0; a<sizeof(Jet_DeltaEta); a++){
     deltaR[a] = sqrt((pow((Jet_DeltaEta[a]),2) + (pow((Jet_DeltaPhi[a]),2))));
     std::cout << "Delta R[" << a << "] : " << deltaR[a] << std::endl;
-  }
+  } */
 
 }
 
