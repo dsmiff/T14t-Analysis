@@ -32,8 +32,8 @@ TH1D* ttbar_jetpt = new TH1D("ttbar_jetpt", "ttbar_jetpt", 200, 0., 200.);
 TH1D* ttbar_genjetpt = new TH1D("ttbar_genjetpt", "ttbar_genjetpt", 200, 0., 200.);
 TH1D* tmass = new TH1D("tmass", "tmass", 200, 0., 400.);
 
-  Long64_t nentries = fChain->GetEntries();
-  Long64_t nents = b_Particle_PID->GetEntries();
+Long64_t nentries = fChain->GetEntries();
+Long64_t nents = b_Particle_PID->GetEntries();
 
 TLorentzVector t, tbar, gluino, LSP;
 Double_t Rcut = 0.5;
@@ -41,7 +41,6 @@ Double_t dR[100], top_mass[50];
 
  
 
-  cout << "Working so far, printing values..." << endl;
   cout << "Number of entries: " << nentries << endl;
   cout << "Branch entries: " << nents << endl;
   
@@ -89,7 +88,7 @@ for(int i = 0; i<nentries; i++){
    if(Particle_PID[j] == -6){
      std::cout << "dR: " << dR[j] << std::endl;
     if((dR[j] < Rcut) && (dR[j] > 0.)){
-      std::cout << "Found a anti top quark" << std::endl;
+      std::cout << "Found an anti top quark" << std::endl;
       tbar.SetPx(Particle_Px[j]);
       tbar.SetPy(Particle_Py[j]);
       tbar.SetPz(Particle_Pz[j]);
