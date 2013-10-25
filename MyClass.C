@@ -30,13 +30,14 @@ void MyClass::Loop()
 TH1D* h_jetPt = new TH1D("jetPt", "jetPt", 200, 0., 200.);
 TH1D* ttbar_jetpt = new TH1D("ttbar_jetpt", "ttbar_jetpt", 200, 0., 200.);
 TH1D* ttbar_genjetpt = new TH1D("ttbar_genjetpt", "ttbar_genjetpt", 200, 0., 200.);
+TH1D* tmass = new TH1D("tmass", "tmass", 200, 0., 400.);
 
   Long64_t nentries = fChain->GetEntries();
   Long64_t nents = b_Particle_PID->GetEntries();
 
 TLorentzVector t, tbar, gluino, LSP;
 Double_t Rcut = 0.5;
-Double_t Rjet[100] , Rgjet[100], dR[100];
+Double_t dR[100], top_mass[50];
 
  
 
@@ -68,12 +69,10 @@ for(int i = 0; i<nentries; i++){
 
 
   for(unsigned int j=0; j<sizeof(Jet_Eta); j++){
-     Rjet[j] = sqrt(((pow(Jet_Eta[j],2)) + pow(Jet_Phi[j],2)));
-     Rgjet[j] = sqrt(((pow(GenJet_Eta[j],2)) + pow(GenJet_Phi[j],2)));
-
+  
+  dR[j] = sqrt((pow((Jet_Eta[j] - GenJet_Eta[j]),2) + (pow((Jet_Phi[j] - GenJet_Phi[j]),2))));
 
    if(Particle_PID[j] == 6){
-     dR[j] = Rjet[j] - Rgjet[j]; 
      std::cout << "dR: " << dR[j] << std::endl;
     if((dR[j] < Rcut) && (dR[j] > .0)){
       std::cout << "Found a top quark" << std::endl;
@@ -81,12 +80,13 @@ for(int i = 0; i<nentries; i++){
       t.SetPy(Particle_Py[j]);
       t.SetPz(Particle_Pz[j]);
       t.SetE(Particle_E[j]);
+      top_mass[j] = t.M();
+      tmass->Fill(top_mass[j]);
       std::cout << "Top mass: "  << t.M() << std::endl;
      }
     }
     
    if(Particle_PID[j] == -6){
-    dR[j] = Rjet[j] - Rgjet[j]; 
      std::cout << "dR: " << dR[j] << std::endl;
     if((dR[j] < Rcut) && (dR[j] > 0.)){
       std::cout << "Found a anti top quark" << std::endl;
@@ -96,7 +96,6 @@ for(int i = 0; i<nentries; i++){
       tbar.SetE(Particle_E[j]);
       std::cout << "Anti top mass: " << tbar.M() << std::endl;
    } 
-
   }
 }
 }
@@ -104,12 +103,17 @@ for(int i = 0; i<nentries; i++){
 
 
 TCanvas *c1 = new TCanvas("c1", "c1", 200, 10, 600, 400);
+TCanvas *c2 = new TCanvas("c2", "c2", 200, 10, 600, 400);
 
 c1->Clear();
 ttbar_jetpt->SetLineColor(8);
 h_jetPt->Draw("hist");
 ttbar_jetpt->Draw("histsame");
 c1->Print("ttbargetjetpt.pdf");
+
+c2->Clear();
+tmass->Draw("hist");
+c2->Print("top_mass.pdf");
 
 }
 
