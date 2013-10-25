@@ -74,7 +74,7 @@ for(int i = 0; i<nentries; i++){
 
    if(Particle_PID[j] == 6){
      std::cout << "dR: " << dR[j] << std::endl;
-    if((dR[j] < Rcut) && (dR[j] > .0)){
+    if((dR[j] < Rcut) && (dR[j] > 0.)){
       std::cout << "Found a top quark" << std::endl;
       t.SetPx(Particle_Px[j]);
       t.SetPy(Particle_Py[j]);
