@@ -58,8 +58,8 @@ for(int i = 0; i<nentries; i++){
   for(unsigned int k=0; k<sizeof(Jet_PT); k++){
     if (Jet_PT[k] < 10.) continue;
     h_jetPt->Fill(Jet_PT[k]);
-    std::cout << " Jet_PT[" << k << "]: " << Jet_PT[k]<< std::endl;
-    std::cout << " PID: " << Particle_PID[k] << std::endl;
+    //std::cout << " Jet_PT[" << k << "]: " << Jet_PT[k]<< std::endl;
+    //std::cout << " PID: " << Particle_PID[k] << std::endl;
     if (abs(Particle_PID[k] == 6)){
     ttbar_jetpt->Fill(Jet_PT[k]);
     ttbar_genjetpt->Fill(GenJet_PT[k]);
@@ -72,7 +72,7 @@ for(int i = 0; i<nentries; i++){
   dR[j] = sqrt((pow((Jet_Eta[j] - GenJet_Eta[j]),2) + (pow((Jet_Phi[j] - GenJet_Phi[j]),2))));
 
    if(Particle_PID[j] == 6){
-     std::cout << "dR: " << dR[j] << std::endl;
+     std::cout << "dR[" << j << "] (PID = 6) :"<< dR[j] << std::endl;
     if((dR[j] < Rcut) && (dR[j] > 0.)){
       std::cout << "Found a top quark" << std::endl;
       t.SetPx(Particle_Px[j]);
@@ -85,8 +85,8 @@ for(int i = 0; i<nentries; i++){
      }
     }
     
-   if(Particle_PID[j] == -6){
-     std::cout << "dR: " << dR[j] << std::endl;
+  if(Particle_PID[j] == -6){
+     std::cout << "dR[" << j << "] (PID = -6) :"<< dR[j] << std::endl;
     if((dR[j] < Rcut) && (dR[j] > 0.)){
       std::cout << "Found an anti top quark" << std::endl;
       tbar.SetPx(Particle_Px[j]);
@@ -96,7 +96,7 @@ for(int i = 0; i<nentries; i++){
       std::cout << "Anti top mass: " << tbar.M() << std::endl;
    } 
   }
-}
+ }
 }
 
 
