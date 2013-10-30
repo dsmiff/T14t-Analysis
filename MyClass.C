@@ -49,7 +49,6 @@ for(int i = 0; i<nentries; i++){
 
     std::cout << "\nNEW EVENT [" << i << " of " << nentries << "]" << std::endl;
 
-
 for(unsigned int q=0; q<sizeof(Particle_PT); q++){
 
     if(abs(Particle_PID[q]) == 6 && Particle_Status[q] == 2) {
@@ -57,9 +56,11 @@ for(unsigned int q=0; q<sizeof(Particle_PT); q++){
       std::cout << "Top Pt [" << q << "] : " << Particle_PT[q] << std::endl;
     }
     if(Particle_Status[q] == 2){
-      std::cout << " Found a status 2 particle" << std::endl;
-      std::cout << " ---> Particle PID : " << Particle_PID[q] << std::endl;
+    //  std::cout << " Found a status 2 particle" << std::endl;
+     // std::cout << " ---> Particle PID : " << Particle_PID[q] << std::endl;
  }
+ std::cout << " For Particle PID" << " " << Particle_PID[q] << " " << "\n Particle Mother: " << Particle_M1[q] << std::endl;
+
 }
 
 
@@ -79,20 +80,22 @@ for(unsigned int q=0; q<sizeof(Particle_PT); q++){
 
   for(unsigned int j=0; j<sizeof(Jet_Eta); j++){
   
-  dR[j] = sqrt((pow((Jet_Eta[j] - GenJet_Eta[j]),2) + (pow((Jet_Phi[j] - GenJet_Phi[j]),2))));
+//  dR[j] = sqrt((pow((Jet_Eta[j] - GenJet_Eta[j]),2) + (pow((Jet_Phi[j] - GenJet_Phi[j]),2))));
 
    if(Particle_PID[j] == 6){
     // std::cout << "dR[" << j << "] (PID = 6) :"<< dR[j] << std::endl;
-    if((dR[j] < Rcut) && (dR[j] > 0.)){
-      //std::cout << "Found a top quark" << std::endl;
+   // if((dR[j] < Rcut) && (dR[j] > 0.)){
+      std::cout << "Found a top quark" << std::endl;
       t.SetPx(Particle_Px[j]);
       t.SetPy(Particle_Py[j]);
       t.SetPz(Particle_Pz[j]);
       t.SetE(Particle_E[j]);
       top_mass[j] = t.M();
       tmass->Fill(top_mass[j]);
+   //   std::cout << " Particle Mother M1: " << Particle_M1[j] << std::endl;
+   //   std::cout << " Particle Mother M2: " << Particle_M2[j] << std::endl;
      // std::cout << " ---> Top mass: "  << t.M() << std::endl;
-     }
+    // }
     }
     
   if (Particle_PID[j] == -6){
@@ -108,32 +111,32 @@ for(unsigned int q=0; q<sizeof(Particle_PT); q++){
   }
 
   if (Particle_PID[j] == 1000021){
-      std::cout << " Found a gluino" << std::endl;
+   //   std::cout << " Found a gluino" << std::endl;
     gluino.SetPx(Particle_Px[j]);
     gluino.SetPy(Particle_Py[j]);
     gluino.SetPz(Particle_Pz[j]);
     gluino.SetE(Particle_E[j]);
-    std::cout << " ----> Gluino mass: " << gluino.M() << std::endl;
-    std::cout << " ----> Gluino status: " << Particle_Status[j] << std::endl;
+  //  std::cout << " ----> Gluino mass: " << gluino.M() << std::endl;
+  //  std::cout << " ----> Gluino status: " << Particle_Status[j] << std::endl;
   }
 
   if (Particle_PID[j] == 1000022){
-    std::cout << " Found LSP" << std::endl;
+  //  std::cout << " Found LSP" << std::endl;
     LSP.SetPx(Particle_Px[j]);
     LSP.SetPy(Particle_Py[j]);
     LSP.SetPz(Particle_Pz[j]);
     LSP.SetE(Particle_E[j]);
-    std::cout << " ----> LSP mass: " << LSP.M() << std::endl;
-    std::cout << " ----> LSP status: " << Particle_Status[j] << std::endl;
+ //   std::cout << " ----> LSP mass: " << LSP.M() << std::endl;
+ //   std::cout << " ----> LSP status: " << Particle_Status[j] << std::endl;
   }
 
   if (Particle_PID[j] == 100006){
-    std::cout << "Foud stop quark" << std::endl;
+ //   std::cout << "Foud stop quark" << std::endl;
     stop.SetPx(Particle_Px[j]);
     stop.SetPy(Particle_Py[j]);
     stop.SetPz(Particle_Pz[j]);
     stop.SetE(Particle_E[j]);
-    std::cout << "----> Stop mass: " << stop.M() << std::endl;
+  //  std::cout << "----> Stop mass: " << stop.M() << std::endl;
   }
  }
 }
