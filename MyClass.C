@@ -7,6 +7,7 @@
 #include <TLorentzVector.h>
 #include <TGraph.h>
 #include <TMath.h>
+#include <TRefArray.h>
 #include <iostream>
 
 using namespace std;
@@ -31,19 +32,14 @@ TH1D* h_jetPt = new TH1D("jetPt", "jetPt", 200, 0., 200.);
 TH1D* ttbar_jetpt = new TH1D("ttbar_jetpt", "ttbar_jetpt", 200, 0., 200.);
 TH1D* ttbar_genjetpt = new TH1D("ttbar_genjetpt", "ttbar_genjetpt", 200, 0., 200.);
 TH1D* tmass = new TH1D("tmass", "tmass", 200, 0., 400.);
+TH1D* TopPt = new TH1D("TopPt", "TopPt", 200, 0., 800.);
 
 Long64_t nentries = fChain->GetEntries();
 Long64_t nents = b_Particle_PID->GetEntries();
 
-TLorentzVector t, tbar, gluino, LSP;
+TLorentzVector t, tbar, gluino, LSP, stop;
 Double_t Rcut = 0.5;
 Double_t dR[100], top_mass[50];
-
- 
-
-  cout << "Number of entries: " << nentries << endl;
-  cout << "Branch entries: " << nents << endl;
-  
 
 // Delphes (tree) has 2000 entries
 // Loop through each Delphes entry:
@@ -51,7 +47,21 @@ Double_t dR[100], top_mass[50];
 for(int i = 0; i<nentries; i++){
   fChain->GetEntry(i);
 
-    std::cout << "\nNEW EVENT" << std::endl;
+    std::cout << "\nNEW EVENT [" << i << " of " << nentries << "]" << std::endl;
+
+
+for(unsigned int q=0; q<sizeof(Particle_PT); q++){
+
+    if(abs(Particle_PID[q]) == 6 && Particle_Status[q] == 2) {
+      TopPt->Fill(Particle_PT[q]);
+      std::cout << "Top Pt [" << q << "] : " << Particle_PT[q] << std::endl;
+    }
+    if(Particle_Status[q] == 2){
+      std::cout << " Found a status 2 particle" << std::endl;
+      std::cout << " ---> Particle PID : " << Particle_PID[q] << std::endl;
+ }
+}
+
 
   // For each Delphes entry, there are numerous entries in the branches and leaves- loop through each one:
 
@@ -72,29 +82,58 @@ for(int i = 0; i<nentries; i++){
   dR[j] = sqrt((pow((Jet_Eta[j] - GenJet_Eta[j]),2) + (pow((Jet_Phi[j] - GenJet_Phi[j]),2))));
 
    if(Particle_PID[j] == 6){
-     std::cout << "dR[" << j << "] (PID = 6) :"<< dR[j] << std::endl;
+    // std::cout << "dR[" << j << "] (PID = 6) :"<< dR[j] << std::endl;
     if((dR[j] < Rcut) && (dR[j] > 0.)){
-      std::cout << "Found a top quark" << std::endl;
+      //std::cout << "Found a top quark" << std::endl;
       t.SetPx(Particle_Px[j]);
       t.SetPy(Particle_Py[j]);
       t.SetPz(Particle_Pz[j]);
       t.SetE(Particle_E[j]);
       top_mass[j] = t.M();
       tmass->Fill(top_mass[j]);
-      std::cout << "Top mass: "  << t.M() << std::endl;
+     // std::cout << " ---> Top mass: "  << t.M() << std::endl;
      }
     }
     
-  if(Particle_PID[j] == -6){
-     std::cout << "dR[" << j << "] (PID = -6) :"<< dR[j] << std::endl;
+  if (Particle_PID[j] == -6){
+    // std::cout << "dR[" << j << "] (PID = -6) :"<< dR[j] << std::endl;
     if((dR[j] < Rcut) && (dR[j] > 0.)){
-      std::cout << "Found an anti top quark" << std::endl;
+     // std::cout << "Found an anti top quark" << std::endl;
       tbar.SetPx(Particle_Px[j]);
       tbar.SetPy(Particle_Py[j]);
       tbar.SetPz(Particle_Pz[j]);
       tbar.SetE(Particle_E[j]);
-      std::cout << "Anti top mass: " << tbar.M() << std::endl;
+      //std::cout << " ---> Anti top mass: " << tbar.M() << std::endl;
    } 
+  }
+
+  if (Particle_PID[j] == 1000021){
+      std::cout << " Found a gluino" << std::endl;
+    gluino.SetPx(Particle_Px[j]);
+    gluino.SetPy(Particle_Py[j]);
+    gluino.SetPz(Particle_Pz[j]);
+    gluino.SetE(Particle_E[j]);
+    std::cout << " ----> Gluino mass: " << gluino.M() << std::endl;
+    std::cout << " ----> Gluino status: " << Particle_Status[j] << std::endl;
+  }
+
+  if (Particle_PID[j] == 1000022){
+    std::cout << " Found LSP" << std::endl;
+    LSP.SetPx(Particle_Px[j]);
+    LSP.SetPy(Particle_Py[j]);
+    LSP.SetPz(Particle_Pz[j]);
+    LSP.SetE(Particle_E[j]);
+    std::cout << " ----> LSP mass: " << LSP.M() << std::endl;
+    std::cout << " ----> LSP status: " << Particle_Status[j] << std::endl;
+  }
+
+  if (Particle_PID[j] == 100006){
+    std::cout << "Foud stop quark" << std::endl;
+    stop.SetPx(Particle_Px[j]);
+    stop.SetPy(Particle_Py[j]);
+    stop.SetPz(Particle_Pz[j]);
+    stop.SetE(Particle_E[j]);
+    std::cout << "----> Stop mass: " << stop.M() << std::endl;
   }
  }
 }
@@ -103,6 +142,7 @@ for(int i = 0; i<nentries; i++){
 
 TCanvas *c1 = new TCanvas("c1", "c1", 200, 10, 600, 400);
 TCanvas *c2 = new TCanvas("c2", "c2", 200, 10, 600, 400);
+TCanvas *c3 = new TCanvas("c3", "c3", 200, 10, 600, 400);
 
 c1->Clear();
 ttbar_jetpt->SetLineColor(8);
@@ -113,6 +153,10 @@ c1->Print("ttbargetjetpt.pdf");
 c2->Clear();
 tmass->Draw("hist");
 c2->Print("top_mass.pdf");
+
+c3->Clear();
+TopPt->Draw("hist");
+c3->Print("TopPt.pdf");
 
 }
 

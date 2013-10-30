@@ -2,7 +2,7 @@
 // This class has been automatically generated on
 // Thu Oct 17 14:22:23 2013 by ROOT version 5.34/10
 // from TTree Delphes/Analysis tree
-// found on file: delphes_output_test.root
+// found on file: delphes_8TeV_T1t1t_output.root
 //////////////////////////////////////////////////////////
 
 #ifndef MyClass_h
@@ -430,9 +430,9 @@ MyClass::MyClass(TTree *tree) : fChain(0)
 // if parameter tree is not specified (or zero), connect the file
 // used to generate this class and read the Tree.
    if (tree == 0) {
-      TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("delphes_output_test.root");
+      TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("delphes_8TeV_T1t1t_output.root");
       if (!f || !f->IsOpen()) {
-         f = new TFile("delphes_output_test.root");
+         f = new TFile("delphes_8TeV_T1t1t_output.root");
       }
       f->GetObject("Delphes",tree);
 
