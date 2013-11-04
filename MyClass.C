@@ -8,6 +8,7 @@
 #include <TGraph.h>
 #include <TMath.h>
 #include <TRefArray.h>
+#include <TLegend.h>
 #include <iostream>
 
 using namespace std;
@@ -28,14 +29,20 @@ void MyClass::Loop()
 // Here b_Particle_PID is a branch, for example
 
 
+// Declaring histograms
+
 TH1D* h_jetPt = new TH1D("jetPt", "jetPt", 200, 0., 200.);
 TH1D* ttbar_jetpt = new TH1D("ttbar_jetpt", "ttbar_jetpt", 200, 0., 200.);
 TH1D* ttbar_genjetpt = new TH1D("ttbar_genjetpt", "ttbar_genjetpt", 200, 0., 200.);
 TH1D* tmass = new TH1D("tmass", "tmass", 200, 0., 400.);
 TH1D* TopPt = new TH1D("TopPt", "TopPt", 200, 0., 800.);
+TH1D* Top_Gluino = new TH1D("Top_Gluino", "Top_Gluino", 200, 0., 800.);
+TH1D* Top_Stop = new TH1D("Top_Stop", "Top_Stop", 200, 0., 800.);
 
 Long64_t nentries = fChain->GetEntries();
 Long64_t nents = b_Particle_PID->GetEntries();
+
+ // Declaring things to use
 
 TLorentzVector t, tbar, gluino, LSP, stop;
 Double_t Rcut = 0.5;
@@ -54,17 +61,21 @@ for(unsigned int q=0; q<sizeof(Particle_PT); q++){
     if(abs(Particle_PID[q]) == 6 && Particle_Status[q] == 2) {
       TopPt->Fill(Particle_PT[q]);
       std::cout << "Top Pt [" << q << "] : " << Particle_PT[q] << std::endl;
+      std::cout << "Top Mother: " << Particle_M1[q] << std::endl;
+      std::cout << "Mother PID: " << Particle_PID[Particle_M1[q]] << std::endl;
     }
-    if(Particle_Status[q] == 2){
-    //  std::cout << " Found a status 2 particle" << std::endl;
-     // std::cout << " ---> Particle PID : " << Particle_PID[q] << std::endl;
- }
- std::cout << " For Particle PID" << " " << Particle_PID[q] << " " << "\n Particle Mother: " << Particle_M1[q] << std::endl;
+    if(abs(Particle_PID[q]) == 6 && Particle_PID[Particle_M1[q]] == 1000021){
+      Top_Gluino->Fill(Particle_PT[q]);
+    }
+    if(abs(Particle_PID[q]) == 6 && abs(Particle_PID[Particle_M1[q]] == 1000006)){
+      Top_Stop->Fill(Particle_PT[q]);
+    }
+  }
 
-}
 
 
   // For each Delphes entry, there are numerous entries in the branches and leaves- loop through each one:
+  // NOT PART OF THE MAIN ANALYSIS
 
   for(unsigned int k=0; k<sizeof(Jet_PT); k++){
     if (Jet_PT[k] < 10.) continue;
@@ -85,7 +96,7 @@ for(unsigned int q=0; q<sizeof(Particle_PT); q++){
    if(Particle_PID[j] == 6){
     // std::cout << "dR[" << j << "] (PID = 6) :"<< dR[j] << std::endl;
    // if((dR[j] < Rcut) && (dR[j] > 0.)){
-      std::cout << "Found a top quark" << std::endl;
+    //  std::cout << "Found a top quark" << std::endl;
       t.SetPx(Particle_Px[j]);
       t.SetPy(Particle_Py[j]);
       t.SetPz(Particle_Pz[j]);
@@ -142,10 +153,16 @@ for(unsigned int q=0; q<sizeof(Particle_PT); q++){
 }
 
 
+// Printing histograms
+
 
 TCanvas *c1 = new TCanvas("c1", "c1", 200, 10, 600, 400);
 TCanvas *c2 = new TCanvas("c2", "c2", 200, 10, 600, 400);
 TCanvas *c3 = new TCanvas("c3", "c3", 200, 10, 600, 400);
+TCanvas *c4 = new TCanvas("c4", "c4", 200, 10, 600, 400);
+// TCanvas *c5 = new TCanvas("c5", "c5", 200, 10, 600, 400);
+TLegend *leg = new TLegend(0.6,0.7,0.89,0.89);
+
 
 c1->Clear();
 ttbar_jetpt->SetLineColor(8);
@@ -160,6 +177,19 @@ c2->Print("top_mass.pdf");
 c3->Clear();
 TopPt->Draw("hist");
 c3->Print("TopPt.pdf");
+
+c4->Clear();
+Top_Gluino->Draw("hist");
+Top_Gluino->SetTitle("PT for stop and gluino");
+Top_Stop->SetLineColor(2);
+Top_Stop->Draw("SAME");
+leg->AddEntry(Top_Gluino, "PT of top from gluino", "l");
+leg->AddEntry(Top_Stop, "PT of top from stop", "l");
+leg->Draw();
+c4->Print("PtTopGluino.pdf");
+
+//c5->Print("PtTopStop.pdf");
+
 
 }
 
