@@ -65,7 +65,7 @@ public :
    Int_t           Particle_PID[kMaxParticle];   //[Particle_]
    Int_t           Particle_Status[kMaxParticle];   //[Particle_]
    Int_t           Particle_IsPU[kMaxParticle];   //[Particle_]
-   Int_t           Particle_M1[kMaxParticle];   //[Particle_]
+   Int_t           Particle_M1[kMaxParticle];   //[Particle_] sizeof(Particle_M1) = 104
    Int_t           Particle_M2[kMaxParticle];   //[Particle_]
    Int_t           Particle_D1[kMaxParticle];   //[Particle_]
    Int_t           Particle_D2[kMaxParticle];   //[Particle_]
