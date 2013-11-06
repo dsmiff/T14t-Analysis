@@ -38,6 +38,8 @@ TH1D* tmass = new TH1D("tmass", "tmass", 200, 0., 400.);
 TH1D* TopPt = new TH1D("TopPt", "TopPt", 200, 0., 800.);
 TH1D* Top_Gluino = new TH1D("Top_Gluino", "Top_Gluino", 200, 0., 800.);
 TH1D* Top_Stop = new TH1D("Top_Stop", "Top_Stop", 200, 0., 800.);
+TH1D* MET = new TH1D("MET", "MET", 200, 0., 1000.);
+
 
 Long64_t nentries = fChain->GetEntries();
 Long64_t nents = b_Particle_PID->GetEntries();
@@ -53,8 +55,10 @@ Double_t dR[100], top_mass[50];
 
 for(int i = 0; i<nentries; i++){
   fChain->GetEntry(i);
+      std::cout << "\nNEW EVENT [" << i << " of " << nentries << "]" << std::endl;
 
-    std::cout << "\nNEW EVENT [" << i << " of " << nentries << "]" << std::endl;
+int nstop = 0;
+int ngluino = 0;
 
 for(unsigned int q=0; q<sizeof(Particle_PT); q++){
 
@@ -66,11 +70,23 @@ for(unsigned int q=0; q<sizeof(Particle_PT); q++){
     }
     if(abs(Particle_PID[q]) == 6 && Particle_PID[Particle_M1[q]] == 1000021){
       Top_Gluino->Fill(Particle_PT[q]);
+      ngluino++;
     }
-    if(abs(Particle_PID[q]) == 6 && abs(Particle_PID[Particle_M1[q]] == 1000006)){
+    if(abs(Particle_PID[q]) == 6 && abs(Particle_PID[Particle_M1[q]]) == 1000006){
       Top_Stop->Fill(Particle_PT[q]);
-    }
+    nstop++;
+      }
+    /* if(Particle_PID[q] == 1000022){
+      MET->Fill(MissingET_MET[q]);
+      std::cout << "LSP Mother: " << Particle_PID[Particle_M1[q]] << std::endl;
+      std::cout << "LSP MET: " << MissingET_MET[q] << std::endl;
+     } */ 
   }
+  if(ngluino != nstop){
+    std::cout << "WRONG" << ngluino << nstop << std::endl;
+  }
+
+
 
 
 
@@ -160,7 +176,8 @@ TCanvas *c1 = new TCanvas("c1", "c1", 200, 10, 600, 400);
 TCanvas *c2 = new TCanvas("c2", "c2", 200, 10, 600, 400);
 TCanvas *c3 = new TCanvas("c3", "c3", 200, 10, 600, 400);
 TCanvas *c4 = new TCanvas("c4", "c4", 200, 10, 600, 400);
-// TCanvas *c5 = new TCanvas("c5", "c5", 200, 10, 600, 400);
+TCanvas *c5 = new TCanvas("c5", "c5", 200, 10, 600, 400);
+TCanvas *c6 = new TCanvas("c6", "c6", 200, 10, 600, 400);
 TLegend *leg = new TLegend(0.6,0.7,0.89,0.89);
 
 
@@ -180,7 +197,10 @@ c3->Print("TopPt.pdf");
 
 c4->Clear();
 Top_Gluino->Draw("hist");
-Top_Gluino->SetTitle("PT for stop and gluino");
+Top_Gluino->SetTitle("P_{T} from stop (825 GeV) and gluino (1 TeV) ");
+Top_Gluino->GetXaxis()->SetTitle("P_{T} of top");
+Top_Gluino->GetYaxis()->SetTitle("Entries");
+Top_Stop->Draw("SAME");
 Top_Stop->SetLineColor(2);
 Top_Stop->Draw("SAME");
 leg->AddEntry(Top_Gluino, "PT of top from gluino", "l");
@@ -188,7 +208,21 @@ leg->AddEntry(Top_Stop, "PT of top from stop", "l");
 leg->Draw();
 c4->Print("PtTopGluino.pdf");
 
-//c5->Print("PtTopStop.pdf");
+// Saving histo of PT of stop from top 
+
+c5->Clear();
+TFile *PTstop_top = new TFile("PT_825_100.root", "RECREATE");
+Top_Stop->Draw("hist");
+Top_Stop->Write();
+
+// MET histo
+
+ c6->Clear();
+ TFile *f = new TFile("MET_825_100.root", "RECREATE");
+ MET->Draw("hist");
+ MET->Write();
+ c6->Print("MET.pdf");
+
 
 
 }
