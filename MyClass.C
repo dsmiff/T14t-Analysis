@@ -38,7 +38,7 @@ TH1D* tmass = new TH1D("tmass", "tmass", 200, 0., 400.);
 TH1D* TopPt = new TH1D("TopPt", "TopPt", 200, 0., 800.);
 TH1D* Top_Gluino = new TH1D("Top_Gluino", "Top_Gluino", 200, 0., 800.);
 TH1D* Top_Stop = new TH1D("Top_Stop", "Top_Stop", 200, 0., 800.);
-TH1D* MET = new TH1D("MET", "MET", 200, 0., 1000.);
+TH1D* MET_histo = new TH1D("MET_histo", "MET_histo", 200, 0., 2500.);
 
 
 Long64_t nentries = fChain->GetEntries();
@@ -49,6 +49,7 @@ Long64_t nents = b_Particle_PID->GetEntries();
 TLorentzVector t, tbar, gluino, LSP, stop;
 Double_t Rcut = 0.5;
 Double_t dR[100], top_mass[50];
+Double_t MET[nentries];
 
 // Delphes (tree) has 2000 entries
 // Loop through each Delphes entry:
@@ -56,6 +57,12 @@ Double_t dR[100], top_mass[50];
 for(int i = 0; i<nentries; i++){
   fChain->GetEntry(i);
       std::cout << "\nNEW EVENT [" << i << " of " << nentries << "]" << std::endl;
+
+  for(unsigned int e=0; e<sizeof(GenJet_PT); e++){
+    MET[i] += abs(GenJet_PT[e]);
+    MET_histo->Fill(MET[i]);
+  }
+     std::cout << "MET[" << i << "]: " << MET[i] << std::endl;
 
 int nstop = 0;
 int ngluino = 0;
@@ -76,15 +83,12 @@ for(unsigned int q=0; q<sizeof(Particle_PT); q++){
       Top_Stop->Fill(Particle_PT[q]);
     nstop++;
       }
-    /* if(Particle_PID[q] == 1000022){
-      MET->Fill(MissingET_MET[q]);
-      std::cout << "LSP Mother: " << Particle_PID[Particle_M1[q]] << std::endl;
-      std::cout << "LSP MET: " << MissingET_MET[q] << std::endl;
-     } */ 
   }
   if(ngluino != nstop){
     std::cout << "WRONG" << ngluino << nstop << std::endl;
   }
+
+
 
 
 
@@ -211,16 +215,16 @@ c4->Print("PtTopGluino.pdf");
 // Saving histo of PT of stop from top 
 
 c5->Clear();
-TFile *PTstop_top = new TFile("PT_825_100.root", "RECREATE");
+TFile *PTstop_top = new TFile("PT_200_100.root", "RECREATE");
 Top_Stop->Draw("hist");
 Top_Stop->Write();
 
 // MET histo
 
  c6->Clear();
- TFile *f = new TFile("MET_825_100.root", "RECREATE");
- MET->Draw("hist");
- MET->Write();
+ TFile *f = new TFile("MET_200_100.root", "RECREATE");
+ MET_histo->Draw("hist");
+ MET_histo->Write();
  c6->Print("MET.pdf");
 
 
