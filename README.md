@@ -1,7 +1,7 @@
-T14t-Analysis
+T1t1t-Analysis
 =============
 
-MyClass.h and MyClass.c files for a test T14t scan
+MyClass.h and MyClass.c files for a test T1t1t scan
 
 The scan involved is the gluino pair production resulting in the production of 4 tops and 2 LSPs. The input files 
 were .lhe and were read through Delphes -  the detector response simulation. 
