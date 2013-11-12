@@ -39,48 +39,65 @@ TH1D* TopPt = new TH1D("TopPt", "TopPt", 200, 0., 800.);
 TH1D* Top_Gluino = new TH1D("Top_Gluino", "Top_Gluino", 200, 0., 800.);
 TH1D* Top_Stop = new TH1D("Top_Stop", "Top_Stop", 200, 0., 800.);
 TH1D* MET_histo = new TH1D("MET_histo", "MET_histo", 200, 0., 2500.);
+TH1D* delR = new TH1D("delR", "delR", 0.1, 0, 1.5);
+// TH2D* Pt_top_vs_delR = new TH2D("Pt_top_vs_delR","Pt_top_vs_delR",200, 0., 400., 200, 0., 5.);
 
 
 Long64_t nentries = fChain->GetEntries();
 Long64_t nents = b_Particle_PID->GetEntries();
 
- // Declaring things to use
+ // Declaring particles involved
 
-TLorentzVector t, tbar, gluino, LSP, stop;
+TLorentzVector t, tbar, gluino, LSP1, LSP2, stop;
 Double_t Rcut = 0.5;
-Double_t dR[100], top_mass[50];
+Double_t dR[100], top_mass[50], Pt_top[sizeof(Particle_PT)];
 Double_t MET[nentries];
 
-// Delphes (tree) has 2000 entries
-// Loop through each Delphes entry:
+// Delphes (tree) has 2000 entries, loop through each entry:
 
 for(int i = 0; i<nentries; i++){
   fChain->GetEntry(i);
       std::cout << "\nNEW EVENT [" << i << " of " << nentries << "]" << std::endl;
 
-  for(unsigned int e=0; e<sizeof(GenJet_PT); e++){
-    MET[i] += abs(GenJet_PT[e]);
-    MET_histo->Fill(MET[i]);
-  }
-     std::cout << "MET[" << i << "]: " << MET[i] << std::endl;
+for(unsigned int e=0; e<sizeof(MissingET_MET); e++){
+ // std::cout << "MET: " << MissingET_MET[e] << std::endl; // Which PID gives the most MET?
+  if(MissingET_MET[e]> 5){
+  MET_histo->Fill(MissingET_MET[e]);
+ }
+}
 
 int nstop = 0;
 int ngluino = 0;
 
 for(unsigned int q=0; q<sizeof(Particle_PT); q++){
 
-    if(abs(Particle_PID[q]) == 6 && Particle_Status[q] == 2) {
-      TopPt->Fill(Particle_PT[q]);
-      std::cout << "Top Pt [" << q << "] : " << Particle_PT[q] << std::endl;
-      std::cout << "Top Mother: " << Particle_M1[q] << std::endl;
-      std::cout << "Mother PID: " << Particle_PID[Particle_M1[q]] << std::endl;
+    if(abs(Particle_PID[q]) == 6 && Particle_Status[q] == 2) {             
+      std::cout << "Found a top quark" << std::endl;
+      TopPt->Fill(Particle_PT[q]);                                            // This has contributions from gluino and stop
+      Pt_top[q] = Particle_PT[q];
+      std::cout << "'---> Top Pt [" << q << "] : " << Pt_top[q] << std::endl;
+      std::cout << "       '---> Mother PID: " << Particle_PID[Particle_M1[q]] << std::endl;
     }
-    if(abs(Particle_PID[q]) == 6 && Particle_PID[Particle_M1[q]] == 1000021){
+    if(abs(Particle_PID[q]) == 1000022){
+      std::cout << "Found LSP" << std::endl;
+      LSP1.SetPx(Particle_Px[q]);
+      LSP1.SetPy(Particle_Py[q]);
+      LSP1.SetPz(Particle_Pz[q]);
+      LSP1.SetE(Particle_E[q]);
+      std::cout << "LSP1 Px: " << LSP1.Px() << std::endl;
+      continue;
+      LSP2.SetPx(Particle_Px[q]);
+      LSP2.SetPy(Particle_Py[q]);
+      LSP2.SetPz(Particle_Pz[q]);
+      LSP2.SetE(Particle_E[q]);
+      std::cout << "LSP2 Px: " << LSP2.Px() << std::endl;
+    }
+    if(abs(Particle_PID[q]) == 6 && Particle_PID[Particle_M1[q]] == 1000021){           // 1000021 is a gluino
       Top_Gluino->Fill(Particle_PT[q]);
       ngluino++;
     }
-    if(abs(Particle_PID[q]) == 6 && abs(Particle_PID[Particle_M1[q]]) == 1000006){
-      Top_Stop->Fill(Particle_PT[q]);
+    if(abs(Particle_PID[q]) == 6 && abs(Particle_PID[Particle_M1[q]]) == 1000006){      //  1000006 is a stop
+      Top_Stop->Fill(Particle_PT[q]);         
     nstop++;
       }
   }
@@ -111,24 +128,28 @@ for(unsigned int q=0; q<sizeof(Particle_PT); q++){
 
   for(unsigned int j=0; j<sizeof(Jet_Eta); j++){
   
-//  dR[j] = sqrt((pow((Jet_Eta[j] - GenJet_Eta[j]),2) + (pow((Jet_Phi[j] - GenJet_Phi[j]),2))));
+  dR[j] = sqrt((pow((Jet_Eta[j] - GenJet_Eta[j]),2) + (pow((Jet_Phi[j] - GenJet_Phi[j]),2))));
+  //  std::cout << "Size of Delta R : " << sizeof(dR) << std::endl;
+  //std::cout << "Delta R : " << dR[j] << std::endl;
+
 
    if(Particle_PID[j] == 6){
     // std::cout << "dR[" << j << "] (PID = 6) :"<< dR[j] << std::endl;
-   // if((dR[j] < Rcut) && (dR[j] > 0.)){
-    //  std::cout << "Found a top quark" << std::endl;
+    if((dR[j] < Rcut) && (dR[j] > 0.)){
+      std::cout << "Found a top quark" << std::endl;
       t.SetPx(Particle_Px[j]);
       t.SetPy(Particle_Py[j]);
       t.SetPz(Particle_Pz[j]);
       t.SetE(Particle_E[j]);
       top_mass[j] = t.M();
       tmass->Fill(top_mass[j]);
+      delR->Fill(dR[j]);
    //   std::cout << " Particle Mother M1: " << Particle_M1[j] << std::endl;
    //   std::cout << " Particle Mother M2: " << Particle_M2[j] << std::endl;
      // std::cout << " ---> Top mass: "  << t.M() << std::endl;
     // }
     }
-    
+    }
   if (Particle_PID[j] == -6){
     // std::cout << "dR[" << j << "] (PID = -6) :"<< dR[j] << std::endl;
     if((dR[j] < Rcut) && (dR[j] > 0.)){
@@ -139,35 +160,6 @@ for(unsigned int q=0; q<sizeof(Particle_PT); q++){
       tbar.SetE(Particle_E[j]);
       //std::cout << " ---> Anti top mass: " << tbar.M() << std::endl;
    } 
-  }
-
-  if (Particle_PID[j] == 1000021){
-   //   std::cout << " Found a gluino" << std::endl;
-    gluino.SetPx(Particle_Px[j]);
-    gluino.SetPy(Particle_Py[j]);
-    gluino.SetPz(Particle_Pz[j]);
-    gluino.SetE(Particle_E[j]);
-  //  std::cout << " ----> Gluino mass: " << gluino.M() << std::endl;
-  //  std::cout << " ----> Gluino status: " << Particle_Status[j] << std::endl;
-  }
-
-  if (Particle_PID[j] == 1000022){
-  //  std::cout << " Found LSP" << std::endl;
-    LSP.SetPx(Particle_Px[j]);
-    LSP.SetPy(Particle_Py[j]);
-    LSP.SetPz(Particle_Pz[j]);
-    LSP.SetE(Particle_E[j]);
- //   std::cout << " ----> LSP mass: " << LSP.M() << std::endl;
- //   std::cout << " ----> LSP status: " << Particle_Status[j] << std::endl;
-  }
-
-  if (Particle_PID[j] == 100006){
- //   std::cout << "Foud stop quark" << std::endl;
-    stop.SetPx(Particle_Px[j]);
-    stop.SetPy(Particle_Py[j]);
-    stop.SetPz(Particle_Pz[j]);
-    stop.SetE(Particle_E[j]);
-  //  std::cout << "----> Stop mass: " << stop.M() << std::endl;
   }
  }
 }
@@ -182,6 +174,7 @@ TCanvas *c3 = new TCanvas("c3", "c3", 200, 10, 600, 400);
 TCanvas *c4 = new TCanvas("c4", "c4", 200, 10, 600, 400);
 TCanvas *c5 = new TCanvas("c5", "c5", 200, 10, 600, 400);
 TCanvas *c6 = new TCanvas("c6", "c6", 200, 10, 600, 400);
+//TCanvas *c7 = new TCanvas("c7", "c7", 200, 10, 600, 400);
 TLegend *leg = new TLegend(0.6,0.7,0.89,0.89);
 
 
@@ -200,8 +193,10 @@ TopPt->Draw("hist");
 c3->Print("TopPt.pdf");
 
 c4->Clear();
+TFile *PTgluino_stop = new TFile("PTgluino_500_100.root","RECREATE");
 Top_Gluino->Draw("hist");
-Top_Gluino->SetTitle("P_{T} from stop (825 GeV) and gluino (1 TeV) ");
+Top_Gluino->Write();
+Top_Gluino->SetTitle("P_{T} from stop (800 GeV) and gluino (1 TeV) ");
 Top_Gluino->GetXaxis()->SetTitle("P_{T} of top");
 Top_Gluino->GetYaxis()->SetTitle("Entries");
 Top_Stop->Draw("SAME");
@@ -215,17 +210,24 @@ c4->Print("PtTopGluino.pdf");
 // Saving histo of PT of stop from top 
 
 c5->Clear();
-TFile *PTstop_top = new TFile("PT_200_100.root", "RECREATE");
+TFile *PTstop_top = new TFile("PT_500_100.root", "RECREATE");
 Top_Stop->Draw("hist");
 Top_Stop->Write();
 
 // MET histo
 
  c6->Clear();
- TFile *f = new TFile("MET_200_100.root", "RECREATE");
+ TFile *f = new TFile("MET_500_100.root", "RECREATE");
  MET_histo->Draw("hist");
  MET_histo->Write();
  c6->Print("MET.pdf");
+
+// Plot delta R
+
+//c7->Clear();
+//Pt_top_vs_delR->Fill(Pt_top,delR);
+//Pt_top_vs_delR->Draw("hist");
+//c7->Print("Pt_top_vs_delR.pdf");
 
 
 
