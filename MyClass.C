@@ -27,6 +27,7 @@ void MyClass::Loop()
 // Declaring histograms
 
 TH1D* h_jetPt = new TH1D("jetPt", "jetPt", 200, 0., 200.);
+TH1D* h_genjetPt = new TH1D("genjetPt", "genjetPt", 200, 0., 200.);
 TH1D* ttbar_jetpt = new TH1D("ttbar_jetpt", "ttbar_jetpt", 200, 0., 200.);
 TH1D* ttbar_genjetpt = new TH1D("ttbar_genjetpt", "ttbar_genjetpt", 200, 0., 200.);
 TH1D* tmass = new TH1D("tmass", "tmass", 200, 0., 400.);
@@ -46,13 +47,15 @@ Long64_t nents = b_Particle_PID->GetEntries();
 TLorentzVector t, tbar, gluino, LSP1, LSP2, stop;
 Double_t Rcut = 0.5;
 Double_t dR[100], top_mass[50], Pt_top[sizeof(Particle_PT)];
-Double_t MET[nentries];
+Double_t MET;
 
 // Delphes (tree) has 2000 entries, loop through each entry:
 
 for(int i = 0; i<nentries; i++){
   fChain->GetEntry(i);
       std::cout << "\nNEW EVENT [" << i << " of " << nentries << "]" << std::endl;
+      std::cout << "Jet Size: " << Jet_size << std::endl;     // Could this indicate how many jets per event?
+      std::cout << "Gen Jet Size: " << GenJet_size << std::endl;
 
 for(unsigned int e=0; e<sizeof(MissingET_MET); e++){
  // std::cout << "MET: " << MissingET_MET[e] << std::endl; // Which PID gives the most MET?
@@ -85,11 +88,9 @@ for(unsigned int q=0; q<sizeof(Particle_PT); q++){
 }
     // Compute MET
 
-     // MET[q] = sqrt(pow(LSP1.Px() + LSP2.Px(),2) + pow(LSP1.Py() + LSP2.Py(),2) + pow(LSP1.Pz() + LSP2.Pz(),2));
-     // std::cout << "MET: " << MET[q] << std::endl;
 for(unsigned int r=0; r<sizeof(Particle_PID); r++){
     if(abs(Particle_PID[r]) == 1000022 && r <= 10) {
-      std::cout << "Found LSP [" << r << "]" << std::endl;
+     // std::cout << "Found LSP [" << r << "]" << std::endl;
       LSP1.SetPx(Particle_Px[r]);
       LSP1.SetPy(Particle_Py[r]);
       LSP1.SetPz(Particle_Pz[r]);
@@ -99,7 +100,7 @@ for(unsigned int r=0; r<sizeof(Particle_PID); r++){
  //     std::cout << "LSP1 Pz: " << LSP1.Pz() << std::endl;
     }
     if(abs(Particle_PID[r]) == 1000022 && r >= 10){         // this needs to be redone
-      std::cout << "Found LSP [" << r << "]" << std::endl;
+   //   std::cout << "Found LSP [" << r << "]" << std::endl;
       LSP2.SetPx(Particle_Px[r]);
       LSP2.SetPy(Particle_Py[r]);
       LSP2.SetPz(Particle_Pz[r]);
@@ -109,24 +110,24 @@ for(unsigned int r=0; r<sizeof(Particle_PID); r++){
  //     std::cout << "LSP2 Pz: " << LSP2.Pz() << std::endl;
     }
      }
+      MET = sqrt(pow(LSP1.Px() + LSP2.Px(),2) + pow(LSP1.Py() + LSP2.Py(),2) + pow(LSP1.Pz() + LSP2.Pz(),2));
+      std::cout << "MET: " << MET << std::endl;             // Read out Px, Py, Pz to compute myself and check
+
 
   if(ngluino != nstop){
     std::cout << "WRONG" << ngluino << nstop << std::endl;
   }
 
 
-
-
-
-
-
-  // For each Delphes entry, there are numerous entries in the branches and leaves- loop through each one:
-  // NOT PART OF THE MAIN ANALYSIS
-/*
   for(unsigned int k=0; k<sizeof(Jet_PT); k++){
-    if (Jet_PT[k] < 10.) continue;
+    if (Jet_PT[k] > 10.){
     h_jetPt->Fill(Jet_PT[k]);
-    //std::cout << " Jet_PT[" << k << "]: " << Jet_PT[k]<< std::endl;
+    }
+    if(GenJet_PT[k] > 10.){
+      h_genjetPt->Fill(GenJet_PT[k]);
+    }
+    //    std::cout << " Jet_PT[" << k << "]: " << Jet_PT[k]<< std::endl;
+    //std::cout << " GenJet_PT[" << k << "]: " << GenJet_PT[k] << std::endl;
     //std::cout << " PID: " << Particle_PID[k] << std::endl;
     if (abs(Particle_PID[k] == 6)){
     ttbar_jetpt->Fill(Jet_PT[k]);
@@ -135,6 +136,11 @@ for(unsigned int r=0; r<sizeof(Particle_PID); r++){
 }
 
 
+
+
+
+
+/*
   for(unsigned int j=0; j<sizeof(Jet_Eta); j++){
   
   dR[j] = sqrt((pow((Jet_Eta[j] - GenJet_Eta[j]),2) + (pow((Jet_Phi[j] - GenJet_Phi[j]),2))));
@@ -190,8 +196,11 @@ TLegend *leg = new TLegend(0.6,0.7,0.89,0.89);
 c1->Clear();
 ttbar_jetpt->SetLineColor(8);
 h_jetPt->Draw("hist");
-ttbar_jetpt->Draw("histsame");
-c1->Print("ttbargetjetpt.pdf");
+h_jetPt->SetLineColor(2);
+h_jetPt->Draw();
+h_genjetPt->Draw("histsame");
+//ttbar_jetpt->Draw("histsame");
+c1->Print("gen_jetpt.pdf");
 
 c2->Clear();
 tmass->Draw("hist");
