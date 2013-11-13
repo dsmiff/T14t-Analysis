@@ -22,12 +22,7 @@ void MyClass::Loop()
 // METHOD2: replace line
 //    fChain->GetEntry(jentry);       //read all branches
 //by  b_branchname->GetEntry(ientry); //read only this branch
-   
-
-// Idea is to create a TLorentzVector, then to access the particular branch to separate and extract particle properties and assign them to the TLorentzVector. 
-// All branches and leaves are declared in MyClass.h
-// Here b_Particle_PID is a branch, for example
-
+                                                                                                                         
 
 // Declaring histograms
 
@@ -78,20 +73,7 @@ for(unsigned int q=0; q<sizeof(Particle_PT); q++){
       std::cout << "'---> Top Pt [" << q << "] : " << Pt_top[q] << std::endl;
       std::cout << "       '---> Mother PID: " << Particle_PID[Particle_M1[q]] << std::endl;
     }
-    if(abs(Particle_PID[q]) == 1000022){
-      std::cout << "Found LSP" << std::endl;
-      LSP1.SetPx(Particle_Px[q]);
-      LSP1.SetPy(Particle_Py[q]);
-      LSP1.SetPz(Particle_Pz[q]);
-      LSP1.SetE(Particle_E[q]);
-      std::cout << "LSP1 Px: " << LSP1.Px() << std::endl;
-      continue;
-      LSP2.SetPx(Particle_Px[q]);
-      LSP2.SetPy(Particle_Py[q]);
-      LSP2.SetPz(Particle_Pz[q]);
-      LSP2.SetE(Particle_E[q]);
-      std::cout << "LSP2 Px: " << LSP2.Px() << std::endl;
-    }
+
     if(abs(Particle_PID[q]) == 6 && Particle_PID[Particle_M1[q]] == 1000021){           // 1000021 is a gluino
       Top_Gluino->Fill(Particle_PT[q]);
       ngluino++;
@@ -100,7 +82,34 @@ for(unsigned int q=0; q<sizeof(Particle_PT); q++){
       Top_Stop->Fill(Particle_PT[q]);         
     nstop++;
       }
-  }
+}
+    // Compute MET
+
+     // MET[q] = sqrt(pow(LSP1.Px() + LSP2.Px(),2) + pow(LSP1.Py() + LSP2.Py(),2) + pow(LSP1.Pz() + LSP2.Pz(),2));
+     // std::cout << "MET: " << MET[q] << std::endl;
+for(unsigned int r=0; r<sizeof(Particle_PID); r++){
+    if(abs(Particle_PID[r]) == 1000022 && r <= 10) {
+      std::cout << "Found LSP [" << r << "]" << std::endl;
+      LSP1.SetPx(Particle_Px[r]);
+      LSP1.SetPy(Particle_Py[r]);
+      LSP1.SetPz(Particle_Pz[r]);
+      LSP1.SetE(Particle_E[r]);
+ //     std::cout << "LSP1 Px: " << LSP1.Px() << std::endl;
+ //     std::cout << "LSP1 Py: " << LSP1.Py() << std::endl;
+ //     std::cout << "LSP1 Pz: " << LSP1.Pz() << std::endl;
+    }
+    if(abs(Particle_PID[r]) == 1000022 && r >= 10){         // this needs to be redone
+      std::cout << "Found LSP [" << r << "]" << std::endl;
+      LSP2.SetPx(Particle_Px[r]);
+      LSP2.SetPy(Particle_Py[r]);
+      LSP2.SetPz(Particle_Pz[r]);
+      LSP2.SetE(Particle_E[r]);
+ //     std::cout << "LSP2 Px: " << LSP2.Px() << std::endl;
+ //     std::cout << "LSP2 Py: " << LSP2.Py() << std::endl;
+ //     std::cout << "LSP2 Pz: " << LSP2.Pz() << std::endl;
+    }
+     }
+
   if(ngluino != nstop){
     std::cout << "WRONG" << ngluino << nstop << std::endl;
   }
@@ -113,7 +122,7 @@ for(unsigned int q=0; q<sizeof(Particle_PT); q++){
 
   // For each Delphes entry, there are numerous entries in the branches and leaves- loop through each one:
   // NOT PART OF THE MAIN ANALYSIS
-
+/*
   for(unsigned int k=0; k<sizeof(Jet_PT); k++){
     if (Jet_PT[k] < 10.) continue;
     h_jetPt->Fill(Jet_PT[k]);
@@ -161,7 +170,7 @@ for(unsigned int q=0; q<sizeof(Particle_PT); q++){
       //std::cout << " ---> Anti top mass: " << tbar.M() << std::endl;
    } 
   }
- }
+ } */
 }
 
 
