@@ -9,6 +9,7 @@
 #include <TMath.h>
 #include <TRefArray.h>
 #include <TLegend.h>
+#include <TObject.h>
 #include <iostream>
 
 using namespace std;
@@ -44,7 +45,7 @@ Long64_t nents = b_Particle_PID->GetEntries();
 
  // Declaring particles involved
 
-TLorentzVector t, tbar, gluino, LSP1, LSP2, stop;
+TLorentzVector gluino, LSP1, LSP2, stop;
 Double_t Rcut = 0.5;
 Double_t dR[100], top_mass[50], Pt_top[sizeof(Particle_PT)];
 Double_t MET;
@@ -54,8 +55,6 @@ Double_t MET;
 for(int i = 0; i<nentries; i++){
   fChain->GetEntry(i);
       std::cout << "\nNEW EVENT [" << i << " of " << nentries << "]" << std::endl;
-      std::cout << "Jet Size: " << Jet_size << std::endl;     // Could this indicate how many jets per event?
-      std::cout << "Gen Jet Size: " << GenJet_size << std::endl;
 
 for(unsigned int e=0; e<sizeof(MissingET_MET); e++){
  // std::cout << "MET: " << MissingET_MET[e] << std::endl; // Which PID gives the most MET?
@@ -86,30 +85,31 @@ for(unsigned int q=0; q<sizeof(Particle_PT); q++){
     nstop++;
       }
 }
-    // Compute MET
+    // Compute MET 
+    // THIS IS WRONG NEED TO FIX
 
+Bool_t found1 = true;
 for(unsigned int r=0; r<sizeof(Particle_PID); r++){
-    if(abs(Particle_PID[r]) == 1000022 && r <= 10) {
-     // std::cout << "Found LSP [" << r << "]" << std::endl;
+    if(abs(Particle_PID[r]) == 1000022) {
       LSP1.SetPx(Particle_Px[r]);
       LSP1.SetPy(Particle_Py[r]);
       LSP1.SetPz(Particle_Pz[r]);
       LSP1.SetE(Particle_E[r]);
- //     std::cout << "LSP1 Px: " << LSP1.Px() << std::endl;
- //     std::cout << "LSP1 Py: " << LSP1.Py() << std::endl;
- //     std::cout << "LSP1 Pz: " << LSP1.Pz() << std::endl;
-    }
-    if(abs(Particle_PID[r]) == 1000022 && r >= 10){         // this needs to be redone
-   //   std::cout << "Found LSP [" << r << "]" << std::endl;
+      found1 = false;
+      //std::cout << "LSP1 Px [" << r << "] : " << LSP1.Px() << std::endl;
+      //std::cout << "LSP1 Py: " << LSP1.Py() << std::endl;
+      //std::cout << "LSP1 Pz: " << LSP1.Pz() << std::endl;
+  }
+    if(abs(Particle_PID[r]) == 1000022 && found1){   
       LSP2.SetPx(Particle_Px[r]);
       LSP2.SetPy(Particle_Py[r]);
       LSP2.SetPz(Particle_Pz[r]);
       LSP2.SetE(Particle_E[r]);
- //     std::cout << "LSP2 Px: " << LSP2.Px() << std::endl;
- //     std::cout << "LSP2 Py: " << LSP2.Py() << std::endl;
- //     std::cout << "LSP2 Pz: " << LSP2.Pz() << std::endl;
+      //std::cout << "LSP2 Px [" << r << "] : " << LSP2.Px() << std::endl;
+      //std::cout << "LSP2 Py: " << LSP2.Py() << std::endl;
+      //std::cout << "LSP2 Pz: " << LSP2.Pz() << std::endl;
     }
-     }
+}
       MET = sqrt(pow(LSP1.Px() + LSP2.Px(),2) + pow(LSP1.Py() + LSP2.Py(),2) + pow(LSP1.Pz() + LSP2.Pz(),2));
       std::cout << "MET: " << MET << std::endl;             // Read out Px, Py, Pz to compute myself and check
 
@@ -120,19 +120,19 @@ for(unsigned int r=0; r<sizeof(Particle_PID); r++){
 
 
   for(unsigned int k=0; k<sizeof(Jet_PT); k++){
+    if(Jet_PT[k] < 20) continue;
+    std::cout << "Jet Pt[" << k << "] : " << Jet_PT[k]<< std::endl;
     if (Jet_PT[k] > 10.){
     h_jetPt->Fill(Jet_PT[k]);
     }
     if(GenJet_PT[k] > 10.){
       h_genjetPt->Fill(GenJet_PT[k]);
     }
-    //    std::cout << " Jet_PT[" << k << "]: " << Jet_PT[k]<< std::endl;
-    //std::cout << " GenJet_PT[" << k << "]: " << GenJet_PT[k] << std::endl;
-    //std::cout << " PID: " << Particle_PID[k] << std::endl;
-    if (abs(Particle_PID[k] == 6)){
+    if(abs(Particle_PID[k]) == 6){
+      std::cout << "Jet PT for t: " << Jet_PT[k] << std::endl;
     ttbar_jetpt->Fill(Jet_PT[k]);
     ttbar_genjetpt->Fill(GenJet_PT[k]);
-    }
+    } 
 }
 
 
