@@ -14,7 +14,7 @@
 
 using namespace std;
 
-/*
+
 int MyClass::GetNJets(){
 
   int nJet = 0;
@@ -24,7 +24,8 @@ int MyClass::GetNJets(){
     nJet++;
   }
   std::cout << "NJets: " << nJet << std::endl;
- } */
+ } 
+  
 
 
 void MyClass::Loop()
@@ -101,7 +102,9 @@ for(unsigned int q=0; q<sizeof(Particle_PT); q++){
 
     // Compute MET 
     // THIS IS WRONG NEED TO FIX
-
+  
+void MyClass::LSPs()
+{
 Bool_t found1 = true;
 for(unsigned int r=0; r<sizeof(Particle_PID); r++){
     if(abs(Particle_PID[r]) == 1000022) {
@@ -127,15 +130,14 @@ for(unsigned int r=0; r<sizeof(Particle_PID); r++){
       MET = sqrt(pow(LSP1.Px() + LSP2.Px(),2) + pow(LSP1.Py() + LSP2.Py(),2) + pow(LSP1.Pz() + LSP2.Pz(),2));
   //    std::cout << "MET: " << MET << std::endl;             // Read out Px, Py, Pz to compute myself and check
 
-
-
+}
 
 
 
   for(unsigned int k=0; k<sizeof(Jet_PT); k++){
     if(Jet_PT[k] > 20. && Jet_Mass[k] > 0.1){
-  // std::cout << "Jet Pt[" << k << "] : " << Jet_PT[k]<< std::endl;
- //   std::cout << "Jet Mass: " << Jet_Mass[k] << std::endl;
+   std::cout << "Jet Pt[" << k << "] : " << Jet_PT[k]<< std::endl;
+   std::cout << "Jet Mass: " << Jet_Mass[k] << std::endl;
     Jet_ET[k] = sqrt(pow(Jet_PT[k],2) + pow(Jet_Mass[k],2));
   //  std::cout << "Jet ET[" << k << "] : " << Jet_ET[k]  << std::endl;
     HT+=Jet_ET[k];
@@ -214,8 +216,6 @@ TCanvas *c1 = new TCanvas("c1", "c1", 200, 10, 600, 400);
 TCanvas *c2 = new TCanvas("c2", "c2", 200, 10, 600, 400);
 TCanvas *c3 = new TCanvas("c3", "c3", 200, 10, 600, 400);
 TCanvas *c4 = new TCanvas("c4", "c4", 200, 10, 600, 400);
-TCanvas *c5 = new TCanvas("c5", "c5", 200, 10, 600, 400);
-TCanvas *c6 = new TCanvas("c6", "c6", 200, 10, 600, 400);
 TCanvas *c7 = new TCanvas("c7", "c7", 200, 10, 600, 400);
 TLegend *leg = new TLegend(0.6,0.7,0.89,0.89);
 
@@ -255,29 +255,18 @@ c4->Print("PtTopGluino.pdf");
 
 // Saving histo of PT of stop from top 
 
-c5->Clear();
 TFile *PTstop_top = new TFile("PT_pyth_500_100.root", "RECREATE");
 Top_Stop->Write();
 
+TFile *f = new TFile("MET_pyth_500_100.root", "RECREATE");
+MET_histo->Draw("hist");
+MET_histo->Write();
 
-// MET histo
-
- c6->Clear();
- TFile *f = new TFile("MET_pyth_500_100.root", "RECREATE");
- MET_histo->Draw("hist");
- MET_histo->Write();
- //c6->Print("MET.pdf");
-
-// Plot delta R
-
-//c7->Clear();
-//Pt_top_vs_delR->Fill(Pt_top,delR);
-//Pt_top_vs_delR->Draw("hist");
-//c7->Print("Pt_top_vs_delR.pdf");
 
 c7->Clear();
 TFile *g = new TFile("JetET.root", "RECREATE");
 JetET->Write();
+c7->Print("JetET.pdf");
 
 
 }
