@@ -1,5 +1,6 @@
 // Should work for comparitive plots where only rootname and name of histo would need to changed 
 // Dominic Smith Nov 13
+// Testing for MyClass
 
 void MG_PY_plots()
 {
@@ -30,8 +31,10 @@ void MG_PY_plots()
   TH1F *h1 = (TH1F*)rootfile->Get("Top_Stop");
   h1->Draw();
   Double_t norm_factor1 = h1->GetIntegral();
+  Double_t entries1 = h1->GetEntries();
   std::cout << "NORM: " << norm_factor1 << std::endl;
-  h1->Scale(1/norm_factor1);
+  std::cout << "# Entries for Pythia generated histo: " << entries1 << std::endl;
+  h1->Scale(4/norm_factor1);
   h1->Draw();
 
 
@@ -39,7 +42,9 @@ void MG_PY_plots()
   h2->Draw("SAME");
   h2->SetLineColor(6);
   Double_t norm_factor2 = h2->GetIntegral();
+  Double_t entries2 = h2->GetEntries();
   std::cout << "NORM2: " << norm_factor2 << std::endl;
+  std::cout << "# Entries for MadGraph generated histo: " << entries2 << std::endl;
   h2->Scale(1/norm_factor1);
   h2->Draw("SAME");
 
