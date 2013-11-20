@@ -13,6 +13,7 @@
 #include <TFile.h>
 #include <TRef.h>
 #include <TRefArray.h>
+#include <TH1.h>
 
 // Need to include TRef and TRefArray
 // Header file for the classes stored in the TTree if any.
@@ -411,6 +412,23 @@ public :
    TBranch        *b_ScalarHT_HT;   //!
    TBranch        *b_ScalarHT_size;   //!
 
+   // Declaration of histograms
+
+   TH1D* JetPT;
+   TH1D* h_genjetPt;
+   TH1D* ttbar;
+   TH1D* ttbar_jetpt;
+   TH1D* ttbar_genjetpt;
+   TH1D* tmass;
+   TH1D* TopPt;
+   TH1D* Top_Gluino;
+   TH1D* Top_Stop;
+   TH1D* MET_histo;
+   TH1D* delR;
+   TH1D* JetET;
+
+
+
    MyClass(TTree *tree=0);
    virtual ~MyClass();
    virtual Int_t    Cut(Long64_t entry);
@@ -420,6 +438,7 @@ public :
    virtual void     Loop();
    virtual Bool_t   Notify();
    virtual void     Show(Long64_t entry = -1);
+ //  int GetNJets();
 };
 
 #endif
@@ -430,9 +449,9 @@ MyClass::MyClass(TTree *tree) : fChain(0)
 // if parameter tree is not specified (or zero), connect the file
 // used to generate this class and read the Tree.
    if (tree == 0) {
-      TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("delphes_500_100_output.root");
+      TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("delphes_pyth_500_100_output.root");
       if (!f || !f->IsOpen()) {
-         f = new TFile("delphes_500_100_output.root");
+         f = new TFile("delphes_pyth_500_100_output.root");
       }
       f->GetObject("Delphes",tree);
 
