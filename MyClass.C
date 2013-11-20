@@ -14,6 +14,20 @@
 
 using namespace std;
 
+/*
+int MyClass::GetNJets(){
+
+  int nJet = 0;
+  for (int i = 0; i < sizeof(Jet_PT); ++i)
+  {
+    if (Jet_PT[i]<10.) continue;
+    nJet++;
+  }
+
+  return nJet;
+}
+*/
+
 void MyClass::Loop()
 {
 // To read only selected branches, Insert statements like:
@@ -27,17 +41,20 @@ void MyClass::Loop()
 
 // Declaring histograms
 
-TH1D* JetPT = new TH1D("jetPt", "jetPt", 200, 0., 200.);
-TH1D* h_genjetPt = new TH1D("genjetPt", "genjetPt", 200, 0., 200.);
-TH1D* ttbar_jetpt = new TH1D("ttbar_jetpt", "ttbar_jetpt", 200, 0., 200.);
-TH1D* ttbar_genjetpt = new TH1D("ttbar_genjetpt", "ttbar_genjetpt", 200, 0., 200.);
-TH1D* tmass = new TH1D("tmass", "tmass", 200, 0., 400.);
-TH1D* TopPt = new TH1D("TopPt", "TopPt", 200, 0., 800.);
-TH1D* Top_Gluino = new TH1D("Top_Gluino", "Top_Gluino", 200, 0., 800.);
-TH1D* Top_Stop = new TH1D("Top_Stop", "Top_Stop", 200, 0., 800.);
-TH1D* MET_histo = new TH1D("MET_histo", "MET_histo", 200, 0., 2500.);
-TH1D* delR = new TH1D("delR", "delR", 0.1, 0, 1.5);
-TH1D* JetET = new TH1D("JetET", "JetET", 200, 0., 400.);
+TH1::SetDefaultSumw2();
+
+  JetPT = new TH1D("jetPt", "jetPt", 200, 0., 200.);
+//JetPT->Sumw2();
+  h_genjetPt = new TH1D("genjetPt", "genjetPt", 200, 0., 200.);
+  ttbar_jetpt = new TH1D("ttbar_jetpt", "ttbar_jetpt", 200, 0., 200.);
+  ttbar_genjetpt = new TH1D("ttbar_genjetpt", "ttbar_genjetpt", 200, 0., 200.);
+  tmass = new TH1D("tmass", "tmass", 200, 0., 400.);
+  TopPt = new TH1D("TopPt", "TopPt", 200, 0., 800.);
+  Top_Gluino = new TH1D("Top_Gluino", "Top_Gluino", 200, 0., 800.);
+  Top_Stop = new TH1D("Top_Stop", "Top_Stop", 200, 0., 800.);
+  MET_histo = new TH1D("MET_histo", "MET_histo", 200, 0., 2500.);
+  delR = new TH1D("delR", "delR", 0.1, 0, 1.5);
+  JetET = new TH1D("JetET", "JetET", 200, 0., 1500.);
 // TH2D* Pt_top_vs_delR = new TH2D("Pt_top_vs_delR","Pt_top_vs_delR",200, 0., 400., 200, 0., 5.);
 
 
@@ -48,9 +65,8 @@ Long64_t nents = b_Particle_PID->GetEntries();
 
 TLorentzVector gluino, LSP1, LSP2, stop;
 Double_t Rcut = 0.5;
-Double_t dR[100], Pt_top[sizeof(Particle_PT)], Jet_ET[kMaxJet];
-Double_t MET, HT;
-Double_t JetHT[kMaxJet];
+Double_t dR[100], Pt_top[sizeof(Particle_PT)];
+Double_t MET;
 
 // Delphes (tree) has 2000 entries, loop through each entry:
 
@@ -68,15 +84,19 @@ for(unsigned int e=0; e<sizeof(MissingET_MET); e++){
 int nstop = 0;
 int ngluino = 0;
 int njets = 0;
+Double_t HT = 0.0;
+Double_t Jet_ET[kMaxEvent];
+
+
 
 for(unsigned int q=0; q<sizeof(Particle_PT); q++){
 
     if(abs(Particle_PID[q]) == 6 && Particle_Status[q] == 2) {             
-      std::cout << "Found a top quark" << std::endl;
+   //   std::cout << "Found a top quark" << std::endl;
       TopPt->Fill(Particle_PT[q]);                                            // This has contributions from gluino and stop
       Pt_top[q] = Particle_PT[q];
-      std::cout << "'---> Top Pt [" << q << "] : " << Pt_top[q] << std::endl;
-      std::cout << "       '---> Mother PID: " << Particle_PID[Particle_M1[q]] << std::endl;
+   //   std::cout << "'---> Top Pt [" << q << "] : " << Pt_top[q] << std::endl;
+    //  std::cout << "       '---> Mother PID: " << Particle_PID[Particle_M1[q]] << std::endl;
     }
 
     if(abs(Particle_PID[q]) == 6 && Particle_PID[Particle_M1[q]] == 1000021){           // 1000021 is a gluino
@@ -123,17 +143,15 @@ for(unsigned int r=0; r<sizeof(Particle_PID); r++){
 
 
   for(unsigned int k=0; k<sizeof(Jet_PT); k++){
-    if(Jet_PT[k] > 20.){
-//    std::cout << "Jet Pt[" << k << "] : " << Jet_PT[k]<< std::endl;
-//    std::cout << "Jet Mass: " << Jet_Mass[k] << std::endl;
+    if(Jet_PT[k] > 20. && Jet_Mass[k] > 0.1){
+  // std::cout << "Jet Pt[" << k << "] : " << Jet_PT[k]<< std::endl;
+ //   std::cout << "Jet Mass: " << Jet_Mass[k] << std::endl;
     Jet_ET[k] = sqrt(pow(Jet_PT[k],2) + pow(Jet_Mass[k],2));
-    JetHT[k] = Jet_ET[k];
-    std::cout << "Jet ET[" << k << "] : " << Jet_ET[k] << std::endl;
-    JetET->Fill(Jet_ET[k]);
+  //  std::cout << "Jet ET[" << k << "] : " << Jet_ET[k]  << std::endl;
+    HT+=Jet_ET[k];
     JetPT->Fill(Jet_PT[k]);
     njets++;
     }
-    HT+=JetHT[k];
     if(GenJet_PT[k] > 10.){
       h_genjetPt->Fill(GenJet_PT[k]);
     }
@@ -143,8 +161,11 @@ for(unsigned int r=0; r<sizeof(Particle_PID); r++){
     ttbar_genjetpt->Fill(GenJet_PT[k]);
     } 
 }
-std::cout << "Number of jets per event: " << njets << std::endl;
-std::cout << "HT: " << HT << std::endl;
+ // std::cout << "Number of jets per event: " << njets << std::endl;
+  std::cout << HT << std::endl;
+  JetET->Fill(HT);
+
+
 
 
 
@@ -217,21 +238,21 @@ JetPT->GetXaxis()->SetTitle("P_{T} of jets");
 JetPT->GetYaxis()->SetTitle("Entries");
 //h_genjetPt->Draw("histsame");
 //ttbar_jetpt->Draw("histsame");
-c1->Print("jetpt.pdf");
+//c1->Print("jetpt.pdf");
 
 c2->Clear();
 tmass->Draw("hist");
-c2->Print("top_mass.pdf");
+//c2->Print("top_mass.pdf");
 
 c3->Clear();
 TopPt->Draw("hist");
-c3->Print("TopPt.pdf");
+//c3->Print("TopPt.pdf");
 
 c4->Clear();
-TFile *PTgluino_stop = new TFile("PTgluino_800_400.root","RECREATE");
+TFile *PTgluino_stop = new TFile("PTgluino_500_300.root","RECREATE");
 Top_Gluino->Draw("hist");
 Top_Gluino->Write();
-Top_Gluino->SetTitle("P_{T} from stop (800 GeV) and gluino (1 TeV) ");
+Top_Gluino->SetTitle("P_{T} from stop (500 GeV) and gluino (1 TeV) ");
 Top_Gluino->GetXaxis()->SetTitle("P_{T} of top");
 Top_Gluino->GetYaxis()->SetTitle("Entries");
 Top_Stop->Draw("SAME");
@@ -245,17 +266,17 @@ c4->Print("PtTopGluino.pdf");
 // Saving histo of PT of stop from top 
 
 c5->Clear();
-TFile *PTstop_top = new TFile("PT_800_400.root", "RECREATE");
-Top_Stop->Draw("hist");
+TFile *PTstop_top = new TFile("PT_pyth_500_100.root", "RECREATE");
 Top_Stop->Write();
+
 
 // MET histo
 
  c6->Clear();
- TFile *f = new TFile("MET_800_400.root", "RECREATE");
+ TFile *f = new TFile("MET_pyth_500_100.root", "RECREATE");
  MET_histo->Draw("hist");
  MET_histo->Write();
- c6->Print("MET.pdf");
+ //c6->Print("MET.pdf");
 
 // Plot delta R
 
@@ -265,7 +286,10 @@ Top_Stop->Write();
 //c7->Print("Pt_top_vs_delR.pdf");
 
 c7->Clear();
+TFile *g = new TFile("JetET.root", "RECREATE");
 JetET->Draw("hist");
+JetET->Write();
+c7->SetLogy(1);
 c7->Print("JetET.pdf");
 
 
