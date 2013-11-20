@@ -43,26 +43,23 @@ void MG_PY_plots_test()
 
   TH1F *h1 = (TH1F*)rootfile->Get("Top_Stop");
   c0_1->cd();
-  h1->Draw();
+  h1->Draw("hist");
   h1->RebinX(5);
-  Double_t norm_factor1 = h1->GetIntegral();
+  h1->GetXaxis()->SetRangeUser(0,600);
   Double_t entries1 = h1->GetEntries();
-  std::cout << "NORM: " << norm_factor1 << std::endl;
   std::cout << "# Entries for Pythia generated histo: " << entries1 << std::endl;
-  h1->Scale(4/norm_factor1);
+  h1->Scale(1/entries1);
   h1->SetTitle("P_{T} disbn for top from stops for Pythia and MG generated events");
   h1->GetYaxis()->SetTitle("Entries normalised");
 
 
   TH1F *h2 = (TH1F*)rootfile2->Get("Top_Stop");
-  h2->Draw("SAME");
+  h2->Draw("SAME L");
   h2->RebinX(5);
   h2->SetLineColor(9);
-  Double_t norm_factor2 = h2->GetIntegral();
   Double_t entries2 = h2->GetEntries();
-  std::cout << "NORM2: " << norm_factor2 << std::endl;
   std::cout << "# Entries for MadGraph generated histo: " << entries2 << std::endl;
-  h2->Scale(1/norm_factor1);
+  h2->Scale(1/entries2);
 
 
   leg->AddEntry(h1, "Pythia generated events for top P_{T}, m_{t} = 500 GeV & m_{lsp} = 100 GeV", "l");
@@ -78,6 +75,7 @@ void MG_PY_plots_test()
   ratio->SetMarkerSize(0.7);
   ratio->SetLineWidth(1);
   ratio->SetLineColor(1);
+  ratio->GetXaxis()->SetTitle("P_{T}");
   ratio->GetYaxis()->SetTitle("Ratio");
   ratio->Draw("E1");
 
