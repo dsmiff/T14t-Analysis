@@ -14,6 +14,7 @@
 #include <TRef.h>
 #include <TRefArray.h>
 #include <TH1.h>
+#include <TLorentzVector.h>
 
 // Need to include TRef and TRefArray
 // Header file for the classes stored in the TTree if any.
@@ -41,6 +42,29 @@ class MyClass {
 public :
    TTree          *fChain;   //!pointer to the analyzed TTree or TChain
    Int_t           fCurrent; //!current Tree number in a TChain
+
+   // Histograms
+
+   TH1D* JetPT;
+   TH1D* h_genjetPt;
+   TH1D* ttbar;
+   TH1D* ttbar_jetpt;
+   TH1D* ttbar_genjetpt;
+   TH1D* tmass;
+   TH1D* TopPt;
+   TH1D* Top_Gluino;
+   TH1D* Top_Stop;
+   TH1D* MET_histo;
+   TH1D* delR;
+   TH1D* JetET;
+
+   // Particles
+
+   TLorentzVector gluino, LSP1, LSP2, stop;
+   Double_t Rcut = 0.5;
+   Double_t MET;
+
+
 
    // Declaration of leaf types
    Int_t           Event_;
@@ -412,20 +436,8 @@ public :
    TBranch        *b_ScalarHT_HT;   //!
    TBranch        *b_ScalarHT_size;   //!
 
-   // Declaration of histograms
 
-   TH1D* JetPT;
-   TH1D* h_genjetPt;
-   TH1D* ttbar;
-   TH1D* ttbar_jetpt;
-   TH1D* ttbar_genjetpt;
-   TH1D* tmass;
-   TH1D* TopPt;
-   TH1D* Top_Gluino;
-   TH1D* Top_Stop;
-   TH1D* MET_histo;
-   TH1D* delR;
-   TH1D* JetET;
+
 
 
 
@@ -438,7 +450,9 @@ public :
    virtual void     Loop();
    virtual Bool_t   Notify();
    virtual void     Show(Long64_t entry = -1);
- //  int GetNJets();
+  // virtual int     GetNJets(); 
+
+
 };
 
 #endif
