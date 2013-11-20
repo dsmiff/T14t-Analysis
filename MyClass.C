@@ -23,28 +23,18 @@ int MyClass::GetNJets(){
     if (Jet_PT[i]<10.) continue;
     nJet++;
   }
+  std::cout << "NJets: " << nJet << std::endl;
+ } */
 
-  return nJet;
-}
-*/
 
 void MyClass::Loop()
 {
-// To read only selected branches, Insert statements like:
-// METHOD1:
-//    fChain->SetBranchStatus("*",0);  // disable all branches
-//    fChain->SetBranchStatus("branchname",1);  // activate branchname
-// METHOD2: replace line
-//    fChain->GetEntry(jentry);       //read all branches
-//by  b_branchname->GetEntry(ientry); //read only this branch
                                                                                                                          
-
 // Declaring histograms
 
-TH1::SetDefaultSumw2();
+  TH1::SetDefaultSumw2();
 
   JetPT = new TH1D("jetPt", "jetPt", 200, 0., 200.);
-//JetPT->Sumw2();
   h_genjetPt = new TH1D("genjetPt", "genjetPt", 200, 0., 200.);
   ttbar_jetpt = new TH1D("ttbar_jetpt", "ttbar_jetpt", 200, 0., 200.);
   ttbar_genjetpt = new TH1D("ttbar_genjetpt", "ttbar_genjetpt", 200, 0., 200.);
@@ -55,24 +45,20 @@ TH1::SetDefaultSumw2();
   MET_histo = new TH1D("MET_histo", "MET_histo", 200, 0., 2500.);
   delR = new TH1D("delR", "delR", 0.1, 0, 1.5);
   JetET = new TH1D("JetET", "JetET", 200, 0., 1500.);
-// TH2D* Pt_top_vs_delR = new TH2D("Pt_top_vs_delR","Pt_top_vs_delR",200, 0., 400., 200, 0., 5.);
+
 
 
 Long64_t nentries = fChain->GetEntries();
 Long64_t nents = b_Particle_PID->GetEntries();
 
- // Declaring particles involved
-
-TLorentzVector gluino, LSP1, LSP2, stop;
-Double_t Rcut = 0.5;
-Double_t dR[100], Pt_top[sizeof(Particle_PT)];
-Double_t MET;
-
-// Delphes (tree) has 2000 entries, loop through each entry:
-
 for(int i = 0; i<nentries; i++){
   fChain->GetEntry(i);
       std::cout << "\nNEW EVENT [" << i << " of " << nentries << "]" << std::endl;
+
+
+
+
+
 
 for(unsigned int e=0; e<sizeof(MissingET_MET); e++){
  // std::cout << "MET: " << MissingET_MET[e] << std::endl; // Which PID gives the most MET?
@@ -86,6 +72,7 @@ int ngluino = 0;
 int njets = 0;
 Double_t HT = 0.0;
 Double_t Jet_ET[kMaxEvent];
+Double_t dR[100], Pt_top[sizeof(Particle_PT)];
 
 
 
@@ -108,6 +95,10 @@ for(unsigned int q=0; q<sizeof(Particle_PT); q++){
     nstop++;
       }
 }
+  if(ngluino != nstop){
+    std::cout << "WRONG" << ngluino << nstop << std::endl;
+  }
+
     // Compute MET 
     // THIS IS WRONG NEED TO FIX
 
@@ -119,27 +110,26 @@ for(unsigned int r=0; r<sizeof(Particle_PID); r++){
       LSP1.SetPz(Particle_Pz[r]);
       LSP1.SetE(Particle_E[r]);
       found1 = false;
-      //std::cout << "LSP1 Px [" << r << "] : " << LSP1.Px() << std::endl;
-      //std::cout << "LSP1 Py: " << LSP1.Py() << std::endl;
-      //std::cout << "LSP1 Pz: " << LSP1.Pz() << std::endl;
+      std::cout << "LSP1 Px [" << r << "] : " << LSP1.Px() << std::endl;
+      std::cout << "LSP1 Py: " << LSP1.Py() << std::endl;
+      std::cout << "LSP1 Pz: " << LSP1.Pz() << std::endl;
   }
     if(abs(Particle_PID[r]) == 1000022 && found1){   
       LSP2.SetPx(Particle_Px[r]);
       LSP2.SetPy(Particle_Py[r]);
       LSP2.SetPz(Particle_Pz[r]);
       LSP2.SetE(Particle_E[r]);
-      //std::cout << "LSP2 Px [" << r << "] : " << LSP2.Px() << std::endl;
-      //std::cout << "LSP2 Py: " << LSP2.Py() << std::endl;
-      //std::cout << "LSP2 Pz: " << LSP2.Pz() << std::endl;
+      std::cout << "LSP2 Px [" << r << "] : " << LSP2.Px() << std::endl;
+      std::cout << "LSP2 Py: " << LSP2.Py() << std::endl;
+      std::cout << "LSP2 Pz: " << LSP2.Pz() << std::endl;
     }
 }
       MET = sqrt(pow(LSP1.Px() + LSP2.Px(),2) + pow(LSP1.Py() + LSP2.Py(),2) + pow(LSP1.Pz() + LSP2.Pz(),2));
   //    std::cout << "MET: " << MET << std::endl;             // Read out Px, Py, Pz to compute myself and check
 
 
-  if(ngluino != nstop){
-    std::cout << "WRONG" << ngluino << nstop << std::endl;
-  }
+
+
 
 
   for(unsigned int k=0; k<sizeof(Jet_PT); k++){
@@ -287,14 +277,11 @@ Top_Stop->Write();
 
 c7->Clear();
 TFile *g = new TFile("JetET.root", "RECREATE");
-JetET->Draw("hist");
 JetET->Write();
-c7->SetLogy(1);
-c7->Print("JetET.pdf");
 
 
 }
-
+/*
 int  run(){
 
   MyClass m;
@@ -303,7 +290,7 @@ int  run(){
 
   return 0;
 }
-
+*/
 
 
 
