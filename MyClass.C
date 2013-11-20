@@ -102,9 +102,9 @@ for(unsigned int q=0; q<sizeof(Particle_PT); q++){
 
     // Compute MET 
     // THIS IS WRONG NEED TO FIX
-  
-void MyClass::LSPs()
-{
+
+
+
 Bool_t found1 = true;
 for(unsigned int r=0; r<sizeof(Particle_PID); r++){
     if(abs(Particle_PID[r]) == 1000022) {
@@ -126,11 +126,27 @@ for(unsigned int r=0; r<sizeof(Particle_PID); r++){
       std::cout << "LSP2 Py: " << LSP2.Py() << std::endl;
       std::cout << "LSP2 Pz: " << LSP2.Pz() << std::endl;
     }
+    if(abs(Particle_PID[r]) == 1000021){
+      g1.SetPx(Particle_Px[r]);
+      g1.SetPy(Particle_Py[r]);
+      g1.SetPz(Particle_Pz[r]);
+      g1.SetE(Particle_E[r]);
+      found1 = false;
+      std::cout << "Gluino 1 Px [" << "] : " << g1.Px() << std::endl;
+    }
+    if(abs(Particle_PID[r]) == 1000021 && found1){
+      g2.SetPx(Particle_Px[r]);
+      g2.SetPy(Particle_Py[r]);
+      g2.SetPz(Particle_Pz[r]);
+      g2.SetE(Particle_E[r]);
+      std::cout << "Glunio 2 Px [" << "] : " << std::endl;
+    }
 }
-      MET = sqrt(pow(LSP1.Px() + LSP2.Px(),2) + pow(LSP1.Py() + LSP2.Py(),2) + pow(LSP1.Pz() + LSP2.Pz(),2));
-  //    std::cout << "MET: " << MET << std::endl;             // Read out Px, Py, Pz to compute myself and check
 
-}
+     MET = sqrt(pow(LSP1.Px() + LSP2.Px(),2) + pow(LSP1.Py() + LSP2.Py(),2) + pow(LSP1.Pz() + LSP2.Pz(),2));
+
+
+
 
 
 
