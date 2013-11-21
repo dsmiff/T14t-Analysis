@@ -100,48 +100,56 @@ for(unsigned int q=0; q<sizeof(Particle_PT); q++){
     std::cout << "WRONG" << ngluino << nstop << std::endl;
   }
 
-    // Compute MET 
-    // THIS IS WRONG NEED TO FIX
 
 
+// Assigning particles their TLorentzVectors
 
-Bool_t found1 = true;
+  int nlsp = 0;
+  int nglu = 0;
+
+
 for(unsigned int r=0; r<sizeof(Particle_PID); r++){
-    if(abs(Particle_PID[r]) == 1000022) {
+    if(abs(Particle_PID[r]) == 1000022 && nlsp ==0){
       LSP1.SetPx(Particle_Px[r]);
       LSP1.SetPy(Particle_Py[r]);
       LSP1.SetPz(Particle_Pz[r]);
       LSP1.SetE(Particle_E[r]);
-      found1 = false;
       std::cout << "LSP1 Px [" << r << "] : " << LSP1.Px() << std::endl;
-      std::cout << "LSP1 Py: " << LSP1.Py() << std::endl;
-      std::cout << "LSP1 Pz: " << LSP1.Pz() << std::endl;
+      nlsp++;
+      r++;
   }
-    if(abs(Particle_PID[r]) == 1000022 && found1){   
+    if(abs(Particle_PID[r]) == 1000021 && nglu == 0){
+      g1.SetPx(Particle_Px[r]);
+      g1.SetPy(Particle_Py[r]);
+      g1.SetPz(Particle_Pz[r]);
+      g1.SetE(Particle_E[r]);
+      std::cout << "Gluino 1 Px [" << r << "] : " << g1.Px() << std::endl;
+      nglu++;
+      r++;
+    }
+    if(abs(Particle_PID[r]) == 1000022 && nlsp == 1){   
       LSP2.SetPx(Particle_Px[r]);
       LSP2.SetPy(Particle_Py[r]);
       LSP2.SetPz(Particle_Pz[r]);
       LSP2.SetE(Particle_E[r]);
       std::cout << "LSP2 Px [" << r << "] : " << LSP2.Px() << std::endl;
-      std::cout << "LSP2 Py: " << LSP2.Py() << std::endl;
-      std::cout << "LSP2 Pz: " << LSP2.Pz() << std::endl;
+      nlsp++;
+      r++;
     }
-    if(abs(Particle_PID[r]) == 1000021){
-      g1.SetPx(Particle_Px[r]);
-      g1.SetPy(Particle_Py[r]);
-      g1.SetPz(Particle_Pz[r]);
-      g1.SetE(Particle_E[r]);
-      found1 = false;
-      std::cout << "Gluino 1 Px [" << "] : " << g1.Px() << std::endl;
-    }
-    if(abs(Particle_PID[r]) == 1000021 && found1){
+    if(abs(Particle_PID[r]) == 1000021 && nglu == 1){
       g2.SetPx(Particle_Px[r]);
       g2.SetPy(Particle_Py[r]);
       g2.SetPz(Particle_Pz[r]);
       g2.SetE(Particle_E[r]);
-      std::cout << "Glunio 2 Px [" << "] : " << std::endl;
+      std::cout << "Glunio 2 Px [" << r << "] : " << g2.Px() << std::endl;
+      nglu++;
+      r++;
     }
-}
+  }
+    if( nlsp != nglu ){
+      std::cout << "No equal amount of gluinos and lsps" << std::endl;
+    }
+
 
      MET = sqrt(pow(LSP1.Px() + LSP2.Px(),2) + pow(LSP1.Py() + LSP2.Py(),2) + pow(LSP1.Pz() + LSP2.Pz(),2));
 
@@ -152,8 +160,8 @@ for(unsigned int r=0; r<sizeof(Particle_PID); r++){
 
   for(unsigned int k=0; k<sizeof(Jet_PT); k++){
     if(Jet_PT[k] > 20. && Jet_Mass[k] > 0.1){
-   std::cout << "Jet Pt[" << k << "] : " << Jet_PT[k]<< std::endl;
-   std::cout << "Jet Mass: " << Jet_Mass[k] << std::endl;
+//   std::cout << "Jet Pt[" << k << "] : " << Jet_PT[k]<< std::endl;
+//   std::cout << "Jet Mass: " << Jet_Mass[k] << std::endl;
     Jet_ET[k] = sqrt(pow(Jet_PT[k],2) + pow(Jet_Mass[k],2));
   //  std::cout << "Jet ET[" << k << "] : " << Jet_ET[k]  << std::endl;
     HT+=Jet_ET[k];
