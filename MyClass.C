@@ -14,7 +14,6 @@
 
 using namespace std;
 
-
 int MyClass::GetNJets(){
 
   int nJet = 0;
@@ -25,7 +24,6 @@ int MyClass::GetNJets(){
   }
   std::cout << "NJets: " << nJet << std::endl;
  } 
-  
 
 
 void MyClass::Loop()
@@ -46,6 +44,7 @@ void MyClass::Loop()
   MET_histo = new TH1D("MET_histo", "MET_histo", 200, 0., 2500.);
   delR = new TH1D("delR", "delR", 0.1, 0, 1.5);
   JetET = new TH1D("JetET", "JetET", 200, 0., 1500.);
+
 
 
 
@@ -108,7 +107,7 @@ for(unsigned int q=0; q<sizeof(Particle_PT); q++){
   int nlsp = 0;
   int nglu = 0;
   int ntop = 0;
-
+  int nstp = 0;
 
 for(unsigned int r=0; r<sizeof(Particle_PID); r++){
     if(abs(Particle_PID[r]) == 1000022 && nlsp ==0){
@@ -118,17 +117,8 @@ for(unsigned int r=0; r<sizeof(Particle_PID); r++){
       LSP1.SetE(Particle_E[r]);
       std::cout << "LSP1 Px [" << r << "] : " << LSP1.Px() << std::endl;
       nlsp++;
-      r++;
+      r = r+1;
   }
-    if(abs(Particle_PID[r]) == 1000021 && nglu == 0){
-      g1.SetPx(Particle_Px[r]);
-      g1.SetPy(Particle_Py[r]);
-      g1.SetPz(Particle_Pz[r]);
-      g1.SetE(Particle_E[r]);
-      std::cout << "Gluino 1 Px [" << r << "] : " << g1.Px() << std::endl;
-      nglu++;
-      r++;
-    }
     if(abs(Particle_PID[r]) == 1000022 && nlsp == 1){   
       LSP2.SetPx(Particle_Px[r]);
       LSP2.SetPy(Particle_Py[r]);
@@ -136,19 +126,51 @@ for(unsigned int r=0; r<sizeof(Particle_PID); r++){
       LSP2.SetE(Particle_E[r]);
       std::cout << "LSP2 Px [" << r << "] : " << LSP2.Px() << std::endl;
       nlsp++;
-      r++;
+      r = r+1;
+    }
+    if(abs(Particle_PID[r]) == 1000021 && nglu == 0){
+      g1.SetPx(Particle_Px[r]);
+      g1.SetPy(Particle_Py[r]);
+      g1.SetPz(Particle_Pz[r]);
+      g1.SetE(Particle_E[r]);
+      std::cout << "Gluino 1 Px [" << r << "] : " << g1.Px() << std::endl;
+      nglu++;
+      r = r+1;
     }
     if(abs(Particle_PID[r]) == 1000021 && nglu == 1){
       g2.SetPx(Particle_Px[r]);
       g2.SetPy(Particle_Py[r]);
       g2.SetPz(Particle_Pz[r]);
       g2.SetE(Particle_E[r]);
-      std::cout << "Glunio 2 Px [" << r << "] : " << g2.Px() << std::endl;
+      std::cout << "Gluino 2 Px [" << r << "] : " << g2.Px() << std::endl;
       nglu++;
-      r++;
+      r = r+1;
+    }
+    
+    if(abs(Particle_PID[r]) == 1000006 && nstp ==0){
+      stop1.SetPx(Particle_Px[r]);
+      stop1.SetPy(Particle_Py[r]);
+      stop1.SetPz(Particle_Pz[r]);
+      stop1.SetE(Particle_E[r]);
+      std::cout << "Stop 1 Px [" << r << "] : " << stop1.Px() << std::endl;
+      nstp++;
+      r = r+1;
+    }
+    if(abs(Particle_PID[r]) == 1000006 && nstp ==1){
+      stop2.SetPx(Particle_Px[r]);
+      stop2.SetPy(Particle_Py[r]);
+      stop2.SetPz(Particle_Pz[r]);
+      stop2.SetE(Particle_E[r]);
+      std::cout << "Stop 2 Px [" << r << "] : " << stop2.Px() << std::endl;
+      nstp++;
+      r = r+1;
     }
   }
-   
+  if( nglu != nlsp){
+    std::cout << "Not equal amount of LSPs and Gluinos" << std::endl;
+  }
+
+
   // Top quarks
 
     for(unsigned int s=0; s<sizeof(Particle_PID); s++){
@@ -189,9 +211,7 @@ for(unsigned int r=0; r<sizeof(Particle_PID); r++){
       s++;
     }
   }
-    if( nlsp != nglu ){
-      std::cout << "No equal amount of gluinos and lsps" << std::endl;
-    }
+
 
 
      MET = sqrt(pow(LSP1.Px() + LSP2.Px(),2) + pow(LSP1.Py() + LSP2.Py(),2) + pow(LSP1.Pz() + LSP2.Pz(),2));
