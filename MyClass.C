@@ -106,6 +106,7 @@ for(unsigned int q=0; q<sizeof(Particle_PT); q++){
 
   int nlsp = 0;
   int nglu = 0;
+  int ntop = 0;
 
 
 for(unsigned int r=0; r<sizeof(Particle_PID); r++){
@@ -144,6 +145,45 @@ for(unsigned int r=0; r<sizeof(Particle_PID); r++){
       std::cout << "Glunio 2 Px [" << r << "] : " << g2.Px() << std::endl;
       nglu++;
       r++;
+    }
+  }
+    
+    for(unsigned int s=0; s<sizeof(Particle_PID); s++){
+    if(abs(Particle_PID[s]) == 6 && ntop == 0){
+      top1.SetPx(Particle_Px[s]);
+      top1.SetPy(Particle_Py[s]);
+      top1.SetPz(Particle_Pz[s]);
+      top1.SetE(Particle_E[s]);
+      std::cout << "Top 1 Px [" << s << "] : " << top1.Px() << std::endl;
+      ntop++;
+      s++;
+    }
+    if(abs(Particle_PID[s]) == 6 && ntop ==1){
+      top2.SetPx(Particle_Px[s]);
+      top2.SetPy(Particle_Py[s]);
+      top2.SetPz(Particle_Pz[s]);
+      top2.SetE(Particle_E[s]);
+      std::cout << "Top 2 Px [" << s << "] :" << top2.Px() << std::endl;
+      ntop++;
+      s++;
+    }
+    if(abs(Particle_PID[s]) == 6 && ntop ==2){
+      top3.SetPx(Particle_Px[s]);
+      top3.SetPy(Particle_Py[s]);
+      top3.SetPz(Particle_Pz[s]);
+      top3.SetE(Particle_E[s]);
+      std::cout << "Top 3 Px [" << s << "] :" << top3.Px() << std::endl;
+      ntop++;
+      s++;
+    }
+    if(abs(Particle_PID[s]) == 6 && ntop == 3){
+      top4.SetPx(Particle_Px[s]);
+      top4.SetPy(Particle_Py[s]);
+      top4.SetPz(Particle_Pz[s]);
+      top4.SetE(Particle_E[s]);
+      std::cout << "Top 4 Px [" << s << "] :" << top4.Px() << std::endl;
+      ntop++;
+      s++;
     }
   }
     if( nlsp != nglu ){
