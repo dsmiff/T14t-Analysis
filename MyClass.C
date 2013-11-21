@@ -13,11 +13,7 @@
 #include <iostream>
 
 using namespace std;
-
-<<<<<<< HEAD
  
-=======
->>>>>>> MyClassTesting
 int MyClass::GetNJets(){
 
   int nJet = 0;
