@@ -14,7 +14,10 @@
 
 using namespace std;
 
+<<<<<<< HEAD
  
+=======
+>>>>>>> MyClassTesting
 int MyClass::GetNJets(){
 
   int nJet = 0;
@@ -25,7 +28,6 @@ int MyClass::GetNJets(){
   }
   std::cout << "NJets: " << nJet << std::endl;
  } 
-  
 
 
 void MyClass::Loop()
@@ -46,7 +48,7 @@ void MyClass::Loop()
   MET_histo = new TH1D("MET_histo", "MET_histo", 200, 0., 2500.);
   delR = new TH1D("delR", "delR", 0.1, 0, 1.5);
   JetET = new TH1D("JetET", "JetET", 200, 0., 1500.);
-
+  delphi_gluino = new TH1D("delphi_gluino","delphi_gluino", 200, -5, 5);
 
 
 Long64_t nentries = fChain->GetEntries();
@@ -103,37 +105,43 @@ for(unsigned int q=0; q<sizeof(Particle_PT); q++){
 
 
 // Assigning particles their TLorentzVectors
+// Need count ticker for non desirable particles, otherwise if statement loops infinitely  
 
   int nlsp = 0;
   int nglu = 0;
+  int ntop = 0;
+  int nstp = 0;
+
+for(unsigned int r=0; r<sizeof(Particle_PID); ){
 
 
-for(unsigned int r=0; r<sizeof(Particle_PID); r++){
+int count = 0;
+
     if(abs(Particle_PID[r]) == 1000022 && nlsp ==0){
       LSP1.SetPx(Particle_Px[r]);
       LSP1.SetPy(Particle_Py[r]);
       LSP1.SetPz(Particle_Pz[r]);
       LSP1.SetE(Particle_E[r]);
-      std::cout << "LSP1 Px [" << r << "] : " << LSP1.Px() << std::endl;
       nlsp++;
+      count++;
       r++;
   }
-    if(abs(Particle_PID[r]) == 1000021 && nglu == 0){
-      g1.SetPx(Particle_Px[r]);
-      g1.SetPy(Particle_Py[r]);
-      g1.SetPz(Particle_Pz[r]);
-      g1.SetE(Particle_E[r]);
-      std::cout << "Gluino 1 Px [" << r << "] : " << g1.Px() << std::endl;
-      nglu++;
-      r++;
-    }
     if(abs(Particle_PID[r]) == 1000022 && nlsp == 1){   
       LSP2.SetPx(Particle_Px[r]);
       LSP2.SetPy(Particle_Py[r]);
       LSP2.SetPz(Particle_Pz[r]);
       LSP2.SetE(Particle_E[r]);
-      std::cout << "LSP2 Px [" << r << "] : " << LSP2.Px() << std::endl;
       nlsp++;
+      count++;
+      r++;
+    }
+    if(abs(Particle_PID[r]) == 1000021 && nglu == 0){
+      g1.SetPx(Particle_Px[r]);
+      g1.SetPy(Particle_Py[r]);
+      g1.SetPz(Particle_Pz[r]);
+      g1.SetE(Particle_E[r]);
+      nglu++;
+      count++;
       r++;
     }
     if(abs(Particle_PID[r]) == 1000021 && nglu == 1){
@@ -141,17 +149,75 @@ for(unsigned int r=0; r<sizeof(Particle_PID); r++){
       g2.SetPy(Particle_Py[r]);
       g2.SetPz(Particle_Pz[r]);
       g2.SetE(Particle_E[r]);
-      std::cout << "Glunio 2 Px [" << r << "] : " << g2.Px() << std::endl;
       nglu++;
+      count++;
+      r++;
+    }
+    if(abs(Particle_PID[r]) == 1000006 && nstp ==0){
+      stop1.SetPx(Particle_Px[r]);
+      stop1.SetPy(Particle_Py[r]);
+      stop1.SetPz(Particle_Pz[r]);
+      stop1.SetE(Particle_E[r]);
+      nstp++;
+      count++;
+      r++;
+    }
+    if(abs(Particle_PID[r]) == 1000006 && nstp ==1){
+      stop2.SetPx(Particle_Px[r]);
+      stop2.SetPy(Particle_Py[r]);
+      stop2.SetPz(Particle_Pz[r]);
+      stop2.SetE(Particle_E[r]);
+      nstp++;
+      count++;
+      r++;
+    }
+    if(abs(Particle_PID[r]) == 6 && ntop == 0){
+      top1.SetPx(Particle_Px[r]);
+      top1.SetPy(Particle_Py[r]);
+      top1.SetPz(Particle_Pz[r]);
+      top1.SetE(Particle_E[r]);
+      ntop++;
+      count++;
+      r++;
+    }
+    if(abs(Particle_PID[r]) == 6 && ntop ==1){
+      top2.SetPx(Particle_Px[r]);
+      top2.SetPy(Particle_Py[r]);
+      top2.SetPz(Particle_Pz[r]);
+      top2.SetE(Particle_E[r]);
+      ntop++;
+      count++;
+      r++;
+    }
+    if(abs(Particle_PID[r]) == 6 && ntop ==2){
+      top3.SetPx(Particle_Px[r]);
+      top3.SetPy(Particle_Py[r]);
+      top3.SetPz(Particle_Pz[r]);
+      top3.SetE(Particle_E[r]);
+      ntop++;
+      count++;
+      r++;
+    }
+    if(abs(Particle_PID[r]) == 6 && ntop == 3){
+      top4.SetPx(Particle_Px[r]);
+      top4.SetPy(Particle_Py[r]);
+      top4.SetPz(Particle_Pz[r]);
+      top4.SetE(Particle_E[r]);
+      ntop++;
+      count++;
+      r++;
+    }
+    if(count == 0){
       r++;
     }
   }
-    if( nlsp != nglu ){
-      std::cout << "No equal amount of gluinos and lsps" << std::endl;
-    }
+// Check there are two of each for gluinos and LSPs
+  if( nglu != nlsp){
+    std::cout << "Not an equal amount of LSPs and Gluinos" << std::endl;
+  }
 
+   MET = sqrt(pow(LSP1.Px() + LSP2.Px(),2) + pow(LSP1.Py() + LSP2.Py(),2) + pow(LSP1.Pz() + LSP2.Pz(),2));
 
-     MET = sqrt(pow(LSP1.Px() + LSP2.Px(),2) + pow(LSP1.Py() + LSP2.Py(),2) + pow(LSP1.Pz() + LSP2.Pz(),2));
 
 
 
@@ -277,7 +343,6 @@ leg->AddEntry(Top_Stop, "PT of top from stop", "l");
 leg->Draw();
 c4->Print("PtTopGluino.pdf");
 
-// Saving histo of PT of stop from top 
 
 TFile *PTstop_top = new TFile("PT_pyth_500_100.root", "RECREATE");
 Top_Stop->Write();
@@ -291,6 +356,11 @@ c7->Clear();
 TFile *g = new TFile("JetET.root", "RECREATE");
 JetET->Write();
 c7->Print("JetET.pdf");
+
+TFile *delphi_gluino = new TFile("delphi_gluino.root", "RECREATE");
+delphi_gluino->Write();
+
+
 
 
 }

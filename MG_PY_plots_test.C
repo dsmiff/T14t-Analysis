@@ -6,12 +6,13 @@ void MG_PY_plots_test()
   gROOT->Reset();
 
   TCanvas *c0 = new TCanvas("MGvsPY","MGvsPY", 600, 780);
-  TLegend *leg = new TLegend(0.6, 0.7, 0.89, 0.89);
+  TLegend *leg = new TLegend(0.5, 0.8, 0.9, 0.88);
   TPad *c0_1 = new TPad("pd1","pd1", 0., 0.3, 1., 1.);
   c0_1->SetBottomMargin(0.005);
   c0_1->SetRightMargin(0.05);
   c0_1->Draw();
   gStyle->SetOptStat(0);
+  gStyle->SetTitleFontSize(0.1);
 
   TPad *c1_1 = new TPad("pd2", "pd2", 0., 0.02, 1., 0.3);
   c1_1->SetTopMargin(0.05);
@@ -20,6 +21,7 @@ void MG_PY_plots_test()
   c1_1->SetGridx(1);
   c1_1->SetGridy(1);
   c1_1->Draw();
+
 
   TString dirname = ".";
   TString rootname1 = "PT_pyth_500_100.root";
@@ -64,21 +66,34 @@ void MG_PY_plots_test()
 
   leg->AddEntry(h1, "Pythia generated events for top P_{T}, m_{t} = 500 GeV & m_{lsp} = 100 GeV", "l");
   leg->AddEntry(h2, "MadGraph generated events for top P_{T}, m_{t} = 500 GeV & m_{lsp} = 100 GeV", "l");
+  leg->SetTextSize(0.025);
   leg->Draw();
+ 
 
   // Create ratio histo
 
   c1_1->cd();
   TH1D *ratio = h1->Clone();
+  TLine *l = new TLine(0,1,600,1);
   ratio->Divide( h2 );
+  ratio->SetTitle("");
   ratio->SetMarkerStyle(4);
   ratio->SetMarkerSize(0.7);
   ratio->SetLineWidth(1);
   ratio->SetLineColor(1);
   ratio->GetXaxis()->SetTitle("P_{T}");
   ratio->GetYaxis()->SetTitle("Ratio");
+  ratio->SetTitleSize(0.1, "Y");
+  ratio->SetTitleSize(0.1, "X");
+  ratio->SetLabelSize(0.07, "XY");
+  ratio->SetTitleOffset(0.25, "Y");
   ratio->Draw("E1");
+  l->SetLineColor(2);
+  l->Draw("SAME");
 
+  TF1 *fit = new TF1("fit","pol0",ratio->GetXaxis()->GetBinLowEdge(1),ratio->GetXaxis()->GetBinUpEdge(ratio->GetNbinsX()));
+  gStyle->SetOptFit(1);
+  ratio->Fit(fit);
 
 
 }

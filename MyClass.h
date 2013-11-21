@@ -57,10 +57,11 @@ public :
    TH1D* MET_histo;
    TH1D* delR;
    TH1D* JetET;
+   TH1D* delphi_gluino;
 
    // Particles
 
-   TLorentzVector g1, g2, LSP1, LSP2, stop;
+   TLorentzVector g1, g2, LSP1, LSP2, stop1, stop2, top1, top2, top3, top4;
    Double_t Rcut = 0.5;
    Double_t MET;
 
@@ -451,6 +452,8 @@ public :
    virtual Bool_t   Notify();
    virtual void     Show(Long64_t entry = -1);
    virtual int     GetNJets(); 
+
+
 
 
 };
