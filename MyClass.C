@@ -14,7 +14,7 @@
 
 using namespace std;
 
-
+ 
 int MyClass::GetNJets(){
 
   int nJet = 0;
