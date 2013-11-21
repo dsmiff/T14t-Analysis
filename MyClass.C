@@ -103,6 +103,7 @@ for(unsigned int q=0; q<sizeof(Particle_PT); q++){
 
 
 // Assigning particles their TLorentzVectors
+// LSPs & gluinos
 
   int nlsp = 0;
   int nglu = 0;
@@ -147,7 +148,9 @@ for(unsigned int r=0; r<sizeof(Particle_PID); r++){
       r++;
     }
   }
-    
+   
+  // Top quarks
+
     for(unsigned int s=0; s<sizeof(Particle_PID); s++){
     if(abs(Particle_PID[s]) == 6 && ntop == 0){
       top1.SetPx(Particle_Px[s]);
