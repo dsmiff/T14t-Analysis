@@ -44,8 +44,7 @@ void MyClass::Loop()
   MET_histo = new TH1D("MET_histo", "MET_histo", 200, 0., 2500.);
   delR = new TH1D("delR", "delR", 0.1, 0, 1.5);
   JetET = new TH1D("JetET", "JetET", 200, 0., 1500.);
-
-
+  delphi_gluino = new TH1D("delphi_gluino","delphi_gluino", 200, -5, 5);
 
 
 Long64_t nentries = fChain->GetEntries();
@@ -109,14 +108,23 @@ for(unsigned int q=0; q<sizeof(Particle_PT); q++){
   int ntop = 0;
   int nstp = 0;
 
-for(unsigned int r=0; r<sizeof(Particle_PID); r++){
+
+
+
+for(unsigned int r=0; r<sizeof(Particle_PID); ){
+
+
+int count = 0;
+
     if(abs(Particle_PID[r]) == 1000022 && nlsp ==0){
       LSP1.SetPx(Particle_Px[r]);
       LSP1.SetPy(Particle_Py[r]);
       LSP1.SetPz(Particle_Pz[r]);
       LSP1.SetE(Particle_E[r]);
       nlsp++;
-      r = r+1;
+      count++;
+      r++;
+
   }
     if(abs(Particle_PID[r]) == 1000022 && nlsp == 1){   
       LSP2.SetPx(Particle_Px[r]);
@@ -124,7 +132,8 @@ for(unsigned int r=0; r<sizeof(Particle_PID); r++){
       LSP2.SetPz(Particle_Pz[r]);
       LSP2.SetE(Particle_E[r]);
       nlsp++;
-      r = r+1;
+      count++;
+      r++;
     }
     if(abs(Particle_PID[r]) == 1000021 && nglu == 0){
       g1.SetPx(Particle_Px[r]);
@@ -132,7 +141,8 @@ for(unsigned int r=0; r<sizeof(Particle_PID); r++){
       g1.SetPz(Particle_Pz[r]);
       g1.SetE(Particle_E[r]);
       nglu++;
-      r = r+1;
+      count++;
+      r++;
     }
     if(abs(Particle_PID[r]) == 1000021 && nglu == 1){
       g2.SetPx(Particle_Px[r]);
@@ -140,7 +150,8 @@ for(unsigned int r=0; r<sizeof(Particle_PID); r++){
       g2.SetPz(Particle_Pz[r]);
       g2.SetE(Particle_E[r]);
       nglu++;
-      r = r+1;
+      count++;
+      r++;
     }
     
     if(abs(Particle_PID[r]) == 1000006 && nstp ==0){
@@ -149,7 +160,8 @@ for(unsigned int r=0; r<sizeof(Particle_PID); r++){
       stop1.SetPz(Particle_Pz[r]);
       stop1.SetE(Particle_E[r]);
       nstp++;
-      r = r+1;
+      count++;
+      r++;
     }
     if(abs(Particle_PID[r]) == 1000006 && nstp ==1){
       stop2.SetPx(Particle_Px[r]);
@@ -157,58 +169,58 @@ for(unsigned int r=0; r<sizeof(Particle_PID); r++){
       stop2.SetPz(Particle_Pz[r]);
       stop2.SetE(Particle_E[r]);
       nstp++;
-      r = r+1;
+      count++;
+      r++;
+    }
+    if(abs(Particle_PID[r]) == 6 && ntop == 0){
+      top1.SetPx(Particle_Px[r]);
+      top1.SetPy(Particle_Py[r]);
+      top1.SetPz(Particle_Pz[r]);
+      top1.SetE(Particle_E[r]);
+      ntop++;
+      count++;
+      r++;
+    }
+    if(abs(Particle_PID[r]) == 6 && ntop ==1){
+      top2.SetPx(Particle_Px[r]);
+      top2.SetPy(Particle_Py[r]);
+      top2.SetPz(Particle_Pz[r]);
+      top2.SetE(Particle_E[r]);
+      ntop++;
+      count++;
+      r++;
+    }
+    if(abs(Particle_PID[r]) == 6 && ntop ==2){
+      top3.SetPx(Particle_Px[r]);
+      top3.SetPy(Particle_Py[r]);
+      top3.SetPz(Particle_Pz[r]);
+      top3.SetE(Particle_E[r]);
+      ntop++;
+      count++;
+      r++;
+    }
+    if(abs(Particle_PID[r]) == 6 && ntop == 3){
+      top4.SetPx(Particle_Px[r]);
+      top4.SetPy(Particle_Py[r]);
+      top4.SetPz(Particle_Pz[r]);
+      top4.SetE(Particle_E[r]);
+      ntop++;
+      count++;
+      r++;
+    }
+    if(count == 0){
+      r++;
+
     }
   }
+
+  
   if( nglu != nlsp){
     std::cout << "Not equal amount of LSPs and Gluinos" << std::endl;
   }
 
+   MET = sqrt(pow(LSP1.Px() + LSP2.Px(),2) + pow(LSP1.Py() + LSP2.Py(),2) + pow(LSP1.Pz() + LSP2.Pz(),2));
 
-  // Top quarks
-
-    for(unsigned int s=0; s<sizeof(Particle_PID); s++){
-    if(abs(Particle_PID[s]) == 6 && ntop == 0){
-      top1.SetPx(Particle_Px[s]);
-      top1.SetPy(Particle_Py[s]);
-      top1.SetPz(Particle_Pz[s]);
-      top1.SetE(Particle_E[s]);
-      std::cout << "Found a top quark" << std::endl;
-      ntop++;
-      s++;
-    }
-    if(abs(Particle_PID[s]) == 6 && ntop ==1){
-      top2.SetPx(Particle_Px[s]);
-      top2.SetPy(Particle_Py[s]);
-      top2.SetPz(Particle_Pz[s]);
-      top2.SetE(Particle_E[s]);
-      std::cout << "Found a top quark" << std::endl;
-      ntop++;
-      s++;
-    }
-    if(abs(Particle_PID[s]) == 6 && ntop ==2){
-      top3.SetPx(Particle_Px[s]);
-      top3.SetPy(Particle_Py[s]);
-      top3.SetPz(Particle_Pz[s]);
-      top3.SetE(Particle_E[s]);
-      std::cout << "Found a top quark" << std::endl;
-      ntop++;
-      s++;
-    }
-    if(abs(Particle_PID[s]) == 6 && ntop == 3){
-      top4.SetPx(Particle_Px[s]);
-      top4.SetPy(Particle_Py[s]);
-      top4.SetPz(Particle_Pz[s]);
-      top4.SetE(Particle_E[s]);
-      std::cout << "Found a top quark" << std::endl;
-      ntop++;
-      s++;
-    }
-  }
-
-
-
-     MET = sqrt(pow(LSP1.Px() + LSP2.Px(),2) + pow(LSP1.Py() + LSP2.Py(),2) + pow(LSP1.Pz() + LSP2.Pz(),2));
 
 
 
@@ -334,7 +346,6 @@ leg->AddEntry(Top_Stop, "PT of top from stop", "l");
 leg->Draw();
 c4->Print("PtTopGluino.pdf");
 
-// Saving histo of PT of stop from top 
 
 TFile *PTstop_top = new TFile("PT_pyth_500_100.root", "RECREATE");
 Top_Stop->Write();
@@ -348,6 +359,11 @@ c7->Clear();
 TFile *g = new TFile("JetET.root", "RECREATE");
 JetET->Write();
 c7->Print("JetET.pdf");
+
+TFile *delphi_gluino = new TFile("delphi_gluino.root", "RECREATE");
+delphi_gluino->Write();
+
+
 
 
 }
