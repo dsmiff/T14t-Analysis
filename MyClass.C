@@ -115,7 +115,6 @@ for(unsigned int r=0; r<sizeof(Particle_PID); r++){
       LSP1.SetPy(Particle_Py[r]);
       LSP1.SetPz(Particle_Pz[r]);
       LSP1.SetE(Particle_E[r]);
-      std::cout << "LSP1 Px [" << r << "] : " << LSP1.Px() << std::endl;
       nlsp++;
       r = r+1;
   }
@@ -124,7 +123,6 @@ for(unsigned int r=0; r<sizeof(Particle_PID); r++){
       LSP2.SetPy(Particle_Py[r]);
       LSP2.SetPz(Particle_Pz[r]);
       LSP2.SetE(Particle_E[r]);
-      std::cout << "LSP2 Px [" << r << "] : " << LSP2.Px() << std::endl;
       nlsp++;
       r = r+1;
     }
@@ -133,7 +131,6 @@ for(unsigned int r=0; r<sizeof(Particle_PID); r++){
       g1.SetPy(Particle_Py[r]);
       g1.SetPz(Particle_Pz[r]);
       g1.SetE(Particle_E[r]);
-      std::cout << "Gluino 1 Px [" << r << "] : " << g1.Px() << std::endl;
       nglu++;
       r = r+1;
     }
@@ -142,7 +139,6 @@ for(unsigned int r=0; r<sizeof(Particle_PID); r++){
       g2.SetPy(Particle_Py[r]);
       g2.SetPz(Particle_Pz[r]);
       g2.SetE(Particle_E[r]);
-      std::cout << "Gluino 2 Px [" << r << "] : " << g2.Px() << std::endl;
       nglu++;
       r = r+1;
     }
@@ -152,7 +148,6 @@ for(unsigned int r=0; r<sizeof(Particle_PID); r++){
       stop1.SetPy(Particle_Py[r]);
       stop1.SetPz(Particle_Pz[r]);
       stop1.SetE(Particle_E[r]);
-      std::cout << "Stop 1 Px [" << r << "] : " << stop1.Px() << std::endl;
       nstp++;
       r = r+1;
     }
@@ -161,7 +156,6 @@ for(unsigned int r=0; r<sizeof(Particle_PID); r++){
       stop2.SetPy(Particle_Py[r]);
       stop2.SetPz(Particle_Pz[r]);
       stop2.SetE(Particle_E[r]);
-      std::cout << "Stop 2 Px [" << r << "] : " << stop2.Px() << std::endl;
       nstp++;
       r = r+1;
     }
