@@ -60,7 +60,7 @@ public :
 
    // Particles
 
-   TLorentzVector g1, g2, LSP1, LSP2, stop;
+   TLorentzVector g1, g2, LSP1, LSP2, stop, top1, top2, top3, top4;
    Double_t Rcut = 0.5;
    Double_t MET;
 
