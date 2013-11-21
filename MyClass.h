@@ -57,6 +57,7 @@ public :
    TH1D* MET_histo;
    TH1D* delR;
    TH1D* JetET;
+   TH1D* delphi_gluino;
 
    // Particles
 
