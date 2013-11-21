@@ -101,15 +101,12 @@ for(unsigned int q=0; q<sizeof(Particle_PT); q++){
 
 
 // Assigning particles their TLorentzVectors
-// LSPs & gluinos
+// Need count ticker for non desirable particles, otherwise if statement loops infinitely  
 
   int nlsp = 0;
   int nglu = 0;
   int ntop = 0;
   int nstp = 0;
-
-
-
 
 for(unsigned int r=0; r<sizeof(Particle_PID); ){
 
@@ -124,7 +121,6 @@ int count = 0;
       nlsp++;
       count++;
       r++;
-
   }
     if(abs(Particle_PID[r]) == 1000022 && nlsp == 1){   
       LSP2.SetPx(Particle_Px[r]);
@@ -153,7 +149,6 @@ int count = 0;
       count++;
       r++;
     }
-    
     if(abs(Particle_PID[r]) == 1000006 && nstp ==0){
       stop1.SetPx(Particle_Px[r]);
       stop1.SetPy(Particle_Py[r]);
@@ -210,13 +205,11 @@ int count = 0;
     }
     if(count == 0){
       r++;
-
     }
   }
-
-  
+// Check there are two of each for gluinos and LSPs
   if( nglu != nlsp){
-    std::cout << "Not equal amount of LSPs and Gluinos" << std::endl;
+    std::cout << "Not an equal amount of LSPs and Gluinos" << std::endl;
   }
 
    MET = sqrt(pow(LSP1.Px() + LSP2.Px(),2) + pow(LSP1.Py() + LSP2.Py(),2) + pow(LSP1.Pz() + LSP2.Pz(),2));
