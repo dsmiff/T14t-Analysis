@@ -154,7 +154,7 @@ for(unsigned int r=0; r<sizeof(Particle_PID); r++){
       top1.SetPy(Particle_Py[s]);
       top1.SetPz(Particle_Pz[s]);
       top1.SetE(Particle_E[s]);
-      std::cout << "Top 1 Px [" << s << "] : " << top1.Px() << std::endl;
+      std::cout << "Found a top quark" << std::endl;
       ntop++;
       s++;
     }
@@ -163,7 +163,7 @@ for(unsigned int r=0; r<sizeof(Particle_PID); r++){
       top2.SetPy(Particle_Py[s]);
       top2.SetPz(Particle_Pz[s]);
       top2.SetE(Particle_E[s]);
-      std::cout << "Top 2 Px [" << s << "] :" << top2.Px() << std::endl;
+      std::cout << "Found a top quark" << std::endl;
       ntop++;
       s++;
     }
@@ -172,7 +172,7 @@ for(unsigned int r=0; r<sizeof(Particle_PID); r++){
       top3.SetPy(Particle_Py[s]);
       top3.SetPz(Particle_Pz[s]);
       top3.SetE(Particle_E[s]);
-      std::cout << "Top 3 Px [" << s << "] :" << top3.Px() << std::endl;
+      std::cout << "Found a top quark" << std::endl;
       ntop++;
       s++;
     }
@@ -181,7 +181,7 @@ for(unsigned int r=0; r<sizeof(Particle_PID); r++){
       top4.SetPy(Particle_Py[s]);
       top4.SetPz(Particle_Pz[s]);
       top4.SetE(Particle_E[s]);
-      std::cout << "Top 4 Px [" << s << "] :" << top4.Px() << std::endl;
+      std::cout << "Found a top quark" << std::endl;
       ntop++;
       s++;
     }
