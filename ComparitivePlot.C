@@ -1,7 +1,7 @@
 // Should work for comparitive plots where only rootname and name of histo would need to changed 
 // Dominic Smith Nov 13
 
-void MG_PY_plots_test()
+void ComparitivePlot()
 {
   gROOT->Reset();
 
