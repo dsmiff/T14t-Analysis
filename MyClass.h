@@ -14,8 +14,8 @@
 #include <TRef.h>
 #include <TRefArray.h>
 #include <TH1.h>
-#include <TH3.h>
 #include <TLorentzVector.h>
+#include <algorithm>
 
 // Need to include TRef and TRefArray
 // Header file for the classes stored in the TTree if any.
@@ -57,16 +57,21 @@ public :
    TH1D* _Top_Stop;
    TH1D* _MET_histo;
    TH1D* _delR;
-   TH1D* _JetET;
+   TH1D* _HT;
    TH1D* _delphi_gluino;
-   TH3D* _ISR;
+   TH1D* _ISR;
+   TH1D* _ScalarHT;
+   TH1D* _JetPt1;
+   TH1D* _JetPt2;
+   TH1D* _JetPt3;
+   TH1D* _JetPt4;
 
    // Particles
 
    TLorentzVector g1, g2, LSP1, LSP2, stop1, stop2, top1, top2, top3, top4, ISR;
    Double_t Rcut = 0.5;
    Double_t MET;
-
+   std::vector<TLorentzVector> Jets;
 
    // Declaration of leaf types
    Int_t           Event_;
@@ -467,9 +472,9 @@ MyClass::MyClass(TTree *tree) : fChain(0)
 // if parameter tree is not specified (or zero), connect the file
 // used to generate this class and read the Tree.
    if (tree == 0) {
-      TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("delphes_500_100_output.root");
+      TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("root/delphes_pyth_500_100_output.root");
       if (!f || !f->IsOpen()) {
-         f = new TFile("delphes_500_100_output.root");
+         f = new TFile("root/delphes_pyth_500_100_output.root");
       }
       f->GetObject("Delphes",tree);
 
@@ -730,3 +735,9 @@ Int_t MyClass::Cut(Long64_t entry)
    return 1;
 }
 #endif // #ifdef MyClass_cxx
+
+struct order_gt : public std::binary_function<TLorentzVector, TLorentzVector, bool> {
+  bool operator()(const TLorentzVector& x, const TLorentzVector& y) {
+    return ( x.Pt() > y.Pt() ) ;
+  }
+};
