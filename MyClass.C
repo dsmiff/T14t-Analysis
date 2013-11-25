@@ -34,7 +34,7 @@ void MyClass::Loop()
 
   TH1::SetDefaultSumw2();
 
-  _JetPT = new TH1D("jetPt", "jetPt", 200, 0., 200.);
+  _JetPT = new TH1D("jetPt", "jetPt", 200, 0., 900.);
   _h_genjetPt = new TH1D("genjetPt", "genjetPt", 200, 0., 200.);
   _ttbar_jetpt = new TH1D("ttbar_jetpt", "ttbar_jetpt", 200, 0., 200.);
   _ttbar_genjetpt = new TH1D("ttbar_genjetpt", "ttbar_genjetpt", 200, 0., 200.);
@@ -44,10 +44,14 @@ void MyClass::Loop()
   _Top_Stop = new TH1D("Top_Stop", "Top_Stop", 200, 0., 800.);
   _MET_histo = new TH1D("MET_histo", "MET_histo", 200, 0., 2500.);
   _delR = new TH1D("delR", "delR", 0.1, 0, 1.5);
-  _JetET = new TH1D("JetET", "JetET", 200, 0., 1500.);
+  _HT = new TH1D("HT", "HT", 200, 0., 1500.);
   _delphi_gluino = new TH1D("delphi_gluino","delphi_gluino", 200, -5, 5);
-  _ISR = new TH3D("ISR", "ISR", 200, -500, 500, 200, -500, 500, 200, -500, 500);
-
+  _ISR = new TH1D("ISR", "ISR", 200, 0., 500);
+  _ScalarHT = new TH1D("ScalarHT","ScalarHT", 200, 200, 2000);
+  _JetPt1 = new TH1D("_JetPt1", "1st leading Jet Pt", 200, 0., 900.);
+  _JetPt2 = new TH1D("_JetPt2", "2nd leading Jet Pt", 200, 0., 900.);
+  _JetPt3 = new TH1D("_JetPt3", "3rd leading Jet Pt", 200, 0., 900.);
+  _JetPt4 = new TH1D("_JetPt4", "4th leading Jet Pt", 200, 0., 900.);
 
 Long64_t nentries = fChain->GetEntries();
 Long64_t nents = b_Particle_PID->GetEntries();
@@ -216,49 +220,60 @@ int count = 0;
     std::cout << "Not an equal amount of LSPs and Gluinos" << std::endl;
   }
 
-   MET = sqrt(pow(LSP1.Px() + LSP2.Px(),2) + pow(LSP1.Py() + LSP2.Py(),2) + pow(LSP1.Pz() + LSP2.Pz(),2));
+   //MET = sqrt(pow(LSP1.Px() + LSP2.Px(),2) + pow(LSP1.Py() + LSP2.Py(),2) + pow(LSP1.Pz() + LSP2.Pz(),2));
 
 // ISR check
 
   ISR = g1 + g2;
- // std::cout << "ISR Px: " << ISR.Px() << std::endl;
-  //std::cout << "ISR Py: " << ISR.Py() << std::endl;
-  //std::cout << "ISR Pz: " << ISR.Pz() << std::endl;
-  //std::cout << "ISR E: " << ISR.E() << std::endl;
-  //_ISR->Fill(ISR.Px(), ISR.Py(), ISR.Pz());
+  std::cout << "Boost: " << ISR.Pt() << std::endl;
+  _ISR->Fill(ISR.Pt());
 
 
 
+for(unsigned int z=0; z<sizeof(ScalarHT_HT); z++){
+    if(ScalarHT_HT[z] < 10) continue;
+    _ScalarHT->Fill(ScalarHT_HT[z]);
+    std::cout << "Scalar HT: " << ScalarHT_HT[z] << std::endl;
+}
 
 
 
+// Jet Analysis
 
-
-
-
+TLorentzVector jet;
 
   for(unsigned int k=0; k<sizeof(Jet_PT); k++){
     if(Jet_PT[k] > 20. && Jet_Mass[k] > 0.1){
-//   std::cout << "Jet Pt[" << k << "] : " << Jet_PT[k]<< std::endl;
-//   std::cout << "Jet Mass: " << Jet_Mass[k] << std::endl;
-    Jet_ET[k] = sqrt(pow(Jet_PT[k],2) + pow(Jet_Mass[k],2));
-  //  std::cout << "Jet ET[" << k << "] : " << Jet_ET[k]  << std::endl;
-    HT+=Jet_ET[k];
+    Jet_ET[k] = sqrt(pow(Jet_PT[k],2) + pow(Jet_Mass[k],2)); // The transverse energy of each jet
+    HT+=Jet_ET[k];                                            // The scalar sum of the transverse energy of each jet as given by the note
     _JetPT->Fill(Jet_PT[k]);
     njets++;
+    if(HT<8) continue;
+     _HT->Fill(HT);
     }
     if(GenJet_PT[k] > 10.){
       _h_genjetPt->Fill(GenJet_PT[k]);
     }
-    if(abs(Particle_PID[k]) == 6){
-   //   std::cout << "Jet PT for t: " << Jet_PT[k] << std::endl;
+    if(abs(Particle_PID[k]) == 6){                    // For top quarks
     _ttbar_jetpt->Fill(Jet_PT[k]);
     _ttbar_genjetpt->Fill(GenJet_PT[k]);
     } 
+  jet.SetPtEtaPhiM(Jet_PT[k], Jet_Eta[k], Jet_Phi[k], Jet_Mass[k]);         // Arrange jets in order of Pt
+  Jets.push_back(jet);
 }
- // std::cout << "Number of jets per event: " << njets << std::endl;
+
+  sort(Jets.begin(), Jets.end(), order_gt());
+  std::cout << "Jet PT 1: " << Jets.at(0).Pt() << std::endl;
+  std::cout << "Jet PT 2: " << Jets.at(1).Pt() << std::endl;
+
+  _JetPt1->Fill(Jets.at(0).Pt());
+  _JetPt2->Fill(Jets.at(1).Pt());
+  _JetPt3->Fill(Jets.at(2).Pt());
+  _JetPt4->Fill(Jets.at(3).Pt());
+
+
   std::cout << HT << std::endl;
-  _JetET->Fill(HT);
+
 
 
 
@@ -309,7 +324,11 @@ int count = 0;
    } 
   }
  } */
+
+  Jets.clear();
+
 }
+
 
 
 // Printing histograms
@@ -320,7 +339,6 @@ TCanvas *c2 = new TCanvas("c2", "c2", 200, 10, 600, 400);
 TCanvas *c3 = new TCanvas("c3", "c3", 200, 10, 600, 400);
 TCanvas *c4 = new TCanvas("c4", "c4", 200, 10, 600, 400);
 TCanvas *c7 = new TCanvas("c7", "c7", 200, 10, 600, 400);
-TCanvas *c8 = new TCanvas("c7", "c7", 200, 10, 600, 400);
 TLegend *leg = new TLegend(0.6,0.7,0.89,0.89);
 
 
@@ -337,7 +355,7 @@ _TopPt->Draw("hist");
 //c3->Print("TopPt.pdf");
 
 c4->Clear();
-TFile *PTgluino_stop = new TFile("PTgluino_pyth_500_300.root","RECREATE");
+TFile *PTgluino_stop = new TFile("PTgluino_pyth_500_100.root","RECREATE");
 _Top_Gluino->Draw("hist");
 _Top_Gluino->Write();
 _Top_Gluino->SetTitle("P_{T} from stop (500 GeV) and gluino (1 TeV) ");
@@ -360,16 +378,26 @@ _MET_histo->Draw("hist");
 _MET_histo->Write();
 
 
-c7->Clear();
-TFile *g = new TFile("JetET.root", "RECREATE");
-_JetET->Write();
-c7->Print("JetET.pdf");
+
+TFile *g = new TFile("HT.root", "RECREATE");
+_HT->Write();
+
 
 TFile *delphi_gluino = new TFile("delphi_gluino.root", "RECREATE");
 _delphi_gluino->Write();
 
-//TFile *_ISR = new TFile("ISR.root", "RECREATE");
-//_ISR->Write();
+TFile *ISR = new TFile("ISR.root", "RECREATE");
+_ISR->Write();
+
+TFile *ScalarHT = new TFile("ScalarHT.root","RECREATE");
+_ScalarHT->Write();
+
+TFile *JetPt1 = new TFile("LeadingJetPt.root", "RECREATE");
+_JetPt1->Write();
+_JetPt2->Write();
+_JetPt3->Write();
+_JetPt4->Write();
+
 
 
 }
