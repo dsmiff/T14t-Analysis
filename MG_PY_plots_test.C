@@ -12,7 +12,7 @@ void MG_PY_plots_test()
   c0_1->SetRightMargin(0.05);
   c0_1->Draw();
   gStyle->SetOptStat(0);
-  gStyle->SetTitleFontSize(0.1);
+  gStyle->SetTitleFontSize(0.05);
 
   TPad *c1_1 = new TPad("pd2", "pd2", 0., 0.02, 1., 0.3);
   c1_1->SetTopMargin(0.05);
@@ -24,8 +24,8 @@ void MG_PY_plots_test()
 
 
   TString dirname = ".";
-  TString rootname1 = "PT_pyth_500_100.root";
-  TString rootname2 = "PT_500_100.root";
+  TString rootname1 = "JetPT_pyth_500_100.root";
+  TString rootname2 = "JetPT_500_100.root";
   rootname1 = dirname + "/" + rootname1;
   rootname2 = dirname + "/" + rootname2;
   delete gROOT->GetListOfFiles()->FindObject(rootname1);
@@ -43,29 +43,30 @@ void MG_PY_plots_test()
   rootfile2->GetListOfKeys()->Print();
   rootfile2->ls();
 
-  TH1F *h1 = (TH1F*)rootfile->Get("Top_Stop");
+  TH1F *h1 = (TH1F*)rootfile->Get("jetPt");
   c0_1->cd();
   h1->Draw("hist");
   h1->RebinX(5);
-  h1->GetXaxis()->SetRangeUser(0,600);
+  //  h1->GetXaxis()->SetRangeUser(0,600);        // Depends on the existing range from .root file
+  // h1->GetYaxis()->SetRangeUser(0,400);
   Double_t entries1 = h1->GetEntries();
   std::cout << "# Entries for Pythia generated histo: " << entries1 << std::endl;
   h1->Scale(1/entries1);
-  h1->SetTitle("P_{T} disbn for top from stops for Pythia and MG generated events");
+  h1->SetTitle("Jet P_{T} disbn for Pythia and MG generated events");
   h1->GetYaxis()->SetTitle("Entries normalised");
 
 
-  TH1F *h2 = (TH1F*)rootfile2->Get("Top_Stop");
-  h2->Draw("SAME L");
+  TH1F *h2 = (TH1F*)rootfile2->Get("jetPt");
+  h2->Draw("SAME");
   h2->RebinX(5);
-  h2->SetLineColor(9);
+  h2->SetLineColor(2);
   Double_t entries2 = h2->GetEntries();
   std::cout << "# Entries for MadGraph generated histo: " << entries2 << std::endl;
   h2->Scale(1/entries2);
 
 
-  leg->AddEntry(h1, "Pythia generated events for top P_{T}, m_{t} = 500 GeV & m_{lsp} = 100 GeV", "l");
-  leg->AddEntry(h2, "MadGraph generated events for top P_{T}, m_{t} = 500 GeV & m_{lsp} = 100 GeV", "l");
+  leg->AddEntry(h1, "Pythia generated events for Jet P_{T}, m_{t} = 500 GeV & m_{lsp} = 100 GeV", "l");
+  leg->AddEntry(h2, "MadGraph generated events for Jet P_{T}, m_{t} = 500 GeV & m_{lsp} = 100 GeV", "l");
   leg->SetTextSize(0.025);
   leg->Draw();
  
@@ -89,10 +90,14 @@ void MG_PY_plots_test()
   ratio->SetTitleOffset(0.25, "Y");
   ratio->Draw("E1");
   l->SetLineColor(2);
-  l->Draw("SAME");
+  l->SetLineWidth(0.5);
+  l->SetLineStyle(2);
+  //  l->Draw("SAME");
+
 
   TF1 *fit = new TF1("fit","pol0",ratio->GetXaxis()->GetBinLowEdge(1),ratio->GetXaxis()->GetBinUpEdge(ratio->GetNbinsX()));
   gStyle->SetOptFit(1);
+  fit->SetLineWidth(0.5);
   ratio->Fit(fit);
 
 

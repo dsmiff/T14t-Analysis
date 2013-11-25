@@ -2,6 +2,7 @@
 #include "MyClass.h"
 #include <TH2.h>
 #include <TH1.h>
+#include <TH3.h>
 #include <TStyle.h>
 #include <TCanvas.h>
 #include <TLorentzVector.h>
@@ -33,18 +34,19 @@ void MyClass::Loop()
 
   TH1::SetDefaultSumw2();
 
-  JetPT = new TH1D("jetPt", "jetPt", 200, 0., 200.);
-  h_genjetPt = new TH1D("genjetPt", "genjetPt", 200, 0., 200.);
-  ttbar_jetpt = new TH1D("ttbar_jetpt", "ttbar_jetpt", 200, 0., 200.);
-  ttbar_genjetpt = new TH1D("ttbar_genjetpt", "ttbar_genjetpt", 200, 0., 200.);
-  tmass = new TH1D("tmass", "tmass", 200, 0., 400.);
-  TopPt = new TH1D("TopPt", "TopPt", 200, 0., 800.);
-  Top_Gluino = new TH1D("Top_Gluino", "Top_Gluino", 200, 0., 800.);
-  Top_Stop = new TH1D("Top_Stop", "Top_Stop", 200, 0., 800.);
-  MET_histo = new TH1D("MET_histo", "MET_histo", 200, 0., 2500.);
-  delR = new TH1D("delR", "delR", 0.1, 0, 1.5);
-  JetET = new TH1D("JetET", "JetET", 200, 0., 1500.);
-  delphi_gluino = new TH1D("delphi_gluino","delphi_gluino", 200, -5, 5);
+  _JetPT = new TH1D("jetPt", "jetPt", 200, 0., 200.);
+  _h_genjetPt = new TH1D("genjetPt", "genjetPt", 200, 0., 200.);
+  _ttbar_jetpt = new TH1D("ttbar_jetpt", "ttbar_jetpt", 200, 0., 200.);
+  _ttbar_genjetpt = new TH1D("ttbar_genjetpt", "ttbar_genjetpt", 200, 0., 200.);
+  _tmass = new TH1D("tmass", "tmass", 200, 0., 400.);
+  _TopPt = new TH1D("TopPt", "TopPt", 200, 0., 800.);
+  _Top_Gluino = new TH1D("Top_Gluino", "Top_Gluino", 200, 0., 800.);
+  _Top_Stop = new TH1D("Top_Stop", "Top_Stop", 200, 0., 800.);
+  _MET_histo = new TH1D("MET_histo", "MET_histo", 200, 0., 2500.);
+  _delR = new TH1D("delR", "delR", 0.1, 0, 1.5);
+  _JetET = new TH1D("JetET", "JetET", 200, 0., 1500.);
+  _delphi_gluino = new TH1D("delphi_gluino","delphi_gluino", 200, -5, 5);
+  _ISR = new TH3D("ISR", "ISR", 200, -500, 500, 200, -500, 500, 200, -500, 500);
 
 
 Long64_t nentries = fChain->GetEntries();
@@ -59,10 +61,11 @@ for(int i = 0; i<nentries; i++){
 
 
 
+
 for(unsigned int e=0; e<sizeof(MissingET_MET); e++){
  // std::cout << "MET: " << MissingET_MET[e] << std::endl; // Which PID gives the most MET?
   if(MissingET_MET[e]> 5){
-  MET_histo->Fill(MissingET_MET[e]);
+  _MET_histo->Fill(MissingET_MET[e]);
  }
 }
 
@@ -79,18 +82,18 @@ for(unsigned int q=0; q<sizeof(Particle_PT); q++){
 
     if(abs(Particle_PID[q]) == 6 && Particle_Status[q] == 2) {             
    //   std::cout << "Found a top quark" << std::endl;
-      TopPt->Fill(Particle_PT[q]);                                            // This has contributions from gluino and stop
+      _TopPt->Fill(Particle_PT[q]);                                            // This has contributions from gluino and stop
       Pt_top[q] = Particle_PT[q];
    //   std::cout << "'---> Top Pt [" << q << "] : " << Pt_top[q] << std::endl;
     //  std::cout << "       '---> Mother PID: " << Particle_PID[Particle_M1[q]] << std::endl;
     }
 
     if(abs(Particle_PID[q]) == 6 && Particle_PID[Particle_M1[q]] == 1000021){           // 1000021 is a gluino
-      Top_Gluino->Fill(Particle_PT[q]);
+      _Top_Gluino->Fill(Particle_PT[q]);
       ngluino++;
     }
     if(abs(Particle_PID[q]) == 6 && abs(Particle_PID[Particle_M1[q]]) == 1000006){      //  1000006 is a stop
-      Top_Stop->Fill(Particle_PT[q]);         
+      _Top_Stop->Fill(Particle_PT[q]);         
     nstop++;
       }
 }
@@ -207,12 +210,26 @@ int count = 0;
       r++;
     }
   }
+
 // Check there are two of each for gluinos and LSPs
-  if( nglu != nlsp){
+  if( nglu != nlsp ){
     std::cout << "Not an equal amount of LSPs and Gluinos" << std::endl;
   }
 
    MET = sqrt(pow(LSP1.Px() + LSP2.Px(),2) + pow(LSP1.Py() + LSP2.Py(),2) + pow(LSP1.Pz() + LSP2.Pz(),2));
+
+// ISR check
+
+  ISR = g1 + g2;
+ // std::cout << "ISR Px: " << ISR.Px() << std::endl;
+  //std::cout << "ISR Py: " << ISR.Py() << std::endl;
+  //std::cout << "ISR Pz: " << ISR.Pz() << std::endl;
+  //std::cout << "ISR E: " << ISR.E() << std::endl;
+  //_ISR->Fill(ISR.Px(), ISR.Py(), ISR.Pz());
+
+
+
+
 
 
 
@@ -227,21 +244,21 @@ int count = 0;
     Jet_ET[k] = sqrt(pow(Jet_PT[k],2) + pow(Jet_Mass[k],2));
   //  std::cout << "Jet ET[" << k << "] : " << Jet_ET[k]  << std::endl;
     HT+=Jet_ET[k];
-    JetPT->Fill(Jet_PT[k]);
+    _JetPT->Fill(Jet_PT[k]);
     njets++;
     }
     if(GenJet_PT[k] > 10.){
-      h_genjetPt->Fill(GenJet_PT[k]);
+      _h_genjetPt->Fill(GenJet_PT[k]);
     }
     if(abs(Particle_PID[k]) == 6){
    //   std::cout << "Jet PT for t: " << Jet_PT[k] << std::endl;
-    ttbar_jetpt->Fill(Jet_PT[k]);
-    ttbar_genjetpt->Fill(GenJet_PT[k]);
+    _ttbar_jetpt->Fill(Jet_PT[k]);
+    _ttbar_genjetpt->Fill(GenJet_PT[k]);
     } 
 }
  // std::cout << "Number of jets per event: " << njets << std::endl;
   std::cout << HT << std::endl;
-  JetET->Fill(HT);
+  _JetET->Fill(HT);
 
 
 
@@ -303,60 +320,56 @@ TCanvas *c2 = new TCanvas("c2", "c2", 200, 10, 600, 400);
 TCanvas *c3 = new TCanvas("c3", "c3", 200, 10, 600, 400);
 TCanvas *c4 = new TCanvas("c4", "c4", 200, 10, 600, 400);
 TCanvas *c7 = new TCanvas("c7", "c7", 200, 10, 600, 400);
+TCanvas *c8 = new TCanvas("c7", "c7", 200, 10, 600, 400);
 TLegend *leg = new TLegend(0.6,0.7,0.89,0.89);
 
 
 c1->Clear();
-JetPT->Draw("hist");
-JetPT->SetTitle("P_{T} of Jets");
-JetPT->Draw();
-JetPT->GetXaxis()->SetTitle("P_{T} of jets");
-JetPT->GetYaxis()->SetTitle("Entries");
-//h_genjetPt->Draw("histsame");
-//ttbar_jetpt->Draw("histsame");
-//c1->Print("jetpt.pdf");
+TFile *Jet_PT = new TFile("JetPT_pyth_500_100.root", "RECREATE");
+_JetPT->Write();
 
 c2->Clear();
-tmass->Draw("hist");
+_tmass->Draw("hist");
 //c2->Print("top_mass.pdf");
 
 c3->Clear();
-TopPt->Draw("hist");
+_TopPt->Draw("hist");
 //c3->Print("TopPt.pdf");
 
 c4->Clear();
-TFile *PTgluino_stop = new TFile("PTgluino_500_300.root","RECREATE");
-Top_Gluino->Draw("hist");
-Top_Gluino->Write();
-Top_Gluino->SetTitle("P_{T} from stop (500 GeV) and gluino (1 TeV) ");
-Top_Gluino->GetXaxis()->SetTitle("P_{T} of top");
-Top_Gluino->GetYaxis()->SetTitle("Entries");
-Top_Stop->Draw("SAME");
-Top_Stop->SetLineColor(2);
-Top_Stop->Draw("SAME");
-leg->AddEntry(Top_Gluino, "PT of top from gluino", "l");
-leg->AddEntry(Top_Stop, "PT of top from stop", "l");
+TFile *PTgluino_stop = new TFile("PTgluino_pyth_500_300.root","RECREATE");
+_Top_Gluino->Draw("hist");
+_Top_Gluino->Write();
+_Top_Gluino->SetTitle("P_{T} from stop (500 GeV) and gluino (1 TeV) ");
+_Top_Gluino->GetXaxis()->SetTitle("P_{T} of top");
+_Top_Gluino->GetYaxis()->SetTitle("Entries");
+_Top_Stop->Draw("SAME");
+_Top_Stop->SetLineColor(2);
+_Top_Stop->Draw("SAME");
+leg->AddEntry(_Top_Gluino, "PT of top from gluino", "l");
+leg->AddEntry(_Top_Stop, "PT of top from stop", "l");
 leg->Draw();
 c4->Print("PtTopGluino.pdf");
 
 
 TFile *PTstop_top = new TFile("PT_pyth_500_100.root", "RECREATE");
-Top_Stop->Write();
+_Top_Stop->Write();
 
 TFile *f = new TFile("MET_pyth_500_100.root", "RECREATE");
-MET_histo->Draw("hist");
-MET_histo->Write();
+_MET_histo->Draw("hist");
+_MET_histo->Write();
 
 
 c7->Clear();
 TFile *g = new TFile("JetET.root", "RECREATE");
-JetET->Write();
+_JetET->Write();
 c7->Print("JetET.pdf");
 
 TFile *delphi_gluino = new TFile("delphi_gluino.root", "RECREATE");
-delphi_gluino->Write();
+_delphi_gluino->Write();
 
-
+//TFile *_ISR = new TFile("ISR.root", "RECREATE");
+//_ISR->Write();
 
 
 }

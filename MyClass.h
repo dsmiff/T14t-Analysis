@@ -14,6 +14,7 @@
 #include <TRef.h>
 #include <TRefArray.h>
 #include <TH1.h>
+#include <TH3.h>
 #include <TLorentzVector.h>
 
 // Need to include TRef and TRefArray
@@ -45,26 +46,26 @@ public :
 
    // Histograms
 
-   TH1D* JetPT;
-   TH1D* h_genjetPt;
-   TH1D* ttbar;
-   TH1D* ttbar_jetpt;
-   TH1D* ttbar_genjetpt;
-   TH1D* tmass;
-   TH1D* TopPt;
-   TH1D* Top_Gluino;
-   TH1D* Top_Stop;
-   TH1D* MET_histo;
-   TH1D* delR;
-   TH1D* JetET;
-   TH1D* delphi_gluino;
+   TH1D* _JetPT;
+   TH1D* _h_genjetPt;
+   TH1D* _ttbar;
+   TH1D* _ttbar_jetpt;
+   TH1D* _ttbar_genjetpt;
+   TH1D* _tmass;
+   TH1D* _TopPt;
+   TH1D* _Top_Gluino;
+   TH1D* _Top_Stop;
+   TH1D* _MET_histo;
+   TH1D* _delR;
+   TH1D* _JetET;
+   TH1D* _delphi_gluino;
+   TH3D* _ISR;
 
    // Particles
 
-   TLorentzVector g1, g2, LSP1, LSP2, stop1, stop2, top1, top2, top3, top4;
+   TLorentzVector g1, g2, LSP1, LSP2, stop1, stop2, top1, top2, top3, top4, ISR;
    Double_t Rcut = 0.5;
    Double_t MET;
-
 
 
    // Declaration of leaf types
@@ -451,7 +452,7 @@ public :
    virtual void     Loop();
    virtual Bool_t   Notify();
    virtual void     Show(Long64_t entry = -1);
-   virtual int     GetNJets(); 
+   virtual int      GetNJets(); 
 
 
 
@@ -466,9 +467,9 @@ MyClass::MyClass(TTree *tree) : fChain(0)
 // if parameter tree is not specified (or zero), connect the file
 // used to generate this class and read the Tree.
    if (tree == 0) {
-      TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("delphes_pyth_500_100_output.root");
+      TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("delphes_500_100_output.root");
       if (!f || !f->IsOpen()) {
-         f = new TFile("delphes_pyth_500_100_output.root");
+         f = new TFile("delphes_500_100_output.root");
       }
       f->GetObject("Delphes",tree);
 
