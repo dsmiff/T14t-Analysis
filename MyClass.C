@@ -38,84 +38,7 @@ int MyClass::GetNJets(){
 
 }
 
-
-void MyClass::Loop()
-{
-                                                                                                                         
-// Declaring histograms
-
-  TH1::SetDefaultSumw2();
-
-  _JetPT = new TH1D("jetPt", "jetPt", 200, 0., 900.);
-  _h_genjetPt = new TH1D("genjetPt", "genjetPt", 200, 0., 200.);
-  _ttbar_jetpt = new TH1D("ttbar_jetpt", "ttbar_jetpt", 200, 0., 200.);
-  _ttbar_genjetpt = new TH1D("ttbar_genjetpt", "ttbar_genjetpt", 200, 0., 200.);
-  _tmass = new TH1D("tmass", "tmass", 200, 0., 400.);
-  _TopPt = new TH1D("TopPt", "TopPt", 200, 0., 800.);
-  _Top_Gluino = new TH1D("Top_Gluino", "Top_Gluino", 200, 0., 800.);
-  _Top_Stop = new TH1D("Top_Stop", "Top_Stop", 200, 0., 800.);
-  _MET_histo = new TH1D("MET_histo", "MET_histo", 200, 0., 2500.);
-  _delR = new TH1D("delR", "delR", 0.1, 0, 1.5);
-  _HT = new TH1D("HT", "HT", 200, 0., 1500.);
-  _delphi_gluino = new TH1D("delphi_gluino","delphi_gluino", 200, -5, 5);
-  _ISR = new TH1D("ISR", "ISR", 200, 0., 500);
-  _ScalarHT = new TH1D("ScalarHT","ScalarHT", 200, 200, 2600);
-  _JetPt1 = new TH1D("_JetPt1", "1st leading Jet Pt", 200, 0., 900.);
-  _JetPt2 = new TH1D("_JetPt2", "2nd leading Jet Pt", 200, 0., 900.);
-  _JetPt3 = new TH1D("_JetPt3", "3rd leading Jet Pt", 200, 0., 900.);
-  _JetPt4 = new TH1D("_JetPt4", "4th leading Jet Pt", 200, 0., 900.);
-
-Long64_t nentries = fChain->GetEntries();
-//Long64_t nents = b_Particle_PID->GetEntries();
-
-for(int i = 0; i<nentries; i++){
-  fChain->GetEntry(i);
-      std::cout << "\nNEW EVENT [" << i << " of " << nentries << "]" << std::endl;
-
-int njetss = GetNJets();
-
-
-
-
-
-
-for(unsigned int j=0; j<sizeof(MissingET_MET); j++){
-  if(MissingET_MET[j]> 5){
-  _MET_histo->Fill(MissingET_MET[j]);
- }
-}
-
-int nstop = 0;
-int ngluino = 0;
-int njets = 0;
-Double_t HT = 0.0;
-Double_t Jet_ET[kMaxEvent];
-Double_t Pt_top[sizeof(Particle_PT)];
-
-
-
-for(unsigned int q=0; q<sizeof(Particle_PT); q++){
-
-    if(abs(Particle_PID[q]) == 6 && Particle_Status[q] == 2) {             
-   //   std::cout << "Found a top quark" << std::endl;
-      _TopPt->Fill(Particle_PT[q]);                                         
-      Pt_top[q] = Particle_PT[q];
-    }
-
-    if(abs(Particle_PID[q]) == 6 && Particle_PID[Particle_M1[q]] == 1000021){           // 1000021 is a gluino
-      _Top_Gluino->Fill(Particle_PT[q]);
-      ngluino++;
-    }
-    if(abs(Particle_PID[q]) == 6 && abs(Particle_PID[Particle_M1[q]]) == 1000006){      //  1000006 is a stop
-      _Top_Stop->Fill(Particle_PT[q]);         
-    nstop++;
-      }
-}
-  if(ngluino != nstop){
-    std::cout << "WRONG" << ngluino << nstop << std::endl;
-  }
-
-
+int MyClass::AnalyseParticles(){
 
 // Assigning particles their TLorentzVectors
 // Need count ticker for non desirable particles, otherwise if statement loops infinitely  
@@ -229,29 +152,13 @@ int count = 0;
     std::cout << "Not an equal amount of LSPs and Gluinos" << std::endl;
   }
 
-   //MET = sqrt(pow(LSP1.Px() + LSP2.Px(),2) + pow(LSP1.Py() + LSP2.Py(),2) + pow(LSP1.Pz() + LSP2.Pz(),2));
-
-// ISR check
-
   ISR = g1 + g2;
   std::cout << "Boost: " << ISR.Pt() << std::endl;
   _ISR->Fill(ISR.Pt());
 
-
-
-for(unsigned int z=0; z<sizeof(ScalarHT_HT); z++){
-   // if(ScalarHT_HT[z] < 10) continue;
-   if(Jet_PT[z] > 20. && Jet_Mass[z] > 0.1){
-  if(ScalarHT_HT[z] < 8) continue;
-    _ScalarHT->Fill(ScalarHT_HT[z]);
-    std::cout << "Scalar HT: " << ScalarHT_HT[z] << std::endl;
- }
 }
 
-
-// Jet Analysis
-
-TLorentzVector jet;
+int MyClass::JetAnalysis(){
 
   for(unsigned int k=0; k<sizeof(Jet_PT); k++){
     if(Jet_PT[k] > 20. && Jet_Mass[k] > 0.1){
@@ -282,12 +189,98 @@ TLorentzVector jet;
 
   Jets.clear();
 
+}
 
-  // B-Tagging analysis
+int MyClass::METAnalysis(){
+
+  for(unsigned int j=0; j<sizeof(MissingET_MET); j++){
+    if(MissingET_MET[j]> 5){
+      _MET_histo->Fill(MissingET_MET[j]);
+   }
+  }
+
+}
 
 
+int MyClass::TopAnalysis(){
+
+   Double_t Pt_top[sizeof(Particle_PT)];
+
+  for(unsigned int q=0; q<sizeof(Particle_PT); q++){
+    if(abs(Particle_PID[q]) == 6 && Particle_Status[q] == 2) {             
+   //   std::cout << "Found a top quark" << std::endl;
+      _TopPt->Fill(Particle_PT[q]);                                         
+      Pt_top[q] = Particle_PT[q];
+    }
+    if(abs(Particle_PID[q]) == 6 && Particle_PID[Particle_M1[q]] == 1000021){           // 1000021 is a gluino
+      _Top_Gluino->Fill(Particle_PT[q]);
+      ngluino++;
+    }
+    if(abs(Particle_PID[q]) == 6 && abs(Particle_PID[Particle_M1[q]]) == 1000006){      //  1000006 is a stop
+      _Top_Stop->Fill(Particle_PT[q]);         
+    nstop++;
+      }
+  }
+    if(ngluino != nstop){
+      std::cout << "WRONG" << ngluino << nstop << std::endl;
+    }
+
+  }
 
 
+  int MyClass::ScalarHTAnalysis(){
+
+    for(unsigned int z=0; z<sizeof(ScalarHT_HT); z++){
+   // if(ScalarHT_HT[z] < 10) continue;
+      if(Jet_PT[z] > 20. && Jet_Mass[z] > 0.1){
+        if(ScalarHT_HT[z] < 8) continue;
+          _ScalarHT->Fill(ScalarHT_HT[z]);
+          std::cout << "Scalar HT: " << ScalarHT_HT[z] << std::endl;
+        }
+      }
+
+  }
+
+
+void MyClass::Loop()
+{
+                                                                                                                         
+// Declaring histograms
+
+  TH1::SetDefaultSumw2();
+
+  _JetPT = new TH1D("jetPt", "jetPt", 200, 0., 900.);
+  _h_genjetPt = new TH1D("genjetPt", "genjetPt", 200, 0., 200.);
+  _ttbar_jetpt = new TH1D("ttbar_jetpt", "ttbar_jetpt", 200, 0., 200.);
+  _ttbar_genjetpt = new TH1D("ttbar_genjetpt", "ttbar_genjetpt", 200, 0., 200.);
+  _tmass = new TH1D("tmass", "tmass", 200, 0., 400.);
+  _TopPt = new TH1D("TopPt", "TopPt", 200, 0., 800.);
+  _Top_Gluino = new TH1D("Top_Gluino", "Top_Gluino", 200, 0., 800.);
+  _Top_Stop = new TH1D("Top_Stop", "Top_Stop", 200, 0., 800.);
+  _MET_histo = new TH1D("MET_histo", "MET_histo", 200, 0., 2500.);
+  _delR = new TH1D("delR", "delR", 0.1, 0, 1.5);
+  _HT = new TH1D("HT", "HT", 200, 0., 1500.);
+  _delphi_gluino = new TH1D("delphi_gluino","delphi_gluino", 200, -5, 5);
+  _ISR = new TH1D("ISR", "ISR", 200, 0., 500);
+  _ScalarHT = new TH1D("ScalarHT","ScalarHT", 200, 200, 2600);
+  _JetPt1 = new TH1D("_JetPt1", "1st leading Jet Pt", 200, 0., 900.);
+  _JetPt2 = new TH1D("_JetPt2", "2nd leading Jet Pt", 200, 0., 900.);
+  _JetPt3 = new TH1D("_JetPt3", "3rd leading Jet Pt", 200, 0., 900.);
+  _JetPt4 = new TH1D("_JetPt4", "4th leading Jet Pt", 200, 0., 900.);
+
+Long64_t nentries = fChain->GetEntries();
+//Long64_t nents = b_Particle_PID->GetEntries();
+
+for(int i = 0; i<nentries; i++){
+  fChain->GetEntry(i);
+      std::cout << "\nNEW EVENT [" << i << " of " << nentries << "]" << std::endl;
+
+int NJETS = GetNJets();
+int ANALYSEPARTICLES = AnalyseParticles();
+int JETANALYSIS = JetAnalysis();
+int METANALYSIS = METAnalysis();
+int TOPANALYSIS = TopAnalysis();
+int SCALARHTANALYSIS = ScalarHTAnalysis();
 
 
 
