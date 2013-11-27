@@ -14,17 +14,29 @@
 #include <iostream>
 
 using namespace std;
- 
+
 int MyClass::GetNJets(){
 
-  int nJet = 0;
-  for (int i = 0; i < sizeof(Jet_PT); ++i)
-  {
-    if (Jet_PT[i]<10.) continue;
-    nJet++;
+  //Long64_t nentries = fChain->GetEntries();
+
+//  for(unsigned int s=0; s<nentries; s++){
+ //   fChain->GetEntry(s);
+   // std::cout << "EVENT[" << s << "]" << std::endl;
+
+  Int_t njet = 0;
+
+  for(unsigned int t=0; t<sizeof(Jet_PT); t++){
+    if(Jet_PT[t]<10) continue;
+      njet++;
+
   }
-  std::cout << "NJets: " << nJet << std::endl;
- } 
+
+    std::cout << "# jets: " << njet << std::endl;
+
+// }
+ return njet;
+
+}
 
 
 void MyClass::Loop()
@@ -54,21 +66,22 @@ void MyClass::Loop()
   _JetPt4 = new TH1D("_JetPt4", "4th leading Jet Pt", 200, 0., 900.);
 
 Long64_t nentries = fChain->GetEntries();
-Long64_t nents = b_Particle_PID->GetEntries();
+//Long64_t nents = b_Particle_PID->GetEntries();
 
 for(int i = 0; i<nentries; i++){
   fChain->GetEntry(i);
       std::cout << "\nNEW EVENT [" << i << " of " << nentries << "]" << std::endl;
 
+int njetss = GetNJets();
+if(i>5) return;
 
 
 
 
 
-
-for(unsigned int e=0; e<sizeof(MissingET_MET); e++){
-  if(MissingET_MET[e]> 5){
-  _MET_histo->Fill(MissingET_MET[e]);
+for(unsigned int j=0; j<sizeof(MissingET_MET); j++){
+  if(MissingET_MET[j]> 5){
+  _MET_histo->Fill(MissingET_MET[j]);
  }
 }
 
@@ -77,7 +90,7 @@ int ngluino = 0;
 int njets = 0;
 Double_t HT = 0.0;
 Double_t Jet_ET[kMaxEvent];
-Double_t dR[100], Pt_top[sizeof(Particle_PT)];
+Double_t Pt_top[sizeof(Particle_PT)];
 
 
 
@@ -269,15 +282,16 @@ TLorentzVector jet;
 
   Jets.clear();
 
+
+  // B-Tagging analysis
+
+
+
+
+
+
+
 }
-
-
-
-
-
-
-
-
 
 // Printing histograms
 
