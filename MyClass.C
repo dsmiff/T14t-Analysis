@@ -67,7 +67,6 @@ for(int i = 0; i<nentries; i++){
 
 
 for(unsigned int e=0; e<sizeof(MissingET_MET); e++){
- // std::cout << "MET: " << MissingET_MET[e] << std::endl; // Which PID gives the most MET?
   if(MissingET_MET[e]> 5){
   _MET_histo->Fill(MissingET_MET[e]);
  }
@@ -86,10 +85,8 @@ for(unsigned int q=0; q<sizeof(Particle_PT); q++){
 
     if(abs(Particle_PID[q]) == 6 && Particle_Status[q] == 2) {             
    //   std::cout << "Found a top quark" << std::endl;
-      _TopPt->Fill(Particle_PT[q]);                                            // This has contributions from gluino and stop
+      _TopPt->Fill(Particle_PT[q]);                                         
       Pt_top[q] = Particle_PT[q];
-   //   std::cout << "'---> Top Pt [" << q << "] : " << Pt_top[q] << std::endl;
-    //  std::cout << "       '---> Mother PID: " << Particle_PID[Particle_M1[q]] << std::endl;
     }
 
     if(abs(Particle_PID[q]) == 6 && Particle_PID[Particle_M1[q]] == 1000021){           // 1000021 is a gluino
@@ -116,7 +113,6 @@ for(unsigned int q=0; q<sizeof(Particle_PT); q++){
   int nstp = 0;
 
 for(unsigned int r=0; r<sizeof(Particle_PID); ){
-
 
 int count = 0;
 
@@ -215,7 +211,7 @@ int count = 0;
     }
   }
 
-// Check there are two of each for gluinos and LSPs
+// Clarity test
   if( nglu != nlsp ){
     std::cout << "Not an equal amount of LSPs and Gluinos" << std::endl;
   }
@@ -265,16 +261,11 @@ TLorentzVector jet;
 }
 
   sort(Jets.begin(), Jets.end(), order_gt());
-  std::cout << "Jet PT 1: " << Jets.at(0).Pt() << std::endl;
-  std::cout << "Jet PT 2: " << Jets.at(1).Pt() << std::endl;
 
   _JetPt1->Fill(Jets.at(0).Pt());
   _JetPt2->Fill(Jets.at(1).Pt());
   _JetPt3->Fill(Jets.at(2).Pt());
   _JetPt4->Fill(Jets.at(3).Pt());
-
-
-  std::cout << HT << std::endl;
 
   Jets.clear();
 
