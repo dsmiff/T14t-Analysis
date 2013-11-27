@@ -66,12 +66,19 @@ public :
    TH1D* _JetPt3;
    TH1D* _JetPt4;
 
-   // Particles
+   // Particles & other declarations
 
    TLorentzVector g1, g2, LSP1, LSP2, stop1, stop2, top1, top2, top3, top4, ISR;
    Double_t Rcut = 0.5;
    Double_t MET;
    std::vector<TLorentzVector> Jets;
+   TLorentzVector jet;
+   int nstop = 0;
+   int ngluino = 0;
+   int njets = 0;
+   Double_t HT = 0.0;
+   Double_t Jet_ET[kMaxEvent];
+
 
    // Declaration of leaf types
    // These are all defined in classes/DelphesClasses.h
@@ -458,9 +465,12 @@ public :
    virtual void     Loop();
    virtual Bool_t   Notify();
    virtual void     Show(Long64_t entry = -1);
-   virtual int    GetNJets(); 
-
-
+   virtual int      GetNJets(); 
+   virtual int      AnalyseParticles();
+   virtual int      JetAnalysis();
+   virtual int      METAnalysis();
+   virtual int      TopAnalysis();
+   virtual int      ScalarHTAnalysis();
 
 };
 
