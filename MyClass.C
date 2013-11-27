@@ -47,7 +47,7 @@ void MyClass::Loop()
   _HT = new TH1D("HT", "HT", 200, 0., 1500.);
   _delphi_gluino = new TH1D("delphi_gluino","delphi_gluino", 200, -5, 5);
   _ISR = new TH1D("ISR", "ISR", 200, 0., 500);
-  _ScalarHT = new TH1D("ScalarHT","ScalarHT", 200, 200, 2000);
+  _ScalarHT = new TH1D("ScalarHT","ScalarHT", 200, 200, 2600);
   _JetPt1 = new TH1D("_JetPt1", "1st leading Jet Pt", 200, 0., 900.);
   _JetPt2 = new TH1D("_JetPt2", "2nd leading Jet Pt", 200, 0., 900.);
   _JetPt3 = new TH1D("_JetPt3", "3rd leading Jet Pt", 200, 0., 900.);
@@ -231,11 +231,13 @@ int count = 0;
 
 
 for(unsigned int z=0; z<sizeof(ScalarHT_HT); z++){
-    if(ScalarHT_HT[z] < 10) continue;
+   // if(ScalarHT_HT[z] < 10) continue;
+   if(Jet_PT[z] > 20. && Jet_Mass[z] > 0.1){
+  if(ScalarHT_HT[z] < 8) continue;
     _ScalarHT->Fill(ScalarHT_HT[z]);
     std::cout << "Scalar HT: " << ScalarHT_HT[z] << std::endl;
+ }
 }
-
 
 
 // Jet Analysis
@@ -274,60 +276,15 @@ TLorentzVector jet;
 
   std::cout << HT << std::endl;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-  for(unsigned int j=0; j<sizeof(Jet_Eta); j++){
-  
-  dR[j] = sqrt((pow((Jet_Eta[j] - GenJet_Eta[j]),2) + (pow((Jet_Phi[j] - GenJet_Phi[j]),2))));
-  //  std::cout << "Size of Delta R : " << sizeof(dR) << std::endl;
-  //std::cout << "Delta R : " << dR[j] << std::endl;
-
-
-   if(Particle_PID[j] == 6){
-    // std::cout << "dR[" << j << "] (PID = 6) :"<< dR[j] << std::endl;
-    if((dR[j] < Rcut) && (dR[j] > 0.)){
-      std::cout << "Found a top quark" << std::endl;
-      t.SetPx(Particle_Px[j]);
-      t.SetPy(Particle_Py[j]);
-      t.SetPz(Particle_Pz[j]);
-      t.SetE(Particle_E[j]);
-      top_mass[j] = t.M();
-      tmass->Fill(top_mass[j]);
-      delR->Fill(dR[j]);
-   //   std::cout << " Particle Mother M1: " << Particle_M1[j] << std::endl;
-   //   std::cout << " Particle Mother M2: " << Particle_M2[j] << std::endl;
-     // std::cout << " ---> Top mass: "  << t.M() << std::endl;
-    // }
-    }
-    }
-  if (Particle_PID[j] == -6){
-    // std::cout << "dR[" << j << "] (PID = -6) :"<< dR[j] << std::endl;
-    if((dR[j] < Rcut) && (dR[j] > 0.)){
-     // std::cout << "Found an anti top quark" << std::endl;
-      tbar.SetPx(Particle_Px[j]);
-      tbar.SetPy(Particle_Py[j]);
-      tbar.SetPz(Particle_Pz[j]);
-      tbar.SetE(Particle_E[j]);
-      //std::cout << " ---> Anti top mass: " << tbar.M() << std::endl;
-   } 
-  }
- } */
-
   Jets.clear();
 
 }
+
+
+
+
+
+
 
 
 
@@ -343,7 +300,7 @@ TLegend *leg = new TLegend(0.6,0.7,0.89,0.89);
 
 
 c1->Clear();
-TFile *Jet_PT = new TFile("JetPT_pyth_500_100.root", "RECREATE");
+TFile *Jet_PT = new TFile("JetPt1_500_100.root", "RECREATE");
 _JetPT->Write();
 
 c2->Clear();
@@ -355,10 +312,10 @@ _TopPt->Draw("hist");
 //c3->Print("TopPt.pdf");
 
 c4->Clear();
-TFile *PTgluino_stop = new TFile("PTgluino_pyth_500_100.root","RECREATE");
+TFile *PTgluino_stop = new TFile("PTgluino_600_500_100.root","RECREATE");
 _Top_Gluino->Draw("hist");
 _Top_Gluino->Write();
-_Top_Gluino->SetTitle("P_{T} from stop (500 GeV) and gluino (1 TeV) ");
+_Top_Gluino->SetTitle("P_{T} from stop (500 GeV) and gluino (600 GeV) ");
 _Top_Gluino->GetXaxis()->SetTitle("P_{T} of top");
 _Top_Gluino->GetYaxis()->SetTitle("Entries");
 _Top_Stop->Draw("SAME");
@@ -370,29 +327,29 @@ leg->Draw();
 c4->Print("PtTopGluino.pdf");
 
 
-TFile *PTstop_top = new TFile("PT_pyth_500_100.root", "RECREATE");
+TFile *PTstop_top = new TFile("PT_600_500_100.root", "RECREATE");
 _Top_Stop->Write();
 
-TFile *f = new TFile("MET_pyth_500_100.root", "RECREATE");
+TFile *f = new TFile("MET_600_500_100.root", "RECREATE");
 _MET_histo->Draw("hist");
 _MET_histo->Write();
 
 
 
-TFile *g = new TFile("HT.root", "RECREATE");
+TFile *g = new TFile("HT_600_500_100.root", "RECREATE");
 _HT->Write();
 
 
 TFile *delphi_gluino = new TFile("delphi_gluino.root", "RECREATE");
 _delphi_gluino->Write();
 
-TFile *ISR = new TFile("ISR.root", "RECREATE");
+TFile *ISR = new TFile("ISR_600_500_100.root", "RECREATE");
 _ISR->Write();
 
-TFile *ScalarHT = new TFile("ScalarHT.root","RECREATE");
+TFile *ScalarHT = new TFile("ScalarHT_600_500_100.root","RECREATE");
 _ScalarHT->Write();
 
-TFile *JetPt1 = new TFile("LeadingJetPt.root", "RECREATE");
+TFile *JetPt1 = new TFile("LeadingJetPt_600_500_100.root", "RECREATE");
 _JetPt1->Write();
 _JetPt2->Write();
 _JetPt3->Write();
