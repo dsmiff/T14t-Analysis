@@ -11,7 +11,7 @@ void JetPlots()
   TLegend *leg = new TLegend(0.7,0.8,0.9,0.88);
 
   TString dirname = ".";
-  TString rootname = "LeadingJetPt_1000_500_100.root";
+  TString rootname = "LeadingJetPt_600_500_100.root";
   rootname = dirname + "/" + rootname;
   delete gROOT->GetListOfFiles()->FindObject(rootname);
   
