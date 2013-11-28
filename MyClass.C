@@ -17,24 +17,14 @@ using namespace std;
 
 int MyClass::GetNJets(){
 
-  //Long64_t nentries = fChain->GetEntries();
-
-//  for(unsigned int s=0; s<nentries; s++){
- //   fChain->GetEntry(s);
-   // std::cout << "EVENT[" << s << "]" << std::endl;
-
   Int_t njet = 0;
 
   for(unsigned int t=0; t<sizeof(Jet_PT); t++){
     if(Jet_PT[t]<10) continue;
       njet++;
-
   }
-
     std::cout << "# jets: " << njet << std::endl;
-
-// }
- return njet;
+    return njet;
 
 }
 
@@ -153,9 +143,10 @@ int count = 0;
   }
 
   ISR = g1 + g2;
-  std::cout << "Boost: " << ISR.Pt() << std::endl;
+  if( ISR.Pt() != 0 ){
+  std::cout << "System boosted: " << ISR.Pt() << std::endl;
   _ISR->Fill(ISR.Pt());
-
+  }
 }
 
 int MyClass::JetAnalysis(){
@@ -238,13 +229,14 @@ int MyClass::TopAnalysis(){
           std::cout << "Scalar HT: " << ScalarHT_HT[z] << std::endl;
         }
       }
-
   }
 
 
 void MyClass::Loop()
 {
-                                                                                                                         
+ 
+  Bool_t printout = 0;
+
 // Declaring histograms
 
   TH1::SetDefaultSumw2();
@@ -260,7 +252,6 @@ void MyClass::Loop()
   _MET_histo = new TH1D("MET_histo", "MET_histo", 200, 0., 2500.);
   _delR = new TH1D("delR", "delR", 0.1, 0, 1.5);
   _HT = new TH1D("HT", "HT", 200, 0., 1500.);
-  _delphi_gluino = new TH1D("delphi_gluino","delphi_gluino", 200, -5, 5);
   _ISR = new TH1D("ISR", "ISR", 200, 0., 500);
   _ScalarHT = new TH1D("ScalarHT","ScalarHT", 200, 200, 2600);
   _JetPt1 = new TH1D("_JetPt1", "1st leading Jet Pt", 200, 0., 900.);
@@ -273,7 +264,11 @@ Long64_t nentries = fChain->GetEntries();
 
 for(int i = 0; i<nentries; i++){
   fChain->GetEntry(i);
-      std::cout << "\nNEW EVENT [" << i << " of " << nentries << "]" << std::endl;
+  if ( printout ) continue;
+   std::cout << "\n**********************************" << std::endl;  
+   std::cout << "\nNEW EVENT [" << i << " of " << nentries << "]" << std::endl;
+
+
 
 int NJETS = GetNJets();
 int ANALYSEPARTICLES = AnalyseParticles();
@@ -329,17 +324,10 @@ TFile *PTstop_top = new TFile("PT_600_500_100.root", "RECREATE");
 _Top_Stop->Write();
 
 TFile *f = new TFile("MET_600_500_100.root", "RECREATE");
-_MET_histo->Draw("hist");
 _MET_histo->Write();
-
-
 
 TFile *g = new TFile("HT_600_500_100.root", "RECREATE");
 _HT->Write();
-
-
-TFile *delphi_gluino = new TFile("delphi_gluino.root", "RECREATE");
-_delphi_gluino->Write();
 
 TFile *ISR = new TFile("ISR_600_500_100.root", "RECREATE");
 _ISR->Write();
