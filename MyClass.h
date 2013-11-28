@@ -14,7 +14,10 @@
 #include <TRef.h>
 #include <TRefArray.h>
 #include <TH1.h>
+#include <TH2.h>
+#include <TH3.h>
 #include <TLorentzVector.h>
+#include <THistPainter.h>
 #include <algorithm>
 
 // Need to include TRef and TRefArray
@@ -64,6 +67,10 @@ public :
    TH1D* _JetPt2;
    TH1D* _JetPt3;
    TH1D* _JetPt4;
+   TH2F* _JetLego1;
+   TH2F* _JetLego2;
+   TH2F* _JetLego3;
+   TH2F* _JetLego4;
 
    // Particles & other declarations
 
@@ -481,9 +488,9 @@ MyClass::MyClass(TTree *tree) : fChain(0)
 // if parameter tree is not specified (or zero), connect the file
 // used to generate this class and read the Tree.
    if (tree == 0) {
-      TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("root/delphes_600_500_100_output.root");
+      TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("root/delphes_800_500_100_output.root");
       if (!f || !f->IsOpen()) {
-         f = new TFile("root/delphes_600_500_100_output.root");
+         f = new TFile("root/delphes_800_500_100_output.root");
       }
       f->GetObject("Delphes",tree);
 
