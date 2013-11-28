@@ -58,7 +58,6 @@ public :
    TH1D* _MET_histo;
    TH1D* _delR;
    TH1D* _HT;
-   TH1D* _delphi_gluino;
    TH1D* _ISR;
    TH1D* _ScalarHT;
    TH1D* _JetPt1;
