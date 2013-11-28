@@ -11,6 +11,7 @@
 #include <TRefArray.h>
 #include <TLegend.h>
 #include <TObject.h>
+#include <THistPainter.h>
 #include <iostream>
 
 using namespace std;
@@ -172,6 +173,13 @@ int MyClass::JetAnalysis(){
 }
 
   sort(Jets.begin(), Jets.end(), order_gt());
+  //std::cout << "1st Jet Pt: " << Jets.at(0).Pt() << std::endl;
+
+
+  _JetLego1->Fill(Jets.at(0).Pt(),Jets.at(0).Eta());
+  _JetLego2->Fill(Jets.at(1).Pt(),Jets.at(1).Eta());
+  _JetLego3->Fill(Jets.at(2).Pt(),Jets.at(2).Eta());
+  _JetLego4->Fill(Jets.at(3).Pt(),Jets.at(3).Eta());
 
   _JetPt1->Fill(Jets.at(0).Pt());
   _JetPt2->Fill(Jets.at(1).Pt());
@@ -258,6 +266,10 @@ void MyClass::Loop()
   _JetPt2 = new TH1D("_JetPt2", "2nd leading Jet Pt", 200, 0., 900.);
   _JetPt3 = new TH1D("_JetPt3", "3rd leading Jet Pt", 200, 0., 900.);
   _JetPt4 = new TH1D("_JetPt4", "4th leading Jet Pt", 200, 0., 900.);
+  _JetLego1 = new TH2F("JetLego1","Jet Lego plot", 200, 0, 600,  50, -5, 5);
+  _JetLego2 = new TH2F("JetLego2","Jet Lego plot", 200, 0, 600,  50, -5, 5);
+  _JetLego3 = new TH2F("JetLego3","Jet Lego plot", 200, 0, 600,  50, -5, 5);
+  _JetLego4 = new TH2F("JetLego4","Jet Lego plot", 200, 0, 600,  50, -5, 5);
 
 Long64_t nentries = fChain->GetEntries();
 //Long64_t nents = b_Particle_PID->GetEntries();
@@ -293,7 +305,7 @@ TLegend *leg = new TLegend(0.6,0.7,0.89,0.89);
 
 
 c1->Clear();
-TFile *Jet_PT = new TFile("JetPt1_500_100.root", "RECREATE");
+TFile *Jet_PT = new TFile("JetPt1_800_500_100.root", "RECREATE");
 _JetPT->Write();
 
 c2->Clear();
@@ -305,7 +317,7 @@ _TopPt->Draw("hist");
 //c3->Print("TopPt.pdf");
 
 c4->Clear();
-TFile *PTgluino_stop = new TFile("PTgluino_600_500_100.root","RECREATE");
+TFile *PTgluino_stop = new TFile("PTgluino_800_500_100.root","RECREATE");
 _Top_Gluino->Draw("hist");
 _Top_Gluino->Write();
 _Top_Gluino->SetTitle("P_{T} from stop (500 GeV) and gluino (600 GeV) ");
@@ -320,27 +332,32 @@ leg->Draw();
 c4->Print("PtTopGluino.pdf");
 
 
-TFile *PTstop_top = new TFile("PT_600_500_100.root", "RECREATE");
+TFile *PTstop_top = new TFile("PT_800_500_100.root", "RECREATE");
 _Top_Stop->Write();
 
-TFile *f = new TFile("MET_600_500_100.root", "RECREATE");
+TFile *f = new TFile("MET_800_500_100.root", "RECREATE");
 _MET_histo->Write();
 
-TFile *g = new TFile("HT_600_500_100.root", "RECREATE");
+TFile *g = new TFile("HT_800_500_100.root", "RECREATE");
 _HT->Write();
 
-TFile *ISR = new TFile("ISR_600_500_100.root", "RECREATE");
+TFile *ISR = new TFile("ISR_800_500_100.root", "RECREATE");
 _ISR->Write();
 
-TFile *ScalarHT = new TFile("ScalarHT_600_500_100.root","RECREATE");
+TFile *ScalarHT = new TFile("ScalarHT_800_500_100.root","RECREATE");
 _ScalarHT->Write();
 
-TFile *JetPt1 = new TFile("LeadingJetPt_600_500_100.root", "RECREATE");
+TFile *JetPt1 = new TFile("LeadingJetPt_800_500_100.root", "RECREATE");
 _JetPt1->Write();
 _JetPt2->Write();
 _JetPt3->Write();
 _JetPt4->Write();
 
+TFile *JetLego = new TFile("JetLego.root", "RECREATE");
+_JetLego1->Write();
+_JetLego2->Write();
+_JetLego3->Write();
+_JetLego4->Write();
 
 
 }
