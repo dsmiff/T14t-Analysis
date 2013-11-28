@@ -40,7 +40,7 @@ int MyClass::AnalyseParticles(){
 
 for(unsigned int r=0; r<sizeof(Particle_PID); ){
 
-int count = 0;
+  int count = 0;
 
     if(abs(Particle_PID[r]) == 1000022 && nlsp ==0){
       LSP1.SetPx(Particle_Px[r]);
