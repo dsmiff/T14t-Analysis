@@ -27,6 +27,12 @@ int MyClass::GetNJets(){
     std::cout << "# jets: " << njet << std::endl;
     return njet;
 
+    for(unsigned int p=0; p<sizeof(Particle_PID); p++){
+      if(abs(Particle_PID[p]) == 6){
+      std::cout << "Particle Mother: " << Particle_M1[p] << std::endl;
+      }
+     }
+
 }
 
 int MyClass::AnalyseParticles(){
@@ -188,6 +194,7 @@ int MyClass::JetAnalysis(){
 
   Jets.clear();
 
+
 }
 
 int MyClass::METAnalysis(){
@@ -305,7 +312,7 @@ TLegend *leg = new TLegend(0.6,0.7,0.89,0.89);
 
 
 c1->Clear();
-TFile *Jet_PT = new TFile("JetPt1_800_500_100.root", "RECREATE");
+TFile *Jet_PT = new TFile("JetPt1_mg1_prep.root", "RECREATE");
 _JetPT->Write();
 
 c2->Clear();
@@ -317,7 +324,7 @@ _TopPt->Draw("hist");
 //c3->Print("TopPt.pdf");
 
 c4->Clear();
-TFile *PTgluino_stop = new TFile("PTgluino_800_500_100.root","RECREATE");
+TFile *PTgluino_stop = new TFile("PTgluino_mg1_prep.root","RECREATE");
 _Top_Gluino->Draw("hist");
 _Top_Gluino->Write();
 _Top_Gluino->SetTitle("P_{T} from stop (500 GeV) and gluino (600 GeV) ");
@@ -332,28 +339,28 @@ leg->Draw();
 c4->Print("PtTopGluino.pdf");
 
 
-TFile *PTstop_top = new TFile("PT_800_500_100.root", "RECREATE");
+TFile *PTstop_top = new TFile("PT_mg1_prep.root", "RECREATE");
 _Top_Stop->Write();
 
-TFile *f = new TFile("MET_800_500_100.root", "RECREATE");
+TFile *f = new TFile("MET_mg1_prep.root", "RECREATE");
 _MET_histo->Write();
 
-TFile *g = new TFile("HT_800_500_100.root", "RECREATE");
+TFile *g = new TFile("HT_mg1_prep.root", "RECREATE");
 _HT->Write();
 
-TFile *ISR = new TFile("ISR_800_500_100.root", "RECREATE");
+TFile *ISR = new TFile("ISR_mg1_prep.root", "RECREATE");
 _ISR->Write();
 
-TFile *ScalarHT = new TFile("ScalarHT_800_500_100.root","RECREATE");
+TFile *ScalarHT = new TFile("ScalarHT_mg1_prep.root","RECREATE");
 _ScalarHT->Write();
 
-TFile *JetPt1 = new TFile("LeadingJetPt_800_500_100.root", "RECREATE");
+TFile *JetPt1 = new TFile("LeadingJetPt_mg1_prep.root", "RECREATE");
 _JetPt1->Write();
 _JetPt2->Write();
 _JetPt3->Write();
 _JetPt4->Write();
 
-TFile *JetLego = new TFile("JetLego.root", "RECREATE");
+TFile *JetLego = new TFile("JetLego_mg1_prep.root", "RECREATE");
 _JetLego1->Write();
 _JetLego2->Write();
 _JetLego3->Write();
