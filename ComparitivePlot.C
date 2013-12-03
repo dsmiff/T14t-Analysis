@@ -24,8 +24,8 @@ void ComparitivePlot()
 
 
   TString dirname = ".";
-  TString rootname1 = "PT_pyth_500_100.root";
-  TString rootname2 = "PT_500_100.root";
+  TString rootname1 = "JetPt1_mg1.root";
+  TString rootname2 = "JetPt1_mg1_prep.root";
   rootname1 = dirname + "/" + rootname1;
   rootname2 = dirname + "/" + rootname2;
   delete gROOT->GetListOfFiles()->FindObject(rootname1);
@@ -43,19 +43,20 @@ void ComparitivePlot()
   rootfile2->GetListOfKeys()->Print();
   rootfile2->ls();
 
-  TH1F *h1 = (TH1F*)rootfile->Get("Top_Stop");
+  TH1F *h1 = (TH1F*)rootfile->Get("jetPt");
   c0_1->cd();
   h1->Draw("hist");
   h1->RebinX(5);
-  h1->GetXaxis()->SetRangeUser(0,600);
+  h1->SetLineColor(2);
+  h1->GetXaxis()->SetRangeUser(0,800);
   Double_t entries1 = h1->GetEntries();
-  std::cout << "# Entries for Pythia generated histo: " << entries1 << std::endl;
+  std::cout << "# Entries for manual MadGraph generated events: " << entries1 << std::endl;
   h1->Scale(1/entries1);
-  h1->SetTitle("P_{T} disbn for top from stops for Pythia and MG generated events");
+  h1->SetTitle("Jet P_{T} disbn for top from stops for manual MadGraph and Prep MG generated events");
   h1->GetYaxis()->SetTitle("Entries normalised");
 
 
-  TH1F *h2 = (TH1F*)rootfile2->Get("Top_Stop");
+  TH1F *h2 = (TH1F*)rootfile2->Get("jetPt");
   h2->Draw("SAME L");
   h2->RebinX(5);
   h2->SetLineColor(9);
@@ -64,8 +65,8 @@ void ComparitivePlot()
   h2->Scale(1/entries2);
 
 
-  leg->AddEntry(h1, "Pythia generated events for top P_{T}, m_{t} = 500 GeV & m_{lsp} = 100 GeV", "l");
-  leg->AddEntry(h2, "MadGraph generated events for top P_{T}, m_{t} = 500 GeV & m_{lsp} = 100 GeV", "l");
+  leg->AddEntry(h1, "Manual MadGraph generated events for top P_{T}, m_{t} = 500 GeV & m_{lsp} = 100 GeV", "l");
+  leg->AddEntry(h2, "Prep MadGraph generated events for top P_{T}, m_{t} = 500 GeV & m_{lsp} = 100 GeV", "l");
   leg->SetTextSize(0.025);
   leg->Draw();
  
