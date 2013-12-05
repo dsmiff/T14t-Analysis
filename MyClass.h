@@ -74,8 +74,9 @@ public :
 
    // Particles & other declarations
 
-   TLorentzVector g1, g2, LSP1, LSP2, stop1, stop2, top1, top2, top3, top4, ISR;
+   TLorentzVector g1, g2, LSP1, LSP2, stop1, stop2, top1, top2, top3, top4, ISR, W1, W2, W3, W4, We, Wmu, Wtau;
    Double_t Rcut = 0.5;
+   Double_t TopBoost1, TopBoost2, TopBoost3, TopBoost4;
    Double_t MET;
    std::vector<TLorentzVector> Jets;
    TLorentzVector jet;
@@ -473,6 +474,7 @@ public :
    virtual void     Show(Long64_t entry = -1);
    virtual int      GetNJets(); 
    virtual int      AnalyseParticles();
+   virtual int      TopPolarisation();
    virtual int      JetAnalysis();
    virtual int      METAnalysis();
    virtual int      TopAnalysis();
@@ -488,9 +490,9 @@ MyClass::MyClass(TTree *tree) : fChain(0)
 // if parameter tree is not specified (or zero), connect the file
 // used to generate this class and read the Tree.
    if (tree == 0) {
-      TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("root/delphes_mg2.root");
+      TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("root/delphes_500_100_output.root");
       if (!f || !f->IsOpen()) {
-         f = new TFile("root/delphes_mg2.root");
+         f = new TFile("root/delphes_500_100_output.root");
       }
       f->GetObject("Delphes",tree);
 
