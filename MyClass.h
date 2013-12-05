@@ -74,7 +74,10 @@ public :
 
    // Particles & other declarations
 
-   TLorentzVector g1, g2, LSP1, LSP2, stop1, stop2, top1, top2, top3, top4, ISR, W1, W2, W3, W4, We, Wmu, Wtau;
+   TLorentzVector g1, g2, LSP1, LSP2, stop1, stop2, top1, top2, top3, top4, ISR, W1, W2, W3, W4;
+   TLorentzVector We = TLorentzVector(0,0,0,0);
+   TLorentzVector Wmu = TLorentzVector(0,0,0,0);
+   TLorentzVector Wtau = TLorentzVector(0,0,0,0);
    Double_t Rcut = 0.5;
    Double_t TopBoost1, TopBoost2, TopBoost3, TopBoost4;
    Double_t MET;
