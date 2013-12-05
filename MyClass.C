@@ -192,6 +192,7 @@ for(unsigned int r=0; r<sizeof(Particle_PID); ){
 
 int MyClass::TopPolarisation(){
 
+
 for(unsigned int p=0; p<sizeof(Particle_PID); p++){
   if(Particle_Status[p] == 1){
     if(abs(Particle_PID[p]) == 11){
@@ -377,7 +378,9 @@ for(int i = 0; i<nentries; i++){
    std::cout << "\n**********************************" << std::endl;  
    std::cout << "\nNEW EVENT [" << i << " of " << nentries << "]" << std::endl;
 
-
+    We = TLorentzVector(0,0,0,0);    // Need to reset the W boson TLorentzVectors for each event
+    Wmu = TLorentzVector(0,0,0,0);
+    Wtau = TLorentzVector(0,0,0,0);
 
 int NJETS = GetNJets();
 int ANALYSEPARTICLES = AnalyseParticles();
