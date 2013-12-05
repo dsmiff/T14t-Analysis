@@ -24,7 +24,7 @@ void ComparitivePlot()
 
 
   TString dirname = ".";
-  TString rootname1 = "JetPt1_mg2.root";
+  TString rootname1 = "JetPt1_new_mg.root";
   TString rootname2 = "JetPt1_mg1_prep.root";
   rootname1 = dirname + "/" + rootname1;
   rootname2 = dirname + "/" + rootname2;
