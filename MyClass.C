@@ -27,12 +27,6 @@ int MyClass::GetNJets(){
     std::cout << "# jets: " << njet << std::endl;
     return njet;
 
-    for(unsigned int p=0; p<sizeof(Particle_PID); p++){
-      if(abs(Particle_PID[p]) == 6){
-      std::cout << "Particle Mother: " << Particle_M1[p] << std::endl;
-      }
-     }
-
 }
 
 int MyClass::AnalyseParticles(){
@@ -44,6 +38,7 @@ int MyClass::AnalyseParticles(){
   int nglu = 0;
   int ntop = 0;
   int nstp = 0;
+  int nwbosons=0;
 
 for(unsigned int r=0; r<sizeof(Particle_PID); ){
 
@@ -139,6 +134,42 @@ for(unsigned int r=0; r<sizeof(Particle_PID); ){
       count++;
       r++;
     }
+    if(abs(Particle_PID[r]) == 24 && nwbosons == 0){
+      W1.SetPx(Particle_Px[r]);
+      W1.SetPy(Particle_Py[r]);
+      W1.SetPz(Particle_Pz[r]);
+      W1.SetE(Particle_E[r]);
+      nwbosons++;
+      count++;
+      r++;
+    }
+    if(abs(Particle_PID[r]) == 24 && nwbosons == 1){
+      W2.SetPx(Particle_Px[r]);
+      W2.SetPy(Particle_Py[r]);
+      W2.SetPz(Particle_Pz[r]);
+      W2.SetE(Particle_E[r]);
+      nwbosons++;
+      count++;
+      r++;
+    }   
+    if(abs(Particle_PID[r]) == 24 && nwbosons == 2){
+      W3.SetPx(Particle_Px[r]);
+      W3.SetPy(Particle_Py[r]);
+      W3.SetPz(Particle_Pz[r]);
+      W3.SetE(Particle_E[r]);
+      nwbosons++;
+      count++;
+      r++;
+    }   
+    if(abs(Particle_PID[r]) == 24 && nwbosons == 3){
+      W4.SetPx(Particle_Px[r]);
+      W4.SetPy(Particle_Py[r]);
+      W4.SetPz(Particle_Pz[r]);
+      W4.SetE(Particle_E[r]);
+      nwbosons++;
+      count++;
+      r++;
+    }      
     if(count == 0){
       r++;
     }
@@ -148,6 +179,9 @@ for(unsigned int r=0; r<sizeof(Particle_PID); ){
   if( nglu != nlsp ){
     std::cout << "Not an equal amount of LSPs and Gluinos" << std::endl;
   }
+  if( ntop != nwbosons){
+    std::cout << "Not an equal amount of W and tops" << std::endl;
+  }
 
   ISR = g1 + g2;
   if( ISR.Pt() != 0 ){
@@ -155,6 +189,52 @@ for(unsigned int r=0; r<sizeof(Particle_PID); ){
   _ISR->Fill(ISR.Pt());
   }
 }
+
+int MyClass::TopPolarisation(){
+
+for(unsigned int p=0; p<sizeof(Particle_PID); p++){
+  if(Particle_Status[p] == 1){
+    if(abs(Particle_PID[p]) == 11){
+      std::cout << "Found a final state electron" << std::endl;
+      std::cout << "Electron mother index: " << Particle_M1[p] << std::endl;
+    if(abs(Particle_PID[Particle_M1[p]]) == 24){
+      std::cout << "---> W boson from a top decay" << std::endl;
+      We.SetPx(Particle_Px[Particle_M1[p]]);
+      We.SetPy(Particle_Py[Particle_M1[p]]);
+      We.SetPz(Particle_Pz[Particle_M1[p]]);
+      We.SetE(Particle_E[Particle_M1[p]]);
+    }  
+  }
+    if(abs(Particle_PID[p]) == 13){
+      std::cout << "Found a final state muon" << std::endl;
+      std::cout << "Muon mother: " << Particle_PID[Particle_M1[p]] << std::endl;
+    if(abs(Particle_PID[Particle_M1[p]]) == 24){
+      std::cout << "---> W boson from a top decay" << std::endl;
+      Wmu.SetPx(Particle_Px[Particle_M1[p]]);
+      Wmu.SetPy(Particle_Py[Particle_M1[p]]);
+      Wmu.SetPz(Particle_Pz[Particle_M1[p]]);
+      Wmu.SetE(Particle_E[Particle_M1[p]]); 
+    }
+  }
+    if(abs(Particle_PID[p]) == 15){
+      std::cout << "Found a final state tauon" << std::endl;
+      std::cout << "Tauon mother: " << Particle_PID[Particle_M1[p]] << std::endl;
+    if(abs(Particle_PID[Particle_M1[p]]) == 24){
+      std::cout << "---> W boson from a top decay" << std::endl;
+      Wtau.SetPx(Particle_Px[Particle_M1[p]]);
+      Wtau.SetPy(Particle_Py[Particle_M1[p]]);
+      Wtau.SetPz(Particle_Pz[Particle_M1[p]]);
+      Wtau.SetE(Particle_E[Particle_M1[p]]);
+    }
+   }
+  }
+
+  if(abs(Particle_PID[p]) == 24){
+   std::cout << "Found a W boson at index: " << p << std::endl;
+  }
+ }
+}
+
 
 int MyClass::JetAnalysis(){
 
@@ -234,8 +314,12 @@ int MyClass::TopAnalysis(){
 // Would be good to add polar angle (between lepton and top direction) vs top boost. The top polarisation can leave an imprint
 // in the kinematic distributions of decays products. Idea would be start by isolating leptons and assign them TLorentzVectors
 // ensure that the isolated leptons have come from top quarks.
-// In the case of heavily boosted tops, the decay products get collimated.    
+// In the case of heavily boosted tops, the decay products get collimated.
 
+    TopBoost1 = abs(top1.Pt())/top1.E();
+    TopBoost2 = abs(top2.Pt())/top2.E();
+    TopBoost3 = abs(top3.Pt())/top3.E();
+    TopBoost4 = abs(top4.Pt())/top4.E();
 
   }
 
@@ -297,11 +381,11 @@ for(int i = 0; i<nentries; i++){
 
 int NJETS = GetNJets();
 int ANALYSEPARTICLES = AnalyseParticles();
+int TOPPOLARISATION = TopPolarisation();
 int JETANALYSIS = JetAnalysis();
 int METANALYSIS = METAnalysis();
 int TOPANALYSIS = TopAnalysis();
 int SCALARHTANALYSIS = ScalarHTAnalysis();
-
 
 
 }
@@ -318,7 +402,7 @@ TLegend *leg = new TLegend(0.6,0.7,0.89,0.89);
 
 
 c1->Clear();
-TFile *Jet_PT = new TFile("JetPt1_mg2.root", "RECREATE");
+TFile *Jet_PT = new TFile("JetPt1_500_100.root", "RECREATE");
 _JetPT->Write();
 
 c2->Clear();
@@ -330,7 +414,7 @@ _TopPt->Draw("hist");
 //c3->Print("TopPt.pdf");
 
 c4->Clear();
-TFile *PTgluino_stop = new TFile("PTgluino_mg2.root","RECREATE");
+TFile *PTgluino_stop = new TFile("PTgluino_500_100.root","RECREATE");
 _Top_Gluino->Draw("hist");
 _Top_Gluino->Write();
 _Top_Gluino->SetTitle("P_{T} from stop (500 GeV) and gluino (600 GeV) ");
@@ -345,28 +429,28 @@ leg->Draw();
 c4->Print("PtTopGluino.pdf");
 
 
-TFile *PTstop_top = new TFile("PT_mg2.root", "RECREATE");
+TFile *PTstop_top = new TFile("PT_500_100.root", "RECREATE");
 _Top_Stop->Write();
 
-TFile *f = new TFile("MET_mg2.root", "RECREATE");
+TFile *f = new TFile("MET_500_100.root", "RECREATE");
 _MET_histo->Write();
 
-TFile *g = new TFile("HT_mg2.root", "RECREATE");
+TFile *g = new TFile("HT_500_100.root", "RECREATE");
 _HT->Write();
 
-TFile *ISR = new TFile("ISR_mg2.root", "RECREATE");
+TFile *ISR = new TFile("ISR_500_100.root", "RECREATE");
 _ISR->Write();
 
-TFile *ScalarHT = new TFile("ScalarHT_mg2.root","RECREATE");
+TFile *ScalarHT = new TFile("ScalarHT_500_100.root","RECREATE");
 _ScalarHT->Write();
 
-TFile *JetPt1 = new TFile("LeadingJetPt_mg2.root", "RECREATE");
+TFile *JetPt1 = new TFile("LeadingJetPt_500_100.root", "RECREATE");
 _JetPt1->Write();
 _JetPt2->Write();
 _JetPt3->Write();
 _JetPt4->Write();
 
-TFile *JetLego = new TFile("JetLego_mg2.root", "RECREATE");
+TFile *JetLego = new TFile("JetLego_500_100.root", "RECREATE");
 _JetLego1->Write();
 _JetLego2->Write();
 _JetLego3->Write();
