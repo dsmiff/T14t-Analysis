@@ -80,7 +80,7 @@ public :
    TLorentzVector Electron = TLorentzVector(0,0,0,0);
    TLorentzVector Muon = TLorentzVector(0,0,0,0);
    TLorentzVector Tauon = TLorentzVector(0,0,0,0);
-   Double_t Rcut = 0.5;
+   Double_t delRcut = 0.5;
    Double_t TopBoost1, TopBoost2, TopBoost3, TopBoost4;
    Double_t MET;
    std::vector<TLorentzVector> Jets;
@@ -90,6 +90,7 @@ public :
    int njets = 0;
    Double_t HT = 0.0;
    Double_t Jet_ET[kMaxEvent];
+   Double_t delRelectron[4];
 
 
    // Declaration of leaf types
