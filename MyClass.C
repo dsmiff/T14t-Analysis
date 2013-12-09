@@ -29,6 +29,9 @@ int MyClass::GetNJets(){
 
 }
 
+
+
+
 int MyClass::AnalyseParticles(){
 
 // Assigning particles their TLorentzVectors
@@ -190,6 +193,9 @@ for(unsigned int r=0; r<sizeof(Particle_PID); ){
   }
 }
 
+
+
+
 int MyClass::TopPolarisation(){
 
 
@@ -198,6 +204,10 @@ for(unsigned int p=0; p<sizeof(Particle_PID); p++){
     if(abs(Particle_PID[p]) == 11){
       std::cout << "Found a final state electron" << std::endl;
       std::cout << "Electron mother index: " << Particle_M1[p] << std::endl;
+      Electron.SetPx(Particle_Px[p]);
+      Electron.SetPy(Particle_Py[p]);
+      Electron.SetPz(Particle_Pz[p]);
+      Electron.SetE(Particle_E[p]);
     if(abs(Particle_PID[Particle_M1[p]]) == 24){
       std::cout << "---> W boson from a top decay" << std::endl;
       We.SetPx(Particle_Px[Particle_M1[p]]);
@@ -208,7 +218,11 @@ for(unsigned int p=0; p<sizeof(Particle_PID); p++){
   }
     if(abs(Particle_PID[p]) == 13){
       std::cout << "Found a final state muon" << std::endl;
-      std::cout << "Muon mother: " << Particle_PID[Particle_M1[p]] << std::endl;
+      std::cout << "Muon mother index: " << Particle_M1[p] << std::endl;
+      Muon.SetPx(Particle_Px[p]);
+      Muon.SetPy(Particle_Py[p]);
+      Muon.SetPz(Particle_Pz[p]);
+      Muon.SetE(Particle_E[p]);
     if(abs(Particle_PID[Particle_M1[p]]) == 24){
       std::cout << "---> W boson from a top decay" << std::endl;
       Wmu.SetPx(Particle_Px[Particle_M1[p]]);
@@ -219,7 +233,11 @@ for(unsigned int p=0; p<sizeof(Particle_PID); p++){
   }
     if(abs(Particle_PID[p]) == 15){
       std::cout << "Found a final state tauon" << std::endl;
-      std::cout << "Tauon mother: " << Particle_PID[Particle_M1[p]] << std::endl;
+      std::cout << "Tauon mother index: " << Particle_M1[p] << std::endl;
+      Tauon.SetPx(Particle_Px[p]);
+      Tauon.SetPy(Particle_Py[p]);
+      Tauon.SetPz(Particle_Pz[p]);
+      Tauon.SetE(Particle_E[p]);
     if(abs(Particle_PID[Particle_M1[p]]) == 24){
       std::cout << "---> W boson from a top decay" << std::endl;
       Wtau.SetPx(Particle_Px[Particle_M1[p]]);
@@ -234,7 +252,27 @@ for(unsigned int p=0; p<sizeof(Particle_PID); p++){
    std::cout << "Found a W boson at index: " << p << std::endl;
   }
  }
+  // Need to perform delR between the top quarks and W bosons to obtain the minimum which will link the W boson to it's mother top quark
+  // Idea would be to then keep the top quark which results in a min delR, and then calculate the polar angle between this top quark and the lepton
+  // from which the W boson came from.
+
+if(We.E() != 0){                                        // Note that if We exists then by definition so should the electron.
+Double_t delRelectron1 = sqrt(pow((We.Eta() - top1.Eta()),2) + pow((We.Phi() - top1.Phi()),2));
+Double_t delRelectron2 = sqrt(pow((We.Eta() - top2.Eta()),2) + pow((We.Phi() - top2.Phi()),2));
+Double_t delRelectron3 = sqrt(pow((We.Eta() - top3.Eta()),2) + pow((We.Phi() - top3.Phi()),2));
+Double_t delRelectron4 = sqrt(pow((We.Eta() - top4.Eta()),2) + pow((We.Phi() - top4.Phi()),2));
 }
+if (Wmu.E() != 0){
+  std::cout << "Eta of Wmu :  " << Wmu.Eta() << std::endl;
+}
+if (Wtau.E() !=0 ){
+  std::cout << "Eta of Wtau : " << Wtau.Eta() << std::endl;
+}
+
+}
+
+
+
 
 
 int MyClass::JetAnalysis(){
@@ -278,6 +316,10 @@ int MyClass::JetAnalysis(){
 
 }
 
+
+
+
+
 int MyClass::METAnalysis(){
 
   for(unsigned int j=0; j<sizeof(MissingET_MET); j++){
@@ -287,6 +329,9 @@ int MyClass::METAnalysis(){
   }
 
 }
+
+
+
 
 
 int MyClass::TopAnalysis(){
@@ -325,6 +370,10 @@ int MyClass::TopAnalysis(){
   }
 
 
+
+
+
+
   int MyClass::ScalarHTAnalysis(){
 
     for(unsigned int z=0; z<sizeof(ScalarHT_HT); z++){
@@ -336,6 +385,9 @@ int MyClass::TopAnalysis(){
         }
       }
   }
+
+
+
 
 
 void MyClass::Loop()
@@ -356,7 +408,6 @@ void MyClass::Loop()
   _Top_Gluino = new TH1D("Top_Gluino", "Top_Gluino", 200, 0., 800.);
   _Top_Stop = new TH1D("Top_Stop", "Top_Stop", 200, 0., 800.);
   _MET_histo = new TH1D("MET_histo", "MET_histo", 200, 0., 2500.);
-  _delR = new TH1D("delR", "delR", 0.1, 0, 1.5);
   _HT = new TH1D("HT", "HT", 200, 0., 1500.);
   _ISR = new TH1D("ISR", "ISR", 200, 0., 500);
   _ScalarHT = new TH1D("ScalarHT","ScalarHT", 200, 200, 2600);
@@ -381,6 +432,9 @@ for(int i = 0; i<nentries; i++){
     We = TLorentzVector(0,0,0,0);    // Need to reset the W boson TLorentzVectors for each event
     Wmu = TLorentzVector(0,0,0,0);
     Wtau = TLorentzVector(0,0,0,0);
+    Electron = TLorentzVector(0,0,0,0);
+    Muon = TLorentzVector(0,0,0,0);
+    Tauon = TLorentzVector(0,0,0,0); 
 
 int NJETS = GetNJets();
 int ANALYSEPARTICLES = AnalyseParticles();
@@ -405,7 +459,7 @@ TLegend *leg = new TLegend(0.6,0.7,0.89,0.89);
 
 
 c1->Clear();
-TFile *Jet_PT = new TFile("JetPt1_500_100.root", "RECREATE");
+TFile *Jet_PT = new TFile("JetPt1_500_100_output.root", "RECREATE");
 _JetPT->Write();
 
 c2->Clear();
@@ -417,7 +471,7 @@ _TopPt->Draw("hist");
 //c3->Print("TopPt.pdf");
 
 c4->Clear();
-TFile *PTgluino_stop = new TFile("PTgluino_500_100.root","RECREATE");
+TFile *PTgluino_stop = new TFile("PTgluino_500_100_output.root","RECREATE");
 _Top_Gluino->Draw("hist");
 _Top_Gluino->Write();
 _Top_Gluino->SetTitle("P_{T} from stop (500 GeV) and gluino (600 GeV) ");
@@ -432,28 +486,28 @@ leg->Draw();
 c4->Print("PtTopGluino.pdf");
 
 
-TFile *PTstop_top = new TFile("PT_500_100.root", "RECREATE");
+TFile *PTstop_top = new TFile("PT_500_100_output.root", "RECREATE");
 _Top_Stop->Write();
 
-TFile *f = new TFile("MET_500_100.root", "RECREATE");
+TFile *f = new TFile("MET_500_100_output.root", "RECREATE");
 _MET_histo->Write();
 
-TFile *g = new TFile("HT_500_100.root", "RECREATE");
+TFile *g = new TFile("HT_500_100_output.root", "RECREATE");
 _HT->Write();
 
-TFile *ISR = new TFile("ISR_500_100.root", "RECREATE");
+TFile *ISR = new TFile("ISR_500_100_output.root", "RECREATE");
 _ISR->Write();
 
-TFile *ScalarHT = new TFile("ScalarHT_500_100.root","RECREATE");
+TFile *ScalarHT = new TFile("ScalarHT_500_100_output.root","RECREATE");
 _ScalarHT->Write();
 
-TFile *JetPt1 = new TFile("LeadingJetPt_500_100.root", "RECREATE");
+TFile *JetPt1 = new TFile("LeadingJetPt_500_100_output.root", "RECREATE");
 _JetPt1->Write();
 _JetPt2->Write();
 _JetPt3->Write();
 _JetPt4->Write();
 
-TFile *JetLego = new TFile("JetLego_500_100.root", "RECREATE");
+TFile *JetLego = new TFile("JetLego_500_100_output.root", "RECREATE");
 _JetLego1->Write();
 _JetLego2->Write();
 _JetLego3->Write();
