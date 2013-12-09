@@ -59,7 +59,6 @@ public :
    TH1D* _Top_Gluino;
    TH1D* _Top_Stop;
    TH1D* _MET_histo;
-   TH1D* _delR;
    TH1D* _HT;
    TH1D* _ISR;
    TH1D* _ScalarHT;
@@ -78,6 +77,9 @@ public :
    TLorentzVector We = TLorentzVector(0,0,0,0);
    TLorentzVector Wmu = TLorentzVector(0,0,0,0);
    TLorentzVector Wtau = TLorentzVector(0,0,0,0);
+   TLorentzVector Electron = TLorentzVector(0,0,0,0);
+   TLorentzVector Muon = TLorentzVector(0,0,0,0);
+   TLorentzVector Tauon = TLorentzVector(0,0,0,0);
    Double_t Rcut = 0.5;
    Double_t TopBoost1, TopBoost2, TopBoost3, TopBoost4;
    Double_t MET;
