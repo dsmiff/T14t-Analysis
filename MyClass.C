@@ -257,10 +257,10 @@ for(unsigned int p=0; p<sizeof(Particle_PID); p++){
   // from which the W boson came from.
 
 if(We.E() != 0){                                        // Note that if We exists then by definition so should the electron.
-Double_t delRelectron1 = sqrt(pow((We.Eta() - top1.Eta()),2) + pow((We.Phi() - top1.Phi()),2));
-Double_t delRelectron2 = sqrt(pow((We.Eta() - top2.Eta()),2) + pow((We.Phi() - top2.Phi()),2));
-Double_t delRelectron3 = sqrt(pow((We.Eta() - top3.Eta()),2) + pow((We.Phi() - top3.Phi()),2));
-Double_t delRelectron4 = sqrt(pow((We.Eta() - top4.Eta()),2) + pow((We.Phi() - top4.Phi()),2));
+ delRelectron[0] = sqrt(pow((We.Eta() - top1.Eta()),2) + pow((We.Phi() - top1.Phi()),2));
+ delRelectron[1] = sqrt(pow((We.Eta() - top2.Eta()),2) + pow((We.Phi() - top2.Phi()),2));
+ delRelectron[2] = sqrt(pow((We.Eta() - top3.Eta()),2) + pow((We.Phi() - top3.Phi()),2));
+ delRelectron[3] = sqrt(pow((We.Eta() - top4.Eta()),2) + pow((We.Phi() - top4.Phi()),2));
 }
 if (Wmu.E() != 0){
   std::cout << "Eta of Wmu :  " << Wmu.Eta() << std::endl;
