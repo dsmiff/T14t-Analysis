@@ -70,6 +70,9 @@ public :
    TH2F* _JetLego2;
    TH2F* _JetLego3;
    TH2F* _JetLego4;
+   TH1F* _polarangle1;
+   TH1F* _polarangle2;
+   TH1F* _polarangle3;
 
    // Particles & other declarations
 
@@ -84,6 +87,7 @@ public :
    Double_t TopBoost1, TopBoost2, TopBoost3, TopBoost4;
    Double_t MET;
    std::vector<TLorentzVector> Jets;
+   // std::vector<TLorentzVector> TopQuarks;
    TLorentzVector jet;
    int nstop = 0;
    int ngluino = 0;
@@ -91,6 +95,8 @@ public :
    Double_t HT = 0.0;
    Double_t Jet_ET[kMaxEvent];
    Double_t delRelectron[4];
+   Double_t delRmu[4];
+   Double_t delRtauon[4];
 
 
    // Declaration of leaf types
