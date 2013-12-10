@@ -178,6 +178,7 @@ for(unsigned int r=0; r<sizeof(Particle_PID); ){
     }
   }
 
+
 // Clarity test
   if( nglu != nlsp ){
     std::cout << "Not an equal amount of LSPs and Gluinos" << std::endl;
@@ -191,18 +192,23 @@ for(unsigned int r=0; r<sizeof(Particle_PID); ){
   std::cout << "System boosted: " << ISR.Pt() << std::endl;
   _ISR->Fill(ISR.Pt());
   }
+
 }
+
 
 
 
 
 int MyClass::TopPolarisation(){
 
+Double_t angle;
 
+// NB if more than one of the same leptons exists (likely the case with muons), angle of each is added to the histo (rather than ommitting it)
+ 
 for(unsigned int p=0; p<sizeof(Particle_PID); p++){
   if(Particle_Status[p] == 1){
     if(abs(Particle_PID[p]) == 11){
-      std::cout << "Found a final state electron" << std::endl;
+      std::cout << "Found a final state electron/positron" << std::endl;
       std::cout << "Electron mother index: " << Particle_M1[p] << std::endl;
       Electron.SetPx(Particle_Px[p]);
       Electron.SetPy(Particle_Py[p]);
@@ -214,10 +220,31 @@ for(unsigned int p=0; p<sizeof(Particle_PID); p++){
       We.SetPy(Particle_Py[Particle_M1[p]]);
       We.SetPz(Particle_Pz[Particle_M1[p]]);
       We.SetE(Particle_E[Particle_M1[p]]);
+      // Calculate del R between this W boson and each top quark
+      delRelectron[0] = sqrt(pow((We.Eta() - top1.Eta()),2) + pow((We.Phi() - top1.Phi()),2));
+      delRelectron[1] = sqrt(pow((We.Eta() - top2.Eta()),2) + pow((We.Phi() - top2.Phi()),2));
+      delRelectron[2] = sqrt(pow((We.Eta() - top3.Eta()),2) + pow((We.Phi() - top3.Phi()),2));
+      delRelectron[3] = sqrt(pow((We.Eta() - top4.Eta()),2) + pow((We.Phi() - top4.Phi()),2));
     }  
+    if(delRelectron[0] < 0.5){
+      angle = Electron.Angle(top1.Vect());
+      _polarangle1->Fill(angle);
+    }
+    else if(delRelectron[1] < 0.5){
+      angle = Electron.Angle(top2.Vect());
+      _polarangle1->Fill(angle);
+    }
+    else if(delRelectron[2] < 0.5){
+      angle = Electron.Angle(top3.Vect());
+      _polarangle3->Fill(angle);
+    }
+    else if(delRelectron[3] < 0.5){
+      angle = Electron.Angle(top4.Vect());
+    }
   }
+
     if(abs(Particle_PID[p]) == 13){
-      std::cout << "Found a final state muon" << std::endl;
+      std::cout << "Found a final state muon/antimuon" << std::endl;
       std::cout << "Muon mother index: " << Particle_M1[p] << std::endl;
       Muon.SetPx(Particle_Px[p]);
       Muon.SetPy(Particle_Py[p]);
@@ -229,10 +256,32 @@ for(unsigned int p=0; p<sizeof(Particle_PID); p++){
       Wmu.SetPy(Particle_Py[Particle_M1[p]]);
       Wmu.SetPz(Particle_Pz[Particle_M1[p]]);
       Wmu.SetE(Particle_E[Particle_M1[p]]); 
+      // Calculate del R between this W boson and each top quark
+      delRmu[0] = sqrt(pow((Wmu.Eta() - top1.Eta()),2) + pow((Wmu.Phi() - top1.Phi()),2));
+      delRmu[1] = sqrt(pow((Wmu.Eta() - top2.Eta()),2) + pow((Wmu.Phi() - top2.Phi()),2));
+      delRmu[2] = sqrt(pow((Wmu.Eta() - top3.Eta()),2) + pow((Wmu.Phi() - top3.Phi()),2));
+      delRmu[3] = sqrt(pow((Wmu.Eta() - top4.Eta()),2) + pow((Wmu.Phi() - top4.Phi()),2));
+    }
+    if(delRmu[0] < 0.5){
+      angle = Muon.Angle(top1.Vect());
+      _polarangle2->Fill(angle);
+    }
+    else if(delRmu[1] < 0.5){
+      angle = Muon.Angle(top2.Vect());
+      _polarangle2->Fill(angle);
+    }
+    else if(delRmu[2] < 0.5){
+      angle = Muon.Angle(top3.Vect());
+      _polarangle2->Fill(angle);
+    }
+    else if(delRmu[3] <  0.5){
+      angle = Muon.Angle(top4.Vect());
+      _polarangle2->Fill(angle);
     }
   }
+
     if(abs(Particle_PID[p]) == 15){
-      std::cout << "Found a final state tauon" << std::endl;
+      std::cout << "Found a final state tauon/antitauon" << std::endl;
       std::cout << "Tauon mother index: " << Particle_M1[p] << std::endl;
       Tauon.SetPx(Particle_Px[p]);
       Tauon.SetPy(Particle_Py[p]);
@@ -244,6 +293,27 @@ for(unsigned int p=0; p<sizeof(Particle_PID); p++){
       Wtau.SetPy(Particle_Py[Particle_M1[p]]);
       Wtau.SetPz(Particle_Pz[Particle_M1[p]]);
       Wtau.SetE(Particle_E[Particle_M1[p]]);
+      // Calculate del R between this W boson and each top quark
+      delRtauon[0] = sqrt(pow((Wtau.Eta() - top1.Eta()),2) + pow((Wtau.Phi() - top1.Phi()),2));
+      delRtauon[1] = sqrt(pow((Wtau.Eta() - top2.Eta()),2) + pow((Wtau.Phi() - top2.Phi()),2));
+      delRtauon[2] = sqrt(pow((Wtau.Eta() - top3.Eta()),2) + pow((Wtau.Phi() - top3.Phi()),2));
+      delRtauon[3] = sqrt(pow((Wtau.Eta() - top4.Eta()),2) + pow((Wtau.Phi() - top4.Phi()),2));
+    }
+    if(delRtauon[0] < 0.5){
+      angle = Tauon.Angle(top1.Vect());
+      _polarangle3->Fill(angle);
+    }
+    else if(delRtauon[1] < 0.5){
+      angle = Tauon.Angle(top2.Vect());
+      _polarangle3->Fill(angle);
+    }
+    else if(delRtauon[2] < 0.5){
+      angle = Tauon.Angle(top3.Vect());
+      _polarangle3->Fill(angle);
+    }
+    else if(delRtauon[3] < 0.5){
+      angle = Tauon.Angle(top4.Vect());
+      _polarangle3->Fill(angle);
     }
    }
   }
@@ -252,22 +322,8 @@ for(unsigned int p=0; p<sizeof(Particle_PID); p++){
    std::cout << "Found a W boson at index: " << p << std::endl;
   }
  }
-  // Need to perform delR between the top quarks and W bosons to obtain the minimum which will link the W boson to it's mother top quark
-  // Idea would be to then keep the top quark which results in a min delR, and then calculate the polar angle between this top quark and the lepton
-  // from which the W boson came from.
 
-if(We.E() != 0){                                        // Note that if We exists then by definition so should the electron.
- delRelectron[0] = sqrt(pow((We.Eta() - top1.Eta()),2) + pow((We.Phi() - top1.Phi()),2));
- delRelectron[1] = sqrt(pow((We.Eta() - top2.Eta()),2) + pow((We.Phi() - top2.Phi()),2));
- delRelectron[2] = sqrt(pow((We.Eta() - top3.Eta()),2) + pow((We.Phi() - top3.Phi()),2));
- delRelectron[3] = sqrt(pow((We.Eta() - top4.Eta()),2) + pow((We.Phi() - top4.Phi()),2));
-}
-if (Wmu.E() != 0){
-  std::cout << "Eta of Wmu :  " << Wmu.Eta() << std::endl;
-}
-if (Wtau.E() !=0 ){
-  std::cout << "Eta of Wtau : " << Wtau.Eta() << std::endl;
-}
+
 
 }
 
@@ -419,8 +475,14 @@ void MyClass::Loop()
   _JetLego2 = new TH2F("JetLego2","Jet Lego plot", 200, 0, 600,  50, -5, 5);
   _JetLego3 = new TH2F("JetLego3","Jet Lego plot", 200, 0, 600,  50, -5, 5);
   _JetLego4 = new TH2F("JetLego4","Jet Lego plot", 200, 0, 600,  50, -5, 5);
+  _polarangle1 = new TH1F("polarangle1","polarangle1", 50, 0.0, 4);
+  _polarangle2 = new TH1F("polarangle2","polarangle2", 50, 0.0, 4);
+  _polarangle3 = new TH1F("polarangle3","polarangle3", 50, 0.0, 4);
 
-Long64_t nentries = fChain->GetEntries();
+
+//Long64_t nentries = fChain->GetEntries();
+Int_t nentries = 10000;
+
 //Long64_t nents = b_Particle_PID->GetEntries();
 
 for(int i = 0; i<nentries; i++){
@@ -513,6 +575,10 @@ _JetLego2->Write();
 _JetLego3->Write();
 _JetLego4->Write();
 
+TFile *angles = new TFile("angle1_500_100_output.root","RECREATE");
+_polarangle1->Write();
+_polarangle2->Write();
+_polarangle3->Write();
 
 }
 /*
