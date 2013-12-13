@@ -202,8 +202,9 @@ for(unsigned int r=0; r<sizeof(Particle_PID); ){
 int MyClass::TopPolarisation(){
 
 Double_t angle;
+Double_t phi;
 
-// NB if more than one of the same leptons exists (likely the case with muons), angle of each is added to the histo (rather than ommitting it)
+// NB if more than one of the same leptons exists (likely the case with muons), polar angle of each is added to the histo (rather than ommitting it)
  
 for(unsigned int p=0; p<sizeof(Particle_PID); p++){
   if(Particle_Status[p] == 1){
@@ -264,18 +265,26 @@ for(unsigned int p=0; p<sizeof(Particle_PID); p++){
     }
     if(delRmu[0] < 0.5){
       angle = Muon.Angle(top1.Vect());
+      phi = top1.Phi() - Muon.Phi();
+            std::cout << "phi: " << phi << std::endl;
       _polarangle2->Fill(angle);
     }
     else if(delRmu[1] < 0.5){
       angle = Muon.Angle(top2.Vect());
+      phi = top2.Phi() - Muon.Phi();
+            std::cout << "phi: " << phi << std::endl;
       _polarangle2->Fill(angle);
     }
     else if(delRmu[2] < 0.5){
       angle = Muon.Angle(top3.Vect());
+      phi = top3.Phi() - Muon.Phi();
+            std::cout << "phi: " << phi << std::endl;
       _polarangle2->Fill(angle);
     }
     else if(delRmu[3] <  0.5){
       angle = Muon.Angle(top4.Vect());
+      phi = top4.Phi() - Muon.Phi();
+      std::cout << "phi: " << phi << std::endl;
       _polarangle2->Fill(angle);
     }
   }
@@ -497,6 +506,9 @@ for(int i = 0; i<nentries; i++){
     Electron = TLorentzVector(0,0,0,0);
     Muon = TLorentzVector(0,0,0,0);
     Tauon = TLorentzVector(0,0,0,0); 
+
+
+// Initiliase functions
 
 int NJETS = GetNJets();
 int ANALYSEPARTICLES = AnalyseParticles();
