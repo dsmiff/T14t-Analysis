@@ -73,6 +73,9 @@ public :
    TH1F* _polarangle1;
    TH1F* _polarangle2;
    TH1F* _polarangle3;
+   TH1F* _phi1;
+   TH1F* _phi2;
+   TH1F* _phi3;
 
    // Particles & other declarations
 
@@ -97,6 +100,7 @@ public :
    Double_t delRelectron[4];
    Double_t delRmu[4];
    Double_t delRtauon[4];
+   Double_t pi = 3.14159265358979312;
 
 
    // Declaration of leaf types
