@@ -229,18 +229,47 @@ for(unsigned int p=0; p<sizeof(Particle_PID); p++){
     }  
     if(delRelectron[0] < 0.5){
       angle = Electron.Angle(top1.Vect());
+      Double_t dotEE = (Electron.Px()*top1.Px() + Electron.Py()*top1.Py());
+      Double_t modEE = (Electron.Pt()*top1.Pt());
+      phi = acos(dotEE/modEE);
+      if(top1.Px() < 0){
+        phi = (2*pi - phi);
+      }
       _polarangle1->Fill(angle);
+      _phi1->Fill(phi);
     }
     else if(delRelectron[1] < 0.5){
       angle = Electron.Angle(top2.Vect());
+      Double_t dotEE = (Electron.Px()*top2.Px() + Electron.Py()*top2.Py());
+      Double_t modEE = (Electron.Pt()*top2.Pt());
+      phi = acos(dotEE/modEE);
+      if(top2.Px() < 0){
+        phi = (2*pi - phi);
+      }
       _polarangle1->Fill(angle);
+      _phi1->Fill(phi);
     }
     else if(delRelectron[2] < 0.5){
       angle = Electron.Angle(top3.Vect());
-      _polarangle3->Fill(angle);
+      Double_t dotEE = (Electron.Px()*top3.Px() + Electron.Py()*top3.Py());
+      Double_t modEE = (Electron.Pt()*top3.Pt());
+      phi = acos(dotEE/modEE);
+      if(top3.Px() < 0){
+        phi = (2*pi - phi);
+      }
+      _polarangle1->Fill(angle);
+      _phi1->Fill(phi);
     }
     else if(delRelectron[3] < 0.5){
       angle = Electron.Angle(top4.Vect());
+      Double_t dotEE = (Electron.Px()*top4.Px() + Electron.Py()*top4.Py());
+      Double_t modEE = (Electron.Pt()*top4.Pt());
+      phi = acos(dotEE/modEE);
+      if(top4.Px() < 0){
+        phi = (2*pi - phi);
+      }
+      _polarangle1->Fill(angle);
+      _phi1->Fill(phi);
     }
   }
 
@@ -265,27 +294,51 @@ for(unsigned int p=0; p<sizeof(Particle_PID); p++){
     }
     if(delRmu[0] < 0.5){
       angle = Muon.Angle(top1.Vect());
-      phi = top1.Phi() - Muon.Phi();
-            std::cout << "phi: " << phi << std::endl;
+      Double_t dotMM = (Muon.Px()*top1.Px() + Muon.Py()*top1.Py());
+      Double_t modMM = (Muon.Pt()*top1.Pt());
+      phi = acos(dotMM/modMM);
+     std::cout << "PHI : " << phi << std::endl;
+     if(top1.Px() < 0){
+      phi = (2*pi - phi);
+     }
       _polarangle2->Fill(angle);
+      _phi2->Fill(phi);
     }
     else if(delRmu[1] < 0.5){
       angle = Muon.Angle(top2.Vect());
-      phi = top2.Phi() - Muon.Phi();
-            std::cout << "phi: " << phi << std::endl;
+      Double_t dotMM = (Muon.Px()*top2.Px() + Muon.Py()*top2.Py());
+      Double_t modMM = (Muon.Pt()*top2.Pt());
+      phi = acos(dotMM/modMM);
+     std::cout << "PHI : " << phi << std::endl;
+     if(top2.Px() < 0){
+      phi = (2*pi - phi);
+     }
       _polarangle2->Fill(angle);
+      _phi2->Fill(phi);
     }
     else if(delRmu[2] < 0.5){
       angle = Muon.Angle(top3.Vect());
-      phi = top3.Phi() - Muon.Phi();
-            std::cout << "phi: " << phi << std::endl;
+      Double_t dotMM = (Muon.Px()*top3.Px() + Muon.Py()*top3.Py());
+      Double_t modMM = (Muon.Pt()*top3.Pt());
+      phi = acos(dotMM/modMM);
+     std::cout << "PHI : " << phi << std::endl;
+     if(top3.Px() < 0){
+      phi = (2*pi - phi);
+     }
       _polarangle2->Fill(angle);
+      _phi2->Fill(phi);
     }
     else if(delRmu[3] <  0.5){
       angle = Muon.Angle(top4.Vect());
-      phi = top4.Phi() - Muon.Phi();
-      std::cout << "phi: " << phi << std::endl;
+      Double_t dotMM = (Muon.Px()*top4.Px() + Muon.Py()*top4.Py());
+      Double_t modMM = (Muon.Pt()*top4.Pt());
+      phi = acos(dotMM/modMM);
+     std::cout << "PHI : " << phi << std::endl;
+     if(top4.Px() < 0){
+      phi = (2*pi - phi);
+     }
       _polarangle2->Fill(angle);
+      _phi2->Fill(phi);
     }
   }
 
@@ -310,19 +363,47 @@ for(unsigned int p=0; p<sizeof(Particle_PID); p++){
     }
     if(delRtauon[0] < 0.5){
       angle = Tauon.Angle(top1.Vect());
+      Double_t dotTT = (Tauon.Px()*top1.Px() + Tauon.Py()*top1.Py());
+      Double_t modTT = (Tauon.Pt()*top1.Pt());
+      phi = acos(dotTT/modTT);
+     if(top1.Px() < 0){
+      phi = (2*pi - phi);
+     }
       _polarangle3->Fill(angle);
+      _phi3->Fill(phi);
     }
     else if(delRtauon[1] < 0.5){
       angle = Tauon.Angle(top2.Vect());
+      Double_t dotTT = (Tauon.Px()*top2.Px() + Tauon.Py()*top2.Py());
+      Double_t modTT = (Tauon.Pt()*top2.Pt());
+      phi = acos(dotTT/modTT);
+     if(top2.Px() < 0){
+      phi = (2*pi - phi);
+     }
       _polarangle3->Fill(angle);
+      _phi3->Fill(phi);
     }
     else if(delRtauon[2] < 0.5){
       angle = Tauon.Angle(top3.Vect());
+      Double_t dotTT = (Tauon.Px()*top3.Px() + Tauon.Py()*top3.Py());
+      Double_t modTT = (Tauon.Pt()*top3.Pt());
+      phi = acos(dotTT/modTT);
+     if(top3.Px() < 0){
+      phi = (2*pi - phi);
+     }
       _polarangle3->Fill(angle);
+      _phi3->Fill(phi);
     }
     else if(delRtauon[3] < 0.5){
       angle = Tauon.Angle(top4.Vect());
+      Double_t dotTT = (Tauon.Px()*top4.Px() + Tauon.Py()*top4.Py());
+      Double_t modTT = (Tauon.Pt()*top4.Pt());
+      phi = acos(dotTT/modTT);
+     if(top4.Px() < 0){
+      phi = (2*pi - phi);
+     }
       _polarangle3->Fill(angle);
+      _phi3->Fill(phi);
     }
    }
   }
@@ -487,6 +568,9 @@ void MyClass::Loop()
   _polarangle1 = new TH1F("polarangle1","polarangle1", 50, 0.0, 4);
   _polarangle2 = new TH1F("polarangle2","polarangle2", 50, 0.0, 4);
   _polarangle3 = new TH1F("polarangle3","polarangle3", 50, 0.0, 4);
+  _phi1 = new TH1F("phi1","phi1", 50, 0.0, 7);
+  _phi2 = new TH1F("phi2","phi2", 50, 0.0, 7);
+  _phi3 = new TH1F("phi3","phi3", 50, 0.0, 7);
 
 
 //Long64_t nentries = fChain->GetEntries();
@@ -591,6 +675,9 @@ TFile *angles = new TFile("angle1_500_100_output.root","RECREATE");
 _polarangle1->Write();
 _polarangle2->Write();
 _polarangle3->Write();
+_phi1->Write();
+_phi2->Write();
+_phi3->Write();
 
 }
 /*
