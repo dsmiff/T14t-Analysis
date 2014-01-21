@@ -201,8 +201,8 @@ for(unsigned int r=0; r<sizeof(Particle_PID); ){
 
 int MyClass::TopPolarisation(){
 
-Double_t angle;
-Double_t phi;
+Double_t angle;       // Polar angle between top quark and respective lepton
+Double_t phi;         // Azimuthal angle between top quark and respective lepton
 
 // NB if more than one of the same leptons exists (likely the case with muons), polar angle of each is added to the histo (rather than ommitting it)
  
@@ -447,7 +447,7 @@ int MyClass::JetAnalysis(){
   //std::cout << "1st Jet Pt: " << Jets.at(0).Pt() << std::endl;
 
 
-  _JetLego1->Fill(Jets.at(0).Pt(),Jets.at(0).Eta());
+  _JetLego1->Fill(Jets.at(0).Pt(),Jets.at(0).Eta()); //Highest Pt jet
   _JetLego2->Fill(Jets.at(1).Pt(),Jets.at(1).Eta());
   _JetLego3->Fill(Jets.at(2).Pt(),Jets.at(2).Eta());
   _JetLego4->Fill(Jets.at(3).Pt(),Jets.at(3).Eta());
@@ -573,8 +573,8 @@ void MyClass::Loop()
   _phi3 = new TH1F("phi3","phi3", 50, 0.0, 7);
 
 
-//Long64_t nentries = fChain->GetEntries();
-Int_t nentries = 10000;
+Long64_t nentries = fChain->GetEntries();
+
 
 //Long64_t nents = b_Particle_PID->GetEntries();
 
@@ -617,7 +617,7 @@ TLegend *leg = new TLegend(0.6,0.7,0.89,0.89);
 
 
 c1->Clear();
-TFile *Jet_PT = new TFile("JetPt1_500_100_output.root", "RECREATE");
+TFile *Jet_PT = new TFile("JetPt1_MG_500_100.root", "RECREATE");
 _JetPT->Write();
 
 c2->Clear();
@@ -629,7 +629,7 @@ _TopPt->Draw("hist");
 //c3->Print("TopPt.pdf");
 
 c4->Clear();
-TFile *PTgluino_stop = new TFile("PTgluino_500_100_output.root","RECREATE");
+TFile *PTgluino_stop = new TFile("PTgluino_MG_500_100.root","RECREATE");
 _Top_Gluino->Draw("hist");
 _Top_Gluino->Write();
 _Top_Gluino->SetTitle("P_{T} from stop (500 GeV) and gluino (600 GeV) ");
@@ -644,40 +644,43 @@ leg->Draw();
 c4->Print("PtTopGluino.pdf");
 
 
-TFile *PTstop_top = new TFile("PT_500_100_output.root", "RECREATE");
+TFile *PTstop_top = new TFile("PT_MG_500_100.root", "RECREATE");
 _Top_Stop->Write();
 
-TFile *f = new TFile("MET_500_100_output.root", "RECREATE");
+TFile *f = new TFile("MET_MG_500_100.root", "RECREATE");
 _MET_histo->Write();
 
-TFile *g = new TFile("HT_500_100_output.root", "RECREATE");
+TFile *g = new TFile("HT_MG_500_100.root", "RECREATE");
 _HT->Write();
 
-TFile *ISR = new TFile("ISR_500_100_output.root", "RECREATE");
+TFile *ISR = new TFile("ISR_MG_500_100.root", "RECREATE");
 _ISR->Write();
 
-TFile *ScalarHT = new TFile("ScalarHT_500_100_output.root","RECREATE");
+TFile *ScalarHT = new TFile("ScalarHT_MG_500_100.root","RECREATE");
 _ScalarHT->Write();
 
-TFile *JetPt1 = new TFile("LeadingJetPt_500_100_output.root", "RECREATE");
+TFile *JetPt1 = new TFile("LeadingJetPt_MG_500_100.root", "RECREATE");
 _JetPt1->Write();
 _JetPt2->Write();
 _JetPt3->Write();
 _JetPt4->Write();
 
-TFile *JetLego = new TFile("JetLego_500_100_output.root", "RECREATE");
+TFile *JetLego = new TFile("JetLego_MG_500_100.root", "RECREATE");
 _JetLego1->Write();
 _JetLego2->Write();
 _JetLego3->Write();
 _JetLego4->Write();
 
-TFile *angles = new TFile("angle1_500_100_output.root","RECREATE");
+TFile *angles = new TFile("angle1_MG_500_100.root","RECREATE");
 _polarangle1->Write();
 _polarangle2->Write();
 _polarangle3->Write();
 _phi1->Write();
 _phi2->Write();
 _phi3->Write();
+
+
+
 
 }
 /*
