@@ -25,7 +25,7 @@ void MG_PY_plots_test()
 
   TString dirname = ".";
   TString rootname1 = "JetPT_pyth_500_100.root";
-  TString rootname2 = "JetPT_500_100.root";
+  TString rootname2 = "JetPT_MG_500_100.root";
   rootname1 = dirname + "/" + rootname1;
   rootname2 = dirname + "/" + rootname2;
   delete gROOT->GetListOfFiles()->FindObject(rootname1);
