@@ -11,7 +11,7 @@ void JetPlots()
   TLegend *leg = new TLegend(0.7,0.8,0.9,0.88);
 
   TString dirname = ".";
-  TString rootname = "LeadingJetPt_600_500_100.root";
+  TString rootname = "LeadingJetPt_500_100.root";
   rootname = dirname + "/" + rootname;
   delete gROOT->GetListOfFiles()->FindObject(rootname);
   
@@ -27,7 +27,7 @@ void JetPlots()
   h1->SetTitle("Jet P_{T}s for the first four jets, m_{g} = 1 TeV, m_{stop} = 500 GeV & m_{lsp} = 100 GeV");
   h1->GetXaxis()->SetTitle("P_{T}");
   h1->GetYaxis()->SetTitle("Entries");
-  h1->GetYaxis()->SetRangeUser(0,5000);
+  h1->GetYaxis()->SetRangeUser(0,20000);
   h1->GetXaxis()->SetRangeUser(0,820);
 
   TH1F *h2 = (TH1F*)rootfile->Get("_JetPt2");
