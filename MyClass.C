@@ -30,7 +30,7 @@ int MyClass::GetNJets(){
 }
 
 
-
+// Would be good to look at delta phi cut between each jet and MHT. Would be a good method to discriminate from jet mismeasurements. 
 
 int MyClass::AnalyseParticles(){
 
@@ -176,7 +176,7 @@ for(unsigned int r=0; r<sizeof(Particle_PID); ){
     if(count == 0){
       r++;
     }
-  }
+ }
 
 
 // Clarity test
@@ -432,7 +432,7 @@ int MyClass::JetAnalysis(){
     if(HT<8) continue;
      _HT->Fill(HT);
     }
-    if(GenJet_PT[k] > 10.){
+    if(GenJet_PT[k] > 20.){
       _h_genjetPt->Fill(GenJet_PT[k]);
     }
     if(abs(Particle_PID[k]) == 6){                    // For top quarks
@@ -460,9 +460,221 @@ int MyClass::JetAnalysis(){
   Jets.clear();
 
 
+
 }
 
+int MyClass::GenJetAnalysis()
+{
+  // Look for W bosons and b quarks with same top quark parent and plot Delta R between W and b against top Pt
 
+  int nw=0;
+  int nt=0;
+  int nb=0;
+
+
+    for(unsigned int j=0; j<sizeof(Particle_PID); j++){
+
+      int gen_count =0;
+
+          if(abs(Particle_PID[j]) == 24 && nw==0){
+            Gen_W1.SetPx(Particle_Px[j]);
+            Gen_W1.SetPy(Particle_Py[j]);
+            Gen_W1.SetPz(Particle_Pz[j]);
+            Gen_W1.SetE(Particle_E[j]);
+            nw++;
+            W_Mindex = Particle_M1[j];
+
+            if(abs(Particle_PID[Particle_M1[j]]) == 6 && nt==0){
+              Gen_Top1.SetPx(Particle_Px[Particle_M1[j]]);
+              Gen_Top1.SetPy(Particle_Py[Particle_M1[j]]);
+              Gen_Top1.SetPz(Particle_Pz[Particle_M1[j]]);
+              Gen_Top1.SetE(Particle_E[Particle_M1[j]]);
+              _Gen_Top1->Fill(Gen_Top1.Pt());
+              std::cout << "Top1 Pt: " << Gen_Top1.Pt() << std::endl;
+              gen_count++;
+              j++;
+              nt++;
+            }
+          }
+        if(abs(Particle_PID[j]) == 5 && nb ==0){
+          Gen_b1.SetPx(Particle_Px[j]);
+          Gen_b1.SetPy(Particle_Py[j]);
+          Gen_b1.SetPz(Particle_Pz[j]);
+          Gen_b1.SetE(Particle_E[j]);
+          nb++;
+          b_Mindex = Particle_M1[j];
+          if(abs(Particle_PID[Particle_M1[j]]) == 6 && b_Mindex == W_Mindex){
+
+            DelR_W_b1 = sqrt(pow((Gen_W1.Eta() - Gen_b1.Eta()),2) + pow((Gen_W1.Phi() - Gen_b1.Phi()), 2));
+            _DelR_W_b1->Fill(Gen_Top1.Pt() ,DelR_W_b1);
+
+            gen_count++;
+            j++;
+          }
+        }
+
+        // Second W and b
+
+        if(abs(Particle_PID[j]) == 24 && nw==1){
+          Gen_W2.SetPx(Particle_Px[j]);
+          Gen_W2.SetPy(Particle_Py[j]);
+          Gen_W2.SetPz(Particle_Pz[j]);
+          Gen_W2.SetE(Particle_E[j]);
+          nw++;
+          W_Mindex = Particle_M1[j];
+
+
+          if(abs(Particle_PID[Particle_M1[j]]) == 6 && nt==1){
+              Gen_Top2.SetPx(Particle_Px[Particle_M1[j]]);
+              Gen_Top2.SetPy(Particle_Py[Particle_M1[j]]);
+              Gen_Top2.SetPz(Particle_Pz[Particle_M1[j]]);
+              Gen_Top2.SetE(Particle_E[Particle_M1[j]]);
+              _Gen_Top2->Fill(Gen_Top2.Pt());
+              std::cout << "Top2 Pt: " << Gen_Top2.Pt() << std::endl;
+              gen_count++;
+              j++;
+              nt++; 
+          }
+        }
+
+        if(abs(Particle_PID[j]) == 5 && nb ==1){
+          Gen_b2.SetPx(Particle_Px[j]);
+          Gen_b2.SetPy(Particle_Py[j]);
+          Gen_b2.SetPz(Particle_Pz[j]);
+          Gen_b2.SetE(Particle_E[j]);
+          nb++;
+          b_Mindex = Particle_M1[j];
+
+                  
+              if(abs(Particle_PID[Particle_M1[j]]) == 6 && b_Mindex == W_Mindex){
+
+            DelR_W_b2 = sqrt(pow((Gen_W2.Eta() - Gen_b2.Eta()),2) + pow((Gen_W2.Phi() - Gen_b2.Phi()), 2));
+            _DelR_W_b2->Fill(Gen_Top2.Pt(), DelR_W_b2);
+
+            gen_count++;
+            j++;
+          }
+        }
+
+        // Third W and b
+
+        if(abs(Particle_PID[j]) == 24 && nw==2){
+          Gen_W3.SetPx(Particle_Px[j]);
+          Gen_W3.SetPy(Particle_Py[j]);
+          Gen_W3.SetPz(Particle_Pz[j]);
+          Gen_W3.SetE(Particle_E[j]);
+          nw++;
+          W_Mindex = Particle_M1[j];
+
+          if(abs(Particle_PID[Particle_M1[j]]) == 6 && nt==2){
+              Gen_Top3.SetPx(Particle_Px[Particle_M1[j]]);
+              Gen_Top3.SetPy(Particle_Py[Particle_M1[j]]);
+              Gen_Top3.SetPz(Particle_Pz[Particle_M1[j]]);
+              Gen_Top3.SetE(Particle_E[Particle_M1[j]]);
+              _Gen_Top3->Fill(Gen_Top3.Pt());
+              std::cout << "Top3 Pt: " << Gen_Top3.Pt() << std::endl;
+              gen_count++;
+              j++;
+              nt++;
+          }
+        }
+
+        if(abs(Particle_PID[j]) == 5 && nb ==2){
+          Gen_b3.SetPx(Particle_Px[j]);
+          Gen_b3.SetPy(Particle_Py[j]);
+          Gen_b3.SetPz(Particle_Pz[j]);
+          Gen_b3.SetE(Particle_E[j]);
+          nb++;
+          b_Mindex = Particle_M1[j];
+
+                  
+              if(abs(Particle_PID[Particle_M1[j]]) == 6 && b_Mindex == W_Mindex){
+
+
+            DelR_W_b3 = sqrt(pow((Gen_W3.Eta() - Gen_b3.Eta()),2) + pow((Gen_W3.Phi() - Gen_b3.Phi()), 2));
+            _DelR_W_b3->Fill(Gen_Top3.Pt(), DelR_W_b3);
+
+            gen_count++;
+            j++;
+          }
+        }
+
+        // Fourth W and b
+
+
+        if(abs(Particle_PID[j]) == 24 && nw==3){
+          Gen_W4.SetPx(Particle_Px[j]);
+          Gen_W4.SetPy(Particle_Py[j]);
+          Gen_W4.SetPz(Particle_Pz[j]);
+          Gen_W4.SetE(Particle_E[j]);
+          nw++;
+          W_Mindex = Particle_M1[j];
+
+
+          if(abs(Particle_PID[Particle_M1[j]]) == 6 && nt==3){
+              Gen_Top4.SetPx(Particle_Px[Particle_M1[j]]);
+              Gen_Top4.SetPy(Particle_Py[Particle_M1[j]]);
+              Gen_Top4.SetPz(Particle_Pz[Particle_M1[j]]);
+              Gen_Top4.SetE(Particle_E[Particle_M1[j]]);
+              _Gen_Top4->Fill(Gen_Top4.Pt());
+              std::cout << "Top4 Pt: " <<Gen_Top4.Pt() << std::endl;
+              gen_count++;
+              j++;
+              nt++;
+          }
+        }
+
+        if(abs(Particle_PID[j]) == 5 && nb ==3){
+          Gen_b4.SetPx(Particle_Px[j]);
+          Gen_b4.SetPy(Particle_Py[j]);
+          Gen_b4.SetPz(Particle_Pz[j]);
+          Gen_b4.SetE(Particle_E[j]);
+          nb++;
+          b_Mindex = Particle_M1[j];
+
+                  
+              if(abs(Particle_PID[Particle_M1[j]]) == 6 && b_Mindex == W_Mindex){
+
+
+            DelR_W_b4 = sqrt(pow((Gen_W4.Eta() - Gen_b4.Eta()),2) + pow((Gen_W4.Phi() - Gen_b4.Phi()), 2));
+            _DelR_W_b4->Fill(Gen_Top4.Pt(), DelR_W_b4);
+
+            gen_count++;
+            j++;
+          }
+        }    
+    }
+
+
+
+
+
+
+
+  for(unsigned int i=0; i<sizeof(GenJet_PT); i++)
+    {
+   
+
+      if(GenJet_PT[i] < 20) continue;
+      _GenJetPThisto->Fill(GenJet_PT[i]);      // Feed this histo into JetPT TFile -> PURITY
+      // need same cuts , Jet PT > 20 < GenJet PT 
+   
+    genjet.SetPtEtaPhiM(GenJet_PT[i], GenJet_Eta[i], GenJet_Phi[i], GenJet_Mass[i]);         // Arrange jets in order of Pt
+    GenJets.push_back(genjet);
+ }
+
+  sort(GenJets.begin(), GenJets.end(), order_gt());
+  //std::cout << "1st Jet Pt: " << Jets.at(0).Pt() << std::endl;
+
+
+  _GenJetPt1->Fill(GenJets.at(0).Pt());
+  _GenJetPt2->Fill(GenJets.at(1).Pt());
+  _GenJetPt3->Fill(GenJets.at(2).Pt());
+  _GenJetPt4->Fill(GenJets.at(3).Pt());
+
+  GenJets.clear();
+
+}
 
 
 
@@ -497,7 +709,7 @@ int MyClass::TopAnalysis(){
     if(abs(Particle_PID[q]) == 6 && abs(Particle_PID[Particle_M1[q]]) == 1000006){      //  1000006 is a stop
       _Top_Stop->Fill(Particle_PT[q]);         
     nstop++;
-      }
+    }
   }
     if(ngluino != nstop){
       std::cout << "WRONG" << ngluino << nstop << std::endl;
@@ -546,7 +758,7 @@ void MyClass::Loop()
   TH1::SetDefaultSumw2();
 
   _JetPT = new TH1D("jetPt", "jetPt", 200, 0., 900.);
-  _h_genjetPt = new TH1D("genjetPt", "genjetPt", 200, 0., 200.);
+  _h_genjetPt = new TH1D("genjetPt", "genjetPt", 200, 0., 900.);
   _ttbar_jetpt = new TH1D("ttbar_jetpt", "ttbar_jetpt", 200, 0., 200.);
   _ttbar_genjetpt = new TH1D("ttbar_genjetpt", "ttbar_genjetpt", 200, 0., 200.);
   _tmass = new TH1D("tmass", "tmass", 200, 0., 400.);
@@ -571,10 +783,23 @@ void MyClass::Loop()
   _phi1 = new TH1F("phi1","phi1", 50, 0.0, 7);
   _phi2 = new TH1F("phi2","phi2", 50, 0.0, 7);
   _phi3 = new TH1F("phi3","phi3", 50, 0.0, 7);
+  _GenJetPThisto = new TH1D("GenJetPT", "GenJet_P{T}", 200, 0.0, 900);
+  _GenJetPt1 = new TH1D("GenJetPt1", "GenJetPt1", 200, 0., 900);
+  _GenJetPt2 = new TH1D("GenJetPt2", "GenJetPt2", 200, 0., 900);
+  _GenJetPt3 = new TH1D("GenJetPt3", "GenJetPt3", 200, 0., 900);
+  _GenJetPt4 = new TH1D("GenJetPt4", "GenJetPt4", 200, 0., 900);
+  _DelR_W_b1 = new TH2F("DeltaR_W_b1", "DelR_W_b1", 200, 0, 900, 50, 0., 8);
+  _DelR_W_b2 = new TH2F("DeltaR_W_b2", "DelR_W_b2", 200, 0, 900, 50, 0., 8);  
+  _DelR_W_b3 = new TH2F("DeltaR_W_b3", "DelR_W_b3", 200, 0, 900, 50, 0., 8);    
+  _DelR_W_b4 = new TH2F("DeltaR_W_b4", "DelR_W_b4", 200, 0, 900, 50, 0., 8);  
+  _Gen_Top1 = new TH1D("Gen_Top1", "Gen_Top1.PT", 200, 0., 800);
+  _Gen_Top2 = new TH1D("Gen_Top2", "Gen_Top2.PT", 200, 0., 800);
+  _Gen_Top3 = new TH1D("Gen_Top3", "Gen_Top3.PT", 200, 0., 800);
+  _Gen_Top4 = new TH1D("Gen_Top4", "Gen_Top4.PT", 200, 0., 800);
 
 
 Long64_t nentries = fChain->GetEntries();
-
+//Long64_t nentries = 1000;
 
 //Long64_t nents = b_Particle_PID->GetEntries();
 
@@ -601,7 +826,7 @@ int JETANALYSIS = JetAnalysis();
 int METANALYSIS = METAnalysis();
 int TOPANALYSIS = TopAnalysis();
 int SCALARHTANALYSIS = ScalarHTAnalysis();
-
+int GENANALYSIS = GenJetAnalysis();
 
 }
 
@@ -617,8 +842,9 @@ TLegend *leg = new TLegend(0.6,0.7,0.89,0.89);
 
 
 c1->Clear();
-TFile *Jet_PT = new TFile("JetPt1_MG_500_100.root", "RECREATE");
+TFile *Jet_PT = new TFile("JetPT_tag_1.root", "RECREATE");
 _JetPT->Write();
+_GenJetPThisto->Write();
 
 c2->Clear();
 _tmass->Draw("hist");
@@ -629,7 +855,7 @@ _TopPt->Draw("hist");
 //c3->Print("TopPt.pdf");
 
 c4->Clear();
-TFile *PTgluino_stop = new TFile("PTgluino_MG_500_100.root","RECREATE");
+TFile *PTgluino_stop = new TFile("PTgluino_MG_500_300.root","RECREATE");
 _Top_Gluino->Draw("hist");
 _Top_Gluino->Write();
 _Top_Gluino->SetTitle("P_{T} from stop (500 GeV) and gluino (600 GeV) ");
@@ -643,35 +869,52 @@ leg->AddEntry(_Top_Stop, "PT of top from stop", "l");
 leg->Draw();
 c4->Print("PtTopGluino.pdf");
 
+c7->Clear();
+_DelR_W_b1->Draw("hist");
 
-TFile *PTstop_top = new TFile("PT_MG_500_100.root", "RECREATE");
+TFile *DeltaR_TopPT = new TFile("DeltaR_TopPT_500_300.root", "RECREATE");
+_DelR_W_b1->Write();
+_DelR_W_b2->Write();
+_DelR_W_b3->Write();
+_DelR_W_b4->Write();
+_Gen_Top1->Write();
+_Gen_Top2->Write();
+_Gen_Top3->Write();
+_Gen_Top4->Write();
+
+TFile *PTstop_top = new TFile("PT_MG_500_300.root", "RECREATE");
 _Top_Stop->Write();
 
-TFile *f = new TFile("MET_MG_500_100.root", "RECREATE");
+TFile *f = new TFile("MET_MG_500_300.root", "RECREATE");
 _MET_histo->Write();
 
-TFile *g = new TFile("HT_MG_500_100.root", "RECREATE");
+TFile *g = new TFile("HT_MG_500_300.root", "RECREATE");
 _HT->Write();
 
-TFile *ISR = new TFile("ISR_MG_500_100.root", "RECREATE");
+TFile *ISR = new TFile("ISR_MG_500_300.root", "RECREATE");
 _ISR->Write();
 
-TFile *ScalarHT = new TFile("ScalarHT_MG_500_100.root","RECREATE");
+TFile *ScalarHT = new TFile("ScalarHT_MG_500_300.root","RECREATE");
 _ScalarHT->Write();
 
-TFile *JetPt1 = new TFile("LeadingJetPt_MG_500_100.root", "RECREATE");
+TFile *JetsPt1 = new TFile("LeadingJetPt_MG_500_300.root", "RECREATE");
 _JetPt1->Write();
 _JetPt2->Write();
 _JetPt3->Write();
 _JetPt4->Write();
+_GenJetPt1->Write();
+_GenJetPt2->Write();
+_GenJetPt3->Write();
+_GenJetPt4->Write();
 
-TFile *JetLego = new TFile("JetLego_MG_500_100.root", "RECREATE");
+
+TFile *JetLego = new TFile("JetLego_MG_500_300.root", "RECREATE");
 _JetLego1->Write();
 _JetLego2->Write();
 _JetLego3->Write();
 _JetLego4->Write();
 
-TFile *angles = new TFile("angle1_MG_500_100.root","RECREATE");
+TFile *angles = new TFile("angle1_MG_500_300.root","RECREATE");
 _polarangle1->Write();
 _polarangle2->Write();
 _polarangle3->Write();
