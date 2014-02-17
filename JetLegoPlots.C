@@ -34,7 +34,7 @@ void JetLegoPlots()
 
   gStyle->SetPalette(1);
 
-  TH1F *h1 = (TH1F*)rootfile1->Get("JetLego1");
+  TH1F *h1 = (TH1F*)rootfile1->Get("JetLego1"); // Highest Pt jet
   h1->GetXaxis()->SetRangeUser(0,500);
   h1->GetXaxis()->SetTitle("Jet P_{T}");
   h1->GetYaxis()->SetTitle("#eta");
