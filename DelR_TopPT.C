@@ -6,6 +6,7 @@ void DelR_TopPT()
   TCanvas *c2 = new TCanvas("c2","c2", 600, 400);
   TCanvas *c3 = new TCanvas("c3", "c3", 600, 400);
   TCanvas *c4 = new TCanvas("c4", "c4", 600, 400);
+  TCanvas *c5 = new TCanvas("c5", "c5", 600, 400);
   TLegend *leg = new TLegend(0.5, 1.0, 0.8, 0.5);
 
 
@@ -28,6 +29,7 @@ void DelR_TopPT()
   TH1F *h2 = (TH1F*)rootfile->Get("DeltaR_W_b2");
   TH1F *h3 = (TH1F*)rootfile->Get("DeltaR_W_b3");
   TH1F *h4 = (TH1F*)rootfile->Get("DeltaR_W_b4");
+  TH1F *h5 = (TH1F*)rootfile->Get("DelR_W_b_all");
   Double_t nentries = h1->GetEntries();
   std::cout << "h1 entries:  " << nentries << std::endl;
 
@@ -91,6 +93,16 @@ void DelR_TopPT()
   leg->Draw();
 
 
+  c5->cd();
+  gStyle->SetPalette(1);
+  gStyle->SetOptStat(0);
+
+  h5->SetTitle("");
+  h5->GetXaxis()->SetTitle("t p_{T} [GeV]");
+  h5->GetYaxis()->SetRangeUser(0,6);
+  h5->GetYaxis()->SetTitle("#Delta R(W,b)");
+  h5->Draw("CONTZ");
+  leg->Draw();
 
 
 }
