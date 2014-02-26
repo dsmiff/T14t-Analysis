@@ -16,6 +16,8 @@ echo Finding your files...
 
 ls | grep "PREP" > FILES.txt
 
+
+
 cp `cat FILES.txt` $Comp_dir
 
 echo Files copied to Comparisons directory
