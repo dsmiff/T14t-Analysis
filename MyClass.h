@@ -532,9 +532,9 @@ MyClass::MyClass(TTree *tree) : fChain(0)
 // if parameter tree is not specified (or zero), connect the file
 // used to generate this class and read the Tree.
    if (tree == 0) {
-      TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("root/delphes_500_300_output.root");
+      TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("../Comparisons/tag_1_delphes_events.root");
       if (!f || !f->IsOpen()) {
-         f = new TFile("root/delphes_500_300_output.root");
+         f = new TFile("../Comparisons/tag_1_delphes_events.root");
       }
       f->GetObject("Delphes",tree);
 
