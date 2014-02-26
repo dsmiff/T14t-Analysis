@@ -13,4 +13,7 @@ restricted to some region of phase space. Within each subrun all events then hav
 be combined according to their relative xsec
 The other approach is to let each event come with an associated weight, that can vary smoothly as a function of Pt. 
 
-The phase space can be sliced in many different ways. However, for the jet rate and many other processes, the most natural variable would be Pt. One would expect a strong correlation between the Pt scale and the jet Pts. Therefore the full Pt range can be subdivived into a set of ranges by using CKIN(3) and CKIN(4) variables as lower and upper limits. 
+The phase space can be sliced in many different ways. However, for the jet rate and many other processes, the most
+natural variable would be Pt. One would expect a strong correlation between the Pt scale and the jet Pts. 
+Therefore the full Pt range can be subdivived into a set of ranges by using CKIN(3) and CKIN(4) variables as lower 
+and upper limits. 
