@@ -209,14 +209,14 @@ Double_t phi;         // Azimuthal angle between top quark and respective lepton
 for(unsigned int p=0; p<sizeof(Particle_PID); p++){
   if(Particle_Status[p] == 1){
     if(abs(Particle_PID[p]) == 11){
-  //    std::cout << "Found a final state electron/positron" << std::endl;
-  //    std::cout << "Electron mother index: " << Particle_M1[p] << std::endl;
+      std::cout << "Found a final state electron/positron" << std::endl;
+      std::cout << "Electron mother index: " << Particle_M1[p] << std::endl;
       Electron.SetPx(Particle_Px[p]);
       Electron.SetPy(Particle_Py[p]);
       Electron.SetPz(Particle_Pz[p]);
       Electron.SetE(Particle_E[p]);
     if(abs(Particle_PID[Particle_M1[p]]) == 24){
-  //    std::cout << "---> W boson from a top decay" << std::endl;
+      std::cout << "---> W boson from a top decay" << std::endl;
       We.SetPx(Particle_Px[Particle_M1[p]]);
       We.SetPy(Particle_Py[Particle_M1[p]]);
       We.SetPz(Particle_Pz[Particle_M1[p]]);
@@ -274,14 +274,14 @@ for(unsigned int p=0; p<sizeof(Particle_PID); p++){
   }
 
     if(abs(Particle_PID[p]) == 13){
-   //   std::cout << "Found a final state muon/antimuon" << std::endl;
-  //    std::cout << "Muon mother index: " << Particle_M1[p] << std::endl;
+      std::cout << "Found a final state muon/antimuon" << std::endl;
+      std::cout << "Muon mother index: " << Particle_M1[p] << std::endl;
       Muon.SetPx(Particle_Px[p]);
       Muon.SetPy(Particle_Py[p]);
       Muon.SetPz(Particle_Pz[p]);
       Muon.SetE(Particle_E[p]);
     if(abs(Particle_PID[Particle_M1[p]]) == 24){
-  //    std::cout << "---> W boson from a top decay" << std::endl;
+      std::cout << "---> W boson from a top decay" << std::endl;
       Wmu.SetPx(Particle_Px[Particle_M1[p]]);
       Wmu.SetPy(Particle_Py[Particle_M1[p]]);
       Wmu.SetPz(Particle_Pz[Particle_M1[p]]);
@@ -297,7 +297,7 @@ for(unsigned int p=0; p<sizeof(Particle_PID); p++){
       Double_t dotMM = (Muon.Px()*top1.Px() + Muon.Py()*top1.Py());
       Double_t modMM = (Muon.Pt()*top1.Pt());
       phi = acos(dotMM/modMM);
- //    std::cout << "PHI : " << phi << std::endl;
+     std::cout << "PHI : " << phi << std::endl;
      if(top1.Px() < 0){
       phi = (2*pi - phi);
      }
@@ -309,7 +309,7 @@ for(unsigned int p=0; p<sizeof(Particle_PID); p++){
       Double_t dotMM = (Muon.Px()*top2.Px() + Muon.Py()*top2.Py());
       Double_t modMM = (Muon.Pt()*top2.Pt());
       phi = acos(dotMM/modMM);
-  //   std::cout << "PHI : " << phi << std::endl;
+     std::cout << "PHI : " << phi << std::endl;
      if(top2.Px() < 0){
       phi = (2*pi - phi);
      }
@@ -321,7 +321,7 @@ for(unsigned int p=0; p<sizeof(Particle_PID); p++){
       Double_t dotMM = (Muon.Px()*top3.Px() + Muon.Py()*top3.Py());
       Double_t modMM = (Muon.Pt()*top3.Pt());
       phi = acos(dotMM/modMM);
-  //   std::cout << "PHI : " << phi << std::endl;
+     std::cout << "PHI : " << phi << std::endl;
      if(top3.Px() < 0){
       phi = (2*pi - phi);
      }
@@ -333,7 +333,7 @@ for(unsigned int p=0; p<sizeof(Particle_PID); p++){
       Double_t dotMM = (Muon.Px()*top4.Px() + Muon.Py()*top4.Py());
       Double_t modMM = (Muon.Pt()*top4.Pt());
       phi = acos(dotMM/modMM);
-  //   std::cout << "PHI : " << phi << std::endl;
+     std::cout << "PHI : " << phi << std::endl;
      if(top4.Px() < 0){
       phi = (2*pi - phi);
      }
@@ -343,14 +343,14 @@ for(unsigned int p=0; p<sizeof(Particle_PID); p++){
   }
 
     if(abs(Particle_PID[p]) == 15){
-  //    std::cout << "Found a final state tauon/antitauon" << std::endl;
-  //    std::cout << "Tauon mother index: " << Particle_M1[p] << std::endl;
+      std::cout << "Found a final state tauon/antitauon" << std::endl;
+      std::cout << "Tauon mother index: " << Particle_M1[p] << std::endl;
       Tauon.SetPx(Particle_Px[p]);
       Tauon.SetPy(Particle_Py[p]);
       Tauon.SetPz(Particle_Pz[p]);
       Tauon.SetE(Particle_E[p]);
     if(abs(Particle_PID[Particle_M1[p]]) == 24){
-  //    std::cout << "---> W boson from a top decay" << std::endl;
+      std::cout << "---> W boson from a top decay" << std::endl;
       Wtau.SetPx(Particle_Px[Particle_M1[p]]);
       Wtau.SetPy(Particle_Py[Particle_M1[p]]);
       Wtau.SetPz(Particle_Pz[Particle_M1[p]]);
@@ -409,7 +409,7 @@ for(unsigned int p=0; p<sizeof(Particle_PID); p++){
   }
 
   if(abs(Particle_PID[p]) == 24){
- //  std::cout << "Found a W boson at index: " << p << std::endl;
+   std::cout << "Found a W boson at index: " << p << std::endl;
   }
  }
 
@@ -459,6 +459,11 @@ int MyClass::JetAnalysis(){
 
   Jets.clear();
 
+
+  // Jet Multiplicities 
+
+  std::cout << "Jet Multiplicities: " << Jet_size << std::endl;
+  _JetMult->Fill(Jet_size);
 
 
 }
@@ -825,8 +830,8 @@ void MyClass::Loop()
 
   TH1::SetDefaultSumw2();
 
-  _JetPT = new TH1D("jetPt", "jetPt", 200, 0., 900.);
-  _h_genjetPt = new TH1D("genjetPt", "genjetPt", 200, 0., 900.);
+  _JetPT = new TH1D("jetPt", "jetPt", 200, 0., 1200.);
+  _h_genjetPt = new TH1D("genjetPt", "genjetPt", 200, 0., 1200.);
   _ttbar_jetpt = new TH1D("ttbar_jetpt", "ttbar_jetpt", 200, 0., 200.);
   _ttbar_genjetpt = new TH1D("ttbar_genjetpt", "ttbar_genjetpt", 200, 0., 200.);
   _tmass = new TH1D("tmass", "tmass", 200, 0., 400.);
@@ -837,10 +842,10 @@ void MyClass::Loop()
   _HT = new TH1D("HT", "HT", 200, 0., 1500.);
   _ISR = new TH1D("ISR", "ISR", 200, 0., 500);
   _ScalarHT = new TH1D("ScalarHT","ScalarHT", 200, 200, 2600);
-  _JetPt1 = new TH1D("_JetPt1", "1st leading Jet Pt", 200, 0., 900.);
-  _JetPt2 = new TH1D("_JetPt2", "2nd leading Jet Pt", 200, 0., 900.);
-  _JetPt3 = new TH1D("_JetPt3", "3rd leading Jet Pt", 200, 0., 900.);
-  _JetPt4 = new TH1D("_JetPt4", "4th leading Jet Pt", 200, 0., 900.);
+  _JetPt1 = new TH1D("_JetPt1", "1st leading Jet Pt", 200, 0., 1400.);
+  _JetPt2 = new TH1D("_JetPt2", "2nd leading Jet Pt", 200, 0., 1400.);
+  _JetPt3 = new TH1D("_JetPt3", "3rd leading Jet Pt", 200, 0., 1400.);
+  _JetPt4 = new TH1D("_JetPt4", "4th leading Jet Pt", 200, 0., 1400.);
   _JetLego1 = new TH2F("JetLego1","Jet Lego plot", 200, 0, 600,  50, -5, 5);
   _JetLego2 = new TH2F("JetLego2","Jet Lego plot", 200, 0, 600,  50, -5, 5);
   _JetLego3 = new TH2F("JetLego3","Jet Lego plot", 200, 0, 600,  50, -5, 5);
@@ -851,20 +856,21 @@ void MyClass::Loop()
   _phi1 = new TH1F("phi1","phi1", 50, 0.0, 7);
   _phi2 = new TH1F("phi2","phi2", 50, 0.0, 7);
   _phi3 = new TH1F("phi3","phi3", 50, 0.0, 7);
-  _GenJetPThisto = new TH1D("GenJetPT", "GenJet_P{T}", 200, 0.0, 900);
-  _GenJetPt1 = new TH1D("GenJetPt1", "GenJetPt1", 200, 0., 900);
-  _GenJetPt2 = new TH1D("GenJetPt2", "GenJetPt2", 200, 0., 900);
-  _GenJetPt3 = new TH1D("GenJetPt3", "GenJetPt3", 200, 0., 900);
-  _GenJetPt4 = new TH1D("GenJetPt4", "GenJetPt4", 200, 0., 900);
-  _DelR_W_b1 = new TH2F("DeltaR_W_b1", "DelR_W_b1", 200, 0, 900, 50, 0., 8);
-  _DelR_W_b2 = new TH2F("DeltaR_W_b2", "DelR_W_b2", 200, 0, 900, 50, 0., 8);  
-  _DelR_W_b3 = new TH2F("DeltaR_W_b3", "DelR_W_b3", 200, 0, 900, 50, 0., 8);    
-  _DelR_W_b4 = new TH2F("DeltaR_W_b4", "DelR_W_b4", 200, 0, 900, 50, 0., 8);  
-  _Gen_Top1 = new TH1D("Gen_Top1", "Gen_Top1.PT", 200, 0., 800);
-  _Gen_Top2 = new TH1D("Gen_Top2", "Gen_Top2.PT", 200, 0., 800);
-  _Gen_Top3 = new TH1D("Gen_Top3", "Gen_Top3.PT", 200, 0., 800);
-  _Gen_Top4 = new TH1D("Gen_Top4", "Gen_Top4.PT", 200, 0., 800);
-  _DelR_W_b_all = new TH2F("DelR_W_b_all","DelR_W_b_all", 200, 0., 900, 50, 0., 6);
+  _GenJetPThisto = new TH1D("GenJetPT", "GenJet_P{T}", 200, 0.0, 1400);
+  _GenJetPt1 = new TH1D("GenJetPt1", "GenJetPt1", 200, 0., 1400);
+  _GenJetPt2 = new TH1D("GenJetPt2", "GenJetPt2", 200, 0., 1400);
+  _GenJetPt3 = new TH1D("GenJetPt3", "GenJetPt3", 200, 0., 1400);
+  _GenJetPt4 = new TH1D("GenJetPt4", "GenJetPt4", 200, 0., 1400);
+  _DelR_W_b1 = new TH2F("DeltaR_W_b1", "DelR_W_b1", 200, 0, 1200, 50, 0., 8);
+  _DelR_W_b2 = new TH2F("DeltaR_W_b2", "DelR_W_b2", 200, 0, 1200, 50, 0., 8);  
+  _DelR_W_b3 = new TH2F("DeltaR_W_b3", "DelR_W_b3", 200, 0, 1200, 50, 0., 8);    
+  _DelR_W_b4 = new TH2F("DeltaR_W_b4", "DelR_W_b4", 200, 0, 1200, 50, 0., 8);  
+  _Gen_Top1 = new TH1D("Gen_Top1", "Gen_Top1.PT", 200, 0., 1200);
+  _Gen_Top2 = new TH1D("Gen_Top2", "Gen_Top2.PT", 200, 0., 1200);
+  _Gen_Top3 = new TH1D("Gen_Top3", "Gen_Top3.PT", 200, 0., 1200);
+  _Gen_Top4 = new TH1D("Gen_Top4", "Gen_Top4.PT", 200, 0., 1200);
+  _DelR_W_b_all = new TH2F("DelR_W_b_all","DelR_W_b_all", 200, 0., 1200, 50, 0., 6);
+  _JetMult = new TH1F("JetMult","JetMultiplicites",100, 0., 20);
 
 
 Long64_t nentries = fChain->GetEntries();
@@ -911,7 +917,7 @@ TLegend *leg = new TLegend(0.6,0.7,0.89,0.89);
 
 
 c1->Clear();
-TFile *Jet_PT = new TFile("JetPT_MG5_500_100.root", "RECREATE");
+TFile *Jet_PT = new TFile("JetPT_PREP_500_100.root", "RECREATE");
 _JetPT->Write();
 _GenJetPThisto->Write();
 Jet_PT->Close();
@@ -925,7 +931,7 @@ _TopPt->Draw("hist");
 //c3->Print("TopPt.pdf");
 
 c4->Clear();
-TFile *PTgluino_stop = new TFile("PTgluino_MG5_500_100.root","RECREATE");
+TFile *PTgluino_stop = new TFile("PTgluino_PREP_500_100.root","RECREATE");
 _Top_Gluino->Draw("hist");
 _Top_Gluino->Write();
 _Top_Gluino->SetTitle("P_{T} from stop (500 GeV) and gluino (1 TeV) ");
@@ -944,7 +950,7 @@ PTgluino_stop->Close();
 c7->Clear();
 _DelR_W_b1->Draw("hist");
 
-TFile *DeltaR_TopPT = new TFile("DeltaR_TopPT_MG5_500_100.root", "RECREATE");
+TFile *DeltaR_TopPT = new TFile("DeltaR_TopPT_PREP_500_100.root", "RECREATE");
 _DelR_W_b1->Write();
 _DelR_W_b2->Write();
 _DelR_W_b3->Write();
@@ -956,45 +962,46 @@ _Gen_Top4->Write();
 _DelR_W_b_all->Write();
 DeltaR_TopPT->Close();
 
-TFile *PTstop_top = new TFile("PT_MG5_500_100.root", "RECREATE");
+TFile *PTstop_top = new TFile("PT_PREP_500_100.root", "RECREATE");
 _Top_Stop->Write();
 PTstop_top->Close();
 
-TFile *f = new TFile("MET_MG5_500_100.root", "RECREATE");
+TFile *f = new TFile("MET_PREP_500_100.root", "RECREATE");
 _MET_histo->Write();
 f->Close();
 
-TFile *g = new TFile("HT_MG5_500_100.root", "RECREATE");
+TFile *g = new TFile("HT_PREP_500_100.root", "RECREATE");
 _HT->Write();
 g->Close();
 
-TFile *ISR = new TFile("ISR_MG5_500_100.root", "RECREATE");
+TFile *ISR = new TFile("ISR_PREP_500_100.root", "RECREATE");
 _ISR->Write();
 ISR->Close();
 
-TFile *ScalarHT = new TFile("ScalarHT_MG5_500_100.root","RECREATE");
+TFile *ScalarHT = new TFile("ScalarHT_PREP_500_100.root","RECREATE");
 _ScalarHT->Write();
 ScalarHT->Close();
 
-TFile *JetsPt1 = new TFile("LeadingJetPt_MG5_500_100.root", "RECREATE");
+TFile *JetsPt1 = new TFile("LeadingJetPt_PREP_500_100.root", "RECREATE");
 _JetPt1->Write();
 _JetPt2->Write();
 _JetPt3->Write();
 _JetPt4->Write();
+_JetMult->Write();
 _GenJetPt1->Write();
 _GenJetPt2->Write();
 _GenJetPt3->Write();
 _GenJetPt4->Write();
 JetsPt1->Close();
 
-TFile *JetLego = new TFile("JetLego_MG5_500_100.root", "RECREATE");
+TFile *JetLego = new TFile("JetLego_PREP_500_100.root", "RECREATE");
 _JetLego1->Write();
 _JetLego2->Write();
 _JetLego3->Write();
 _JetLego4->Write();
 JetLego->Close();
 
-TFile *angles = new TFile("angle1_MG5_500_100.root","RECREATE");
+TFile *angles = new TFile("angle1_PREP_500_100.root","RECREATE");
 _polarangle1->Write();
 _polarangle2->Write();
 _polarangle3->Write();
