@@ -66,6 +66,9 @@ public :
    TH1D* _JetPt2;
    TH1D* _JetPt3;
    TH1D* _JetPt4;
+   TH1D* _JetPt5;
+   TH1D* _JetPt6;
+   TH1D* _JetPt7;
    TH2F* _JetLego1;
    TH2F* _JetLego2;
    TH2F* _JetLego3;
@@ -90,6 +93,7 @@ public :
    TH1D* _Gen_Top3;
    TH1D* _Gen_Top4;
    TH2F* _DelR_W_b_all;
+   TH1F* _JetMult;
 
    // Particles & other declarations
 
@@ -532,9 +536,9 @@ MyClass::MyClass(TTree *tree) : fChain(0)
 // if parameter tree is not specified (or zero), connect the file
 // used to generate this class and read the Tree.
    if (tree == 0) {
-      TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("../Comparisons/tag_1_delphes_events.root");
+      TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("../Comparisons/MG5/tag_1_delphes_events.root");
       if (!f || !f->IsOpen()) {
-         f = new TFile("../Comparisons/tag_1_delphes_events.root");
+         f = new TFile("../Comparisons/MG5/tag_1_delphes_events.root");
       }
       f->GetObject("Delphes",tree);
 
