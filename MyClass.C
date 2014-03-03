@@ -19,8 +19,9 @@ using namespace std;
 int MyClass::GetNJets(){
 
   Int_t njet = 0;
+  Int_t NJets = sizeof(Jet_PT)/sizeof(Jet_PT[0]);
 
-  for(unsigned int t=0; t<sizeof(Jet_PT); t++){
+  for(unsigned int t=0; t<NJets; t++){
     if(Jet_PT[t]<10) continue;
       njet++;
   }
@@ -43,7 +44,10 @@ int MyClass::AnalyseParticles(){
   int nstp = 0;
   int nwbosons=0;
 
-for(unsigned int r=0; r<sizeof(Particle_PID); ){
+Int_t Nparticles = sizeof(Particle_PID)/sizeof(Particle_PID[0]);
+
+
+for(unsigned int r=0; r<Nparticles; ){
 
   int count = 0;
 
@@ -205,13 +209,10 @@ Double_t angle;       // Polar angle between top quark and respective lepton
 Double_t phi;         // Azimuthal angle between top quark and respective lepton
 
 Int_t Nparticles = sizeof(Particle_PID)/sizeof(Particle_PID[0]);
-std::cout << "# particles: " << Nparticles << std::endl;
-std::cout << "Size of Particle_PID: " << sizeof(Particle_PID) << std::endl;
-std::cout << "Size of Particle_PID[0]: "  << sizeof(Particle_PID[0]) << std::endl;
 
 // NB if more than one of the same leptons exists (likely the case with muons), polar angle of each is added to the histo (rather than ommitting it)
  
-for(unsigned int p=0; p<Nparticles; p++){
+for(unsigned int p=0; p < Nparticles; p++){
   if(Particle_Status[p] == 1){
     if(abs(Particle_PID[p]) == 11){
       std::cout << "Found a final state electron/positron" << std::endl;
@@ -431,7 +432,7 @@ int MyClass::JetAnalysis(){
 Int_t NJets = sizeof(Jet_PT)/sizeof(Jet_PT[0]);
 
 
-  for(unsigned int k=0; k<sizeof(Jet_PT); k++){
+  for(unsigned int k=0; k< NJets; k++){
     if(Jet_PT[k] > 20. && Jet_Mass[k] > 0.1){
     Jet_ET[k] = sqrt(pow(Jet_PT[k],2) + pow(Jet_Mass[k],2)); // The transverse energy of each jet
     HT+=Jet_ET[k];                                            // The scalar sum of the transverse energy of each jet as given by the note
@@ -487,9 +488,12 @@ int MyClass::GenJetAnalysis()
   int nt=0;
   int nb=0;
 
+Int_t Nparticles = sizeof(Particle_PID)/sizeof(Particle_PID[0]);
+Int_t NGenJets = sizeof(GenJet_PT)/sizeof(GenJet_PT[0]);
+
   // Looking for individual top quarks in the event
 
-    for(unsigned int j=0; j<sizeof(Particle_PID); j++){
+    for(unsigned int j=0; j<Nparticles; j++){
 
       int gen_count =0;
 
@@ -688,7 +692,7 @@ int MyClass::GenJetAnalysis()
 
     // Same Delta R(W,b) vs Top Pt but for all tops
 
-    for(unsigned int p=0; p <sizeof(Particle_PID); p++)
+    for(unsigned int p=0; p < Nparticles; p++)
     {
 
       if(abs(Particle_PID[p]) == 24){          // Found a W boson, assinging TLorentzVector
@@ -735,7 +739,7 @@ int MyClass::GenJetAnalysis()
 
 
 
-  for(unsigned int i=0; i<sizeof(GenJet_PT); i++)
+  for(unsigned int i=0; i< NGenJets; i++)
     {
    
 
@@ -764,7 +768,9 @@ int MyClass::GenJetAnalysis()
 
 int MyClass::METAnalysis(){
 
-  for(unsigned int j=0; j<sizeof(MissingET_MET); j++){
+  Int_t NMET = sizeof(MissingET_MET)/sizeof(MissingET_MET[0]);
+
+  for(unsigned int j=0; j<NMET; j++){
     if(MissingET_MET[j]> 5){
       _MET_histo->Fill(MissingET_MET[j]);
    }
@@ -778,9 +784,11 @@ int MyClass::METAnalysis(){
 
 int MyClass::TopAnalysis(){
 
-   Double_t Pt_top[sizeof(Particle_PT)];
+  Double_t Pt_top[sizeof(Particle_PT)];
+  Int_t Nparticles = sizeof(Particle_PID)/sizeof(Particle_PID[0]);
 
-  for(unsigned int q=0; q<sizeof(Particle_PT); q++){
+
+  for(unsigned int q=0; q<Nparticles; q++){
     if(abs(Particle_PID[q]) == 6 && Particle_Status[q] == 2) {             
    //   std::cout << "Found a top quark" << std::endl;
       _TopPt->Fill(Particle_PT[q]);                                         
@@ -818,7 +826,9 @@ int MyClass::TopAnalysis(){
 
   int MyClass::ScalarHTAnalysis(){
 
-    for(unsigned int z=0; z<sizeof(ScalarHT_HT); z++){
+    Int_t NScalarHT = sizeof(ScalarHT_HT)/sizeof(ScalarHT_HT[0]);
+
+    for(unsigned int z=0; z<NScalarHT; z++){
    // if(ScalarHT_HT[z] < 10) continue;
       if(Jet_PT[z] > 20. && Jet_Mass[z] > 0.1){
         if(ScalarHT_HT[z] < 8) continue;
