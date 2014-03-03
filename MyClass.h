@@ -97,6 +97,7 @@ public :
 
    // Particles & other declarations
 
+
    TLorentzVector g1, g2, LSP1, LSP2, stop1, stop2, top1, top2, top3, top4, ISR, W1, W2, W3, W4;
    TLorentzVector We = TLorentzVector(0,0,0,0);
    TLorentzVector Wmu = TLorentzVector(0,0,0,0);
@@ -131,6 +132,8 @@ public :
    Double_t delRmu[4];
    Double_t delRtauon[4];
    Double_t pi = 3.14159265358979312;
+
+
 
 
    // Declaration of leaf types
