@@ -47,7 +47,10 @@ int MyClass::AnalyseParticles(){
 Int_t Nparticles = sizeof(Particle_PID)/sizeof(Particle_PID[0]);
 
 
-for(unsigned int r=0; r<Nparticles; ){
+for(unsigned int r=0; r<Nparticles; r++){
+
+  //if(Particle_PID[r] == abs(Particle_PID[Particle_M1[r]])) {
+  //if(Particle_M1[r] == 0) {
 
   int count = 0;
 
@@ -180,6 +183,7 @@ for(unsigned int r=0; r<Nparticles; ){
     if(count == 0){
       r++;
     }
+
  }
 
 
@@ -193,7 +197,7 @@ for(unsigned int r=0; r<Nparticles; ){
 
   ISR = g1 + g2;
   if( ISR.Pt() != 0 ){
-  std::cout << "System boosted: " << ISR.Pt() << std::endl;
+  //std::cout << "System boosted: " << ISR.Pt() << std::endl;
   _ISR->Fill(ISR.Pt());
   }
 
@@ -964,7 +968,7 @@ _JetPT->Write();
 
 
 c1->Clear();
-TFile *Jet_PT = new TFile("JetPT_MG5_500_100.root", "RECREATE");
+TFile *Jet_PT = new TFile("JetPT_tester_100.root", "RECREATE");
 _JetPT->Write();
 _GenJetPThisto->Write();
 _ScalarHTJetMults->Write();
@@ -979,7 +983,7 @@ _TopPt->Draw("hist");
 //c3->Print("TopPt.pdf");
 
 c4->Clear();
-TFile *PTgluino_stop = new TFile("PTgluino_MG5_500_100.root","RECREATE");
+TFile *PTgluino_stop = new TFile("PTgluino_tester_100.root","RECREATE");
 _Top_Gluino->Draw("hist");
 _Top_Gluino->Write();
 _Top_Gluino->SetTitle("P_{T} from stop (500 GeV) and gluino (1 TeV) ");
@@ -998,7 +1002,7 @@ PTgluino_stop->Close();
 c7->Clear();
 _DelR_W_b1->Draw("hist");
 
-TFile *DeltaR_TopPT = new TFile("DeltaR_TopPT_MG5_500_100.root", "RECREATE");
+TFile *DeltaR_TopPT = new TFile("DeltaR_TopPT_tester_100.root", "RECREATE");
 _DelR_W_b1->Write();
 _DelR_W_b2->Write();
 _DelR_W_b3->Write();
@@ -1010,27 +1014,27 @@ _Gen_Top4->Write();
 _DelR_W_b_all->Write();
 DeltaR_TopPT->Close();
 
-TFile *PTstop_top = new TFile("PT_MG5_500_100.root", "RECREATE");
+TFile *PTstop_top = new TFile("PT_tester_100.root", "RECREATE");
 _Top_Stop->Write();
 PTstop_top->Close();
 
-TFile *f = new TFile("MET_MG5_500_100.root", "RECREATE");
+TFile *f = new TFile("MET_tester_100.root", "RECREATE");
 _MET_histo->Write();
 f->Close();
 
-TFile *g = new TFile("HT_MG5_500_100.root", "RECREATE");
+TFile *g = new TFile("HT_tester_100.root", "RECREATE");
 _HT->Write();
 g->Close();
 
-TFile *ISR = new TFile("ISR_MG5_500_100.root", "RECREATE");
+TFile *ISR = new TFile("ISR_tester_100.root", "RECREATE");
 _ISR->Write();
 ISR->Close();
 
-TFile *ScalarHT = new TFile("ScalarHT_MG5_500_100.root","RECREATE");
+TFile *ScalarHT = new TFile("ScalarHT_tester_100.root","RECREATE");
 _ScalarHT->Write();
 ScalarHT->Close();
 
-TFile *JetsPt1 = new TFile("LeadingJetPt_MG5_500_100.root", "RECREATE");
+TFile *JetsPt1 = new TFile("LeadingJetPt_tester_100.root", "RECREATE");
 _JetPt1->Write();
 _JetPt2->Write();
 _JetPt3->Write();
@@ -1045,14 +1049,14 @@ _GenJetPt3->Write();
 _GenJetPt4->Write();
 JetsPt1->Close();
 
-TFile *JetLego = new TFile("JetLego_MG5_500_100.root", "RECREATE");
+TFile *JetLego = new TFile("JetLego_tester_100.root", "RECREATE");
 _JetLego1->Write();
 _JetLego2->Write();
 _JetLego3->Write();
 _JetLego4->Write();
 JetLego->Close();
 
-TFile *angles = new TFile("angle1_MG5_500_100.root","RECREATE");
+TFile *angles = new TFile("angle1_tester_100.root","RECREATE");
 _polarangle1->Write();
 _polarangle2->Write();
 _polarangle3->Write();
