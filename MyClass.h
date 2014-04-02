@@ -22,8 +22,8 @@
 
 // Need to include TRef and TRefArray
 // Header file for the classes stored in the TTree if any.
-#include "/usr/local/root/src/core/cont/inc/TClonesArray.h"
-#include "/usr/local/root/src/core/base/inc/TObject.h"
+#include "/usr/local/include/root/TClonesArray.h"
+#include "/usr/local/include/root/TObject.h"
 
 // Fixed size dimensions of array or collections stored in the TTree if any.
 const Int_t kMaxEvent = 1;
@@ -547,9 +547,9 @@ MyClass::MyClass(TTree *tree) : fChain(0)
 // if parameter tree is not specified (or zero), connect the file
 // used to generate this class and read the Tree.
    if (tree == 0) {
-      TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("../Comparisons/MG5/tag_1_delphes_events.root");
+      TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("../delphes_ALEXIS_500_100.root");
       if (!f || !f->IsOpen()) {
-         f = new TFile("../Comparisons/MG5/tag_1_delphes_events.root");
+         f = new TFile("../delphes_ALEXIS_500_100.root");
       }
       f->GetObject("Delphes",tree);
 
