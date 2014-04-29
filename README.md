@@ -1,6 +1,11 @@
 T1t1t-Analysis
 =============
 
+Note: These codes are old and buggy.
+  An updated version is located in the VBF_H repository, labelled ExampleT1t1tAnalysis.C and ExampleT1t1tAnalysis.h
+  
+  
+  
 MyClass.h and MyClass.c files for a test T1t1t scan
 
 The scan involved is the gluino pair production resulting in the production of 4 tops and 2 LSPs. The input files 
