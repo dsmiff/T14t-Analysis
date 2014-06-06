@@ -1,8 +1,8 @@
 T1t1t-Analysis
 =============
 
-Note: These codes are old and buggy.
-  An updated version is located in the VBF_H repository, labelled ExampleT1t1tAnalysis.C and ExampleT1t1tAnalysis.h
+Note: These codes are old, buggy and generally just shite
+  An updated version is located in the SUSY repository, labelled ExampleT1t1tAnalysis.C and ExampleT1t1tAnalysis.h
   
   
   
